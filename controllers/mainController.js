@@ -75,7 +75,7 @@ exports.getResume = async (req, res) => {
 
         // Set headers to indicate a PDF file download
         res.contentType(resume.contentType);
-        res.setHeader('Content-Disposition', `attachment; filename="${resume.name}"`);
+        res.setHeader('Content-Disposition', `inline; filename="${resume.name}"`);
 
         // Send the binary data
         res.send(resume.data);
