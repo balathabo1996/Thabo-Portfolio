@@ -1455,47 +1455,96 @@ footer p {
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
+    body {
+        /* Fix for mobile background attachment issues */
+        background-attachment: scroll;
+    }
+
     .hero {
         flex-direction: column-reverse;
         justify-content: center;
         text-align: center;
         padding-top: 100px;
+        /* Account for sticky header */
+        min-height: 0;
+        padding-bottom: 3rem;
     }
 
     .hero-content h2 {
-        font-size: 2.8rem;
+        font-size: 2.5rem;
     }
 
     .hero-image {
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
+        max-width: 300px;
+        width: 100%;
     }
 
     header {
         position: sticky;
-        /* Ensure sticky on mobile too */
-        flex-direction: column;
+        top: 0;
         padding: 0.8rem 1rem;
-        /* Compact mobile padding */
-        gap: 0.8rem;
-        background: rgba(10, 10, 10, 0.98);
-        /* Less transp on mobile for readability */
+        background: rgba(10, 10, 10, 0.95);
+        /* High contrast for legibility */
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+    }
+
+    /* Keep logo and nav on separate lines but compact */
+    .logo {
+        font-size: 1.5rem;
     }
 
     .navigation {
-        gap: 1.2rem;
+        gap: 1rem;
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
+        margin-top: 0.5rem;
     }
 
     .navigation a {
-        padding: 8px 12px;
-        /* Larger touch targets */
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.05);
+        /* Bubble style for better touch targets */
+        border-radius: 8px;
+    }
+
+    .navigation a.active {
+        background: rgba(0, 198, 255, 0.1);
+    }
+
+    .theme-toggle {
+        margin-left: 0;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
     }
 
     main {
         padding-top: 20px;
-        /* Reduced since header flows naturally */
+    }
+
+    .btn-submit,
+    .btn-cta {
+        width: 100%;
+        /* Full width buttons for ease of use */
+    }
+
+    .contact-wrapper {
+        flex-direction: column;
+    }
+
+    .contact-info-panel,
+    .contact-form {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: 1fr;
+        /* Stack cards on very small screens */
     }
 }
 
