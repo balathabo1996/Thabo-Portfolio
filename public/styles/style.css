@@ -627,6 +627,8 @@ main {
 
 .meta-info {
   text-align: right;
+  margin-left: auto; /* Pushes to the right if wrapped */
+  flex-shrink: 0; /* Prevents shrinking too much */
 }
 
 .date-badge {
@@ -748,6 +750,7 @@ main {
 
   .meta-info {
     text-align: left;
+    margin-left: 0;
   }
 
   .timeline {
