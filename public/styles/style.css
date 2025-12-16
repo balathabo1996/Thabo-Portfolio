@@ -1484,7 +1484,7 @@ footer p {
         position: sticky;
         top: 0;
         padding: 0.8rem 1rem;
-        background: rgba(10, 10, 10, 0.95);
+
         /* High contrast for legibility */
         -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
@@ -1511,7 +1511,7 @@ footer p {
     .navigation a {
         padding: 6px 10px;
         font-size: 0.9rem;
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--input-bg);
         /* Bubble style for better touch targets */
         border-radius: 8px;
     }
@@ -1523,7 +1523,7 @@ footer p {
     .theme-toggle {
         margin-left: 0;
         padding: 6px;
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--input-bg);
         border-radius: 50%;
     }
 
