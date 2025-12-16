@@ -1488,11 +1488,16 @@ footer p {
         /* High contrast for legibility */
         -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     /* Keep logo and nav on separate lines but compact */
     .logo {
         font-size: 1.5rem;
+        white-space: nowrap;
+        width: 100%;
+        text-align: center;
     }
 
     .navigation {
