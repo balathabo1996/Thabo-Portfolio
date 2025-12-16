@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contact Balachandran Thabotharan for IT and Web Development inquiries."
+    />
+    <title>Contact | Thabo.Portfolio</title>
+    <link rel="stylesheet" href="/styles/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="https://img.icons8.com/ios-filled/50/000000/mail.png"
+      type="image/png"
+    />
+  </head>
+
+  <body>
+    <header>
+      <a href="/" class="logo"><span>T</span>habo.</a>
+      <nav class="navigation">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/portfolio">Portfolio</a>
+        <a href="/contact" class="active">Contact</a>
+        <button
+          id="theme-toggle"
+          class="theme-toggle"
+          aria-label="Toggle Dark/Light Mode"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-sun"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1 class="page-title">
+        <i class="fas fa-envelope-open-text"></i> Get in <span>Touch</span>
+      </h1>
+
+      <section class="contact-wrapper">
+        <div class="contact-info-panel">
+          <h3>Contact Info</h3>
+          <ul class="contact-list">
+            <li>
+              <div class="icon"><i class="fas fa-envelope"></i></div>
+              <div class="details">
+                <strong>Email</strong>
+                <a href="mailto:balathabo96@gmail.com">balathabo96@gmail.com</a>
+              </div>
+            </li>
+            <li>
+              <div class="icon"><i class="fab fa-linkedin-in"></i></div>
+              <div class="details">
+                <strong>LinkedIn</strong>
+                <a
+                  href="https://www.linkedin.com/in/balachandran-thabotharan-261895131"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >View Profile</a
+                >
+              </div>
+            </li>
+            <li>
+              <div class="icon"><i class="fas fa-phone"></i></div>
+              <div class="details">
+                <strong>Phone</strong>
+                <p>(437) 383-1996</p>
+              </div>
+            </li>
+            <li>
+              <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div class="details">
+                <strong>Location</strong>
+                <p>Scarborough, Ontario, Canada</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <form
+          id="contactForm"
+          class="contact-form"
+          action="https://formspree.io/f/xovgbykb"
+          method="POST"
+        >
+          <div class="form-group">
+            <input type="text" name="name" placeholder="Your Name" required />
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input type="text" name="subject" placeholder="Subject" required />
+          </div>
+          <div class="form-group">
+            <textarea
+              name="message"
+              rows="5"
+              placeholder="Message"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Message</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="social-links">
+        <a href="mailto:balathabo96@gmail.com" aria-label="Email"
+          ><i class="fas fa-envelope"></i
+        ></a>
+        <a
+          href="https://www.linkedin.com/in/balachandran-thabotharan-261895131"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+        <a
+          href="https://github.com/balathabo1996"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          ><i class="fab fa-github"></i
+        ></a>
+      </div>
+      <p>&copy; 2025 Balachandran Thabotharan. All rights reserved.</p>
+    </footer>
+
+    <script src="/scripts/theme.js"></script>
+    <script src="/scripts/contact.js"></script>
+  </body>
+</html>
