@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "197c1f32-6162-4bab-94b3-de947ff79c76",
     "name": "Thabo Portfolio",
-    "description": "Collection for testing Thabo Portfolio website routes and APIs. Updated to include JSON content negotiation headers.",
+    "description": "Collection for testing Thabo Portfolio website routes and APIs.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -11,15 +11,10 @@
       "item": [
         {
           "name": "Home Page",
+          "id": "031188a2-9996-4530-909c-b25c50cdc066",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/",
               "host": [
@@ -34,15 +29,10 @@
         },
         {
           "name": "About Page",
+          "id": "a23406bf-ec70-423f-980a-9d2620a3f411",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/about",
               "host": [
@@ -57,15 +47,10 @@
         },
         {
           "name": "Contact Page",
+          "id": "34305532-bd69-4195-9b12-30037453dcc3",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/contact",
               "host": [
@@ -80,15 +65,10 @@
         },
         {
           "name": "Portfolio Page",
+          "id": "0ff8300d-632b-4af8-bc8d-4928f1d872d2",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/portfolio",
               "host": [
@@ -103,15 +83,10 @@
         },
         {
           "name": "Download Resume",
+          "id": "43131cae-e2b5-47f5-960d-0796ac148686",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/resume",
               "host": [
@@ -124,22 +99,18 @@
           },
           "response": []
         }
-      ]
+      ],
+      "id": "116f89af-1ef0-4291-b307-237aaceee39d"
     },
     {
       "name": "API",
       "item": [
         {
           "name": "Get Profile",
+          "id": "6a95e176-5084-41e5-b905-e0e8339afda6",
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{baseUrl}}/api/profile",
               "host": [
@@ -155,16 +126,12 @@
         },
         {
           "name": "Update Profile",
+          "id": "837b0f88-0417-4718-8fb0-05b73d5bf5b2",
           "request": {
             "method": "PUT",
             "header": [
               {
                 "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              },
-              {
-                "key": "Accept",
                 "value": "application/json",
                 "type": "text"
               }
@@ -186,40 +153,13 @@
           },
           "response": []
         }
-      ]
-    },
-    {
-      "name": "Errors",
-      "item": [
-        {
-          "name": "404 Not Found Test",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/this-page-does-not-exist",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "this-page-does-not-exist"
-              ]
-            },
-            "description": "Tests the custom 404 JSON response"
-          },
-          "response": []
-        }
-      ]
+      ],
+      "id": "71a37d93-17a9-4487-96c1-fd98c14afa40"
     }
   ],
   "variable": [
     {
+      "id": "546c75f8-f8db-488b-9dc0-076898ca2c52",
       "key": "baseUrl",
       "value": "http://localhost:8000",
       "type": "string"
