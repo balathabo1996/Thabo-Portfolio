@@ -23,7 +23,19 @@ const path = require('path');
  * @param {Object} res - Express response object
  */
 exports.getHome = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'index.html'));
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.json({
+            message: "Welcome to Thabo's Portfolio",
+            role: "Infrastructure Engineer | IT Solutions Student",
+            links: {
+                about: "/about",
+                portfolio: "/portfolio",
+                contact: "/contact",
+                resume: "/resume"
+            }
+        });
+    }
+    res.render('index');
 };
 
 /**
@@ -33,7 +45,15 @@ exports.getHome = (req, res) => {
  * @param {Object} res - Express response object
  */
 exports.getAbout = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'about.html'));
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.json({
+            name: "Balachandran Thabotharan",
+            title: "Infrastructure Engineer",
+            bio: "IT professional with hands-on experience in system administration, infrastructure engineering, and web application development.",
+            skills: ["Windows Server", "Hyper-V", "VMware", "Node.js", "Express", "MongoDB", "Network Security"]
+        });
+    }
+    res.render('about');
 };
 
 /**
@@ -43,7 +63,16 @@ exports.getAbout = (req, res) => {
  * @param {Object} res - Express response object
  */
 exports.getContact = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'contact.html'));
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.json({
+            email: "balathabo96@gmail.com",
+            phone: "(437) 383-1996",
+            linkedin: "https://www.linkedin.com/in/balachandran-thabotharan-261895131",
+            github: "https://github.com/balathabo1996",
+            location: "Scarborough, Ontario, Canada"
+        });
+    }
+    res.render('contact');
 };
 
 /**
@@ -53,7 +82,48 @@ exports.getContact = (req, res) => {
  * @param {Object} res - Express response object
  */
 exports.getPortfolio = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views', 'portfolio.html'));
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.json([
+            {
+                title: "Fleet Operations Management",
+                description: "Managed fleet logistics, fuel tracking, and safety compliance. Optimized operational efficiency through data-driven reporting.",
+                techStack: ["Fleet Mgmt Software", "Data Analysis", "Logistics"],
+                features: ["Fuel Expense Analysis", "Safety Inspection Compliance", "Fleet Maintenance Scheduling"]
+            },
+            {
+                title: "Enterprise Virtualization",
+                description: "Designed and implemented scalable Windows-based infrastructure with high-availability virtualization.",
+                techStack: ["Windows Server", "Hyper-V", "VMware"],
+                features: ["Active Directory", "Server Hardening", "High Availability"]
+            },
+            {
+                title: "Secure Web Framework",
+                description: "Developed a robust web application backend with integrated security protocols and RESTful APIs.",
+                techStack: ["Node.js", "Express", "MongoDB"],
+                features: ["Secure Authentication (JWT)", "Database Optimization", "API Rate Limiting"]
+            },
+            {
+                title: "Disaster Recovery System",
+                description: "Engineered a comprehensive backup and disaster recovery strategy ensuring 99.9% data availability.",
+                techStack: ["PowerShell", "Security", "Automation"],
+                features: ["Automated Backup Scripts", "Risk Assessment", "Compliance Documentation"]
+            },
+            {
+                title: "IT Service & Support",
+                description: "Delivering exceptional technical support and customer service, resolving complex IT issues.",
+                techStack: ["ServiceNow", "Jira", "Communication"],
+                features: ["Incident Management", "Technical Troubleshooting", "User Training"]
+            },
+            {
+                title: "FoodEarth",
+                description: "A comprehensive MVC web application addressing decision fatigue in the kitchen.",
+                techStack: ["Node.js", "Express", "MongoDB", "Handlebars"],
+                features: ["Interactive Meal Planner", "Secure Authentication", "Recipe Management"],
+                link: "https://food-earth.vercel.app/"
+            }
+        ]);
+    }
+    res.render('portfolio');
 };
 
 /**

@@ -1,3 +1,14 @@
+/**
+ * Express Server Entry Point
+ * 
+ * This file initializes the Express application, connects to MongoDB,
+ * and sets up middleware and routes.
+ * 
+ * @file server.js
+ * @author Balachandran Thabotharan
+ * @version 1.0.0
+ */
+
 // Import required modules
 const express = require('express');
 const path = require('path');
@@ -10,6 +21,10 @@ const mainRoutes = require('./routes/mainRoutes');
 // Initialize Express application
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Set View Engine
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 /**
  * Database Connection
@@ -31,7 +46,20 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Register Routes
+// Register Routes
 app.use('/', mainRoutes);
+
+// 404 Handler - Must be the last route
+app.use((req, res) => {
+    if (req.headers.accept && req.headers.accept.includes('application/json')) {
+        return res.status(404).json({
+            error: "Not Found",
+            message: "The requested endpoint does not exist",
+            path: req.originalUrl
+        });
+    }
+    res.status(404).render('404');
+});
 
 // Start the Server
 app.listen(PORT, () => {
