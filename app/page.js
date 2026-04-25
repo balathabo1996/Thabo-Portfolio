@@ -1,5 +1,7 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import Profile from '@/lib/models/Profile';
+import Experience from '@/lib/models/Experience';
+import Project from '@/lib/models/Project';
 import ContactForm from '@/components/ContactForm';
 
 export const dynamic = 'force-dynamic';
@@ -25,7 +27,17 @@ async function getProfileImage() {
 }
 
 export default async function HomePage() {
+  await connectToDatabase();
   const profileImageUrl = await getProfileImage();
+  
+  // Fetch all experience data
+  const allExperiences = await Experience.find().sort({ order: 1 }).lean();
+  
+  // Categorize
+  const workExp = allExperiences.filter(e => e.type === 'work');
+  const eduExp = allExperiences.filter(e => e.type === 'education');
+  const achievements = allExperiences.filter(e => e.type === 'achievement');
+  const voluntary = allExperiences.filter(e => e.type === 'voluntary');
 
   return (
     <>
@@ -322,6 +334,42 @@ export default async function HomePage() {
                 </div>
               </div>
             </div>
+
+            {/* Key Achievements & Certifications */}
+            {achievements.length > 0 && (
+              <div className="section-group mt-5">
+                <div className="section-header reveal">
+                  <h2>Key Achievements & Certifications</h2>
+                  <div className="section-line"></div>
+                </div>
+                <div className="skills-grid reveal-stagger">
+                  {achievements.map((item, idx) => (
+                    <div key={idx} className="skill-category achievement-card">
+                      <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{item.role}</h3>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{item.company}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Voluntary Contributions */}
+            {voluntary.length > 0 && (
+              <div className="section-group mt-5">
+                <div className="section-header reveal">
+                  <h2>Voluntary Contributions</h2>
+                  <div className="section-line"></div>
+                </div>
+                <div className="skills-grid reveal-stagger">
+                  {voluntary.map((item, idx) => (
+                    <div key={idx} className="skill-category voluntary-card">
+                      <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{item.role}</h3>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{item.company}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -28,7 +28,7 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 - **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam; delivers email via Gmail SMTP
 
 ### Technical
-- **REST API** — 6 endpoints documented with OpenAPI 3.0 and testable via Swagger UI at `/api-docs`
+- **REST API** — 9 endpoints documented with OpenAPI 3.0 and testable via Swagger UI at `/api-docs`
 - **Security Headers** — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, and more via `next.config.mjs`
 - **API Key Protection** — Profile update endpoint guarded by `x-api-key` header check
 - **Mass-Assignment Protection** — Only whitelisted fields accepted on profile updates
@@ -64,8 +64,11 @@ Thabo-Portfolio/
 │   │
 │   ├── api/
 │   │   ├── profile/route.js      # GET + PUT /api/profile
+│   │   ├── experience/route.js   # GET + POST /api/experience
+│   │   ├── projects/route.js     # GET + POST /api/projects
 │   │   ├── contact/route.js      # POST /api/contact
-│   │   └── swagger/route.js      # GET /api/swagger  (OpenAPI JSON)
+│   │   ├── swagger/route.js      # GET /api/swagger  (OpenAPI JSON)
+│   │   └── seed/route.js         # POST /api/seed    (Reset + Populate)
 │   │
 │   ├── api-docs/route.js         # GET /api-docs  (Swagger UI page)
 │   └── resume/route.js           # GET /resume    (PDF stream)
@@ -84,6 +87,8 @@ Thabo-Portfolio/
 │   ├── swagger.js                # OpenAPI 3.0 specification (single source of truth)
 │   └── models/
 │       ├── Profile.js            # Mongoose schema — owner profile
+│       ├── Experience.js         # Mongoose schema — work/edu history
+│       ├── Project.js            # Mongoose schema — portfolio projects
 │       └── Resume.js             # Mongoose schema — resume PDF binary
 │
 ├── styles/
@@ -95,7 +100,7 @@ Thabo-Portfolio/
 │   └── swagger-ui/               # Swagger UI assets (local — avoids CDN/CSP issues)
 │
 ├── postman/
-│   ├── Thabo-Portfolio.postman_collection.json   # All 6 API requests + test scripts
+│   ├── Thabo-Portfolio.postman_collection.json   # All 9 API requests + test scripts
 │   └── Thabo-Portfolio.postman_environment.json  # base_url + admin_api_key variables
 │
 ├── next.config.mjs               # Security headers, image remote patterns
@@ -107,14 +112,19 @@ Thabo-Portfolio/
 
 ## API Reference
 
-Full interactive documentation is available at **`/api-docs`** (Swagger UI).
+Full interactive developer documentation is available at **`/api-docs`**. This premium Swagger UI allows you to test all 11 endpoints interactively with real-time feedback.
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
 | `GET` | `/api/profile` | — | Fetch owner profile (auto-creates if missing) |
 | `PUT` | `/api/profile` | `x-api-key` | Update profile fields |
+| `GET` | `/api/experience` | — | Fetch work, education, achievements, and voluntary work |
+| `POST` | `/api/experience` | `x-api-key` | Add new work, education, achievement, or voluntary entry |
+| `GET` | `/api/projects` | — | Fetch all portfolio projects |
+| `POST` | `/api/projects` | `x-api-key` | Add new portfolio project |
 | `GET` | `/resume` | — | Stream latest resume PDF inline |
 | `POST` | `/api/contact` | — | Send contact form email via Gmail |
+| `POST` | `/api/seed` | `x-api-key` | Reset and populate DB with professional demo data |
 | `GET` | `/api/swagger` | — | Raw OpenAPI 3.0 JSON spec |
 | `GET` | `/api-docs` | — | Interactive Swagger UI page |
 
@@ -235,7 +245,7 @@ Two files are included in the `postman/` folder:
 
 | File | Purpose |
 |---|---|
-| `Thabo-Portfolio.postman_collection.json` | All 6 requests with automated test scripts |
+| `Thabo-Portfolio.postman_collection.json` | All 9 requests with automated test scripts |
 | `Thabo-Portfolio.postman_environment.json` | `base_url` and `admin_api_key` variables |
 
 **Steps to use:**

@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "Thabo Portfolio API",
-    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 6 endpoints are documented:\n  GET  /api/profile   – Fetch owner profile from MongoDB\n  PUT  /api/profile   – Update profile fields (x-api-key required)\n  GET  /resume        – Stream resume PDF from MongoDB\n  POST /api/contact   – Send contact form email via Nodemailer + Gmail\n  GET  /api/swagger   – Return raw OpenAPI 3.0 JSON spec\n  GET  /api-docs      – Open interactive Swagger UI page\n\nSetup:\n  1. Import this collection into Postman.\n  2. Import Thabo-Portfolio.postman_environment.json and select it.\n  3. Set the admin_api_key variable to the value of ADMIN_API_KEY in .env.\n  4. Run the dev server (npm run dev) before sending requests.",
+    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 11 endpoints are documented:\n  GET  /api/profile      – Fetch owner profile from MongoDB\n  PUT  /api/profile      – Update profile fields (x-api-key required)\n  GET  /api/experience   – Fetch work, education, achievements, and voluntary work\n  POST /api/experience   – Add new experience (requires x-api-key)\n  GET  /api/projects     – Fetch portfolio projects\n  POST /api/projects     – Add new project (requires x-api-key)\n  GET  /resume           – Stream resume PDF from MongoDB\n  POST /api/contact      – Send contact form email\n  POST /api/seed         – Reset and seed database (requires x-api-key)\n  GET  /api/swagger      – Raw OpenAPI JSON spec\n  GET  /api-docs         – Swagger UI page",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
 
@@ -338,7 +338,80 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Experience",
+      "description": "Work, education, achievements, and voluntary history endpoints.",
+      "item": [
+        {
+          "name": "Get Experiences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/experience", "host": ["{{base_url}}"], "path": ["api", "experience"] }
+          }
+        },
+        {
+          "name": "Create Experience",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"Diploma in ICT\",\n  \"company\": \"DMI\",\n  \"type\": \"achievement\",\n  \"order\": 1\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/experience", "host": ["{{base_url}}"], "path": ["api", "experience"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "description": "Portfolio projects management.",
+      "item": [
+        {
+          "name": "Get Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api", "projects"] }
+          }
+        },
+        {
+          "name": "Create Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Project\",\n  \"description\": \"Project description\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api", "projects"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "description": "System maintenance endpoints.",
+      "item": [
+        {
+          "name": "Seed Database",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+            ],
+            "url": { "raw": "{{base_url}}/api/seed", "host": ["{{base_url}}"], "path": ["api", "seed"] }
+          }
+        }
+      ]
     }
-
   ]
 }
