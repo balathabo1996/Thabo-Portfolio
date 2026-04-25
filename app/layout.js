@@ -31,8 +31,8 @@ export const metadata = {
     title: 'Thabo.Portfolio',
   },
   icons: {
-    icon: 'https://img.icons8.com/ios-filled/50/60a5fa/home.png',
-    apple: 'https://img.icons8.com/ios-filled/180/60a5fa/home.png',
+    icon: '/favicon.png',
+    apple: '/apple-icon.png',
   },
 };
 
