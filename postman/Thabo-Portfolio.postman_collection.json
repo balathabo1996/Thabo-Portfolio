@@ -1,0 +1,344 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Thabo Portfolio API",
+    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 6 endpoints are documented:\n  GET  /api/profile   – Fetch owner profile from MongoDB\n  PUT  /api/profile   – Update profile fields (x-api-key required)\n  GET  /resume        – Stream resume PDF from MongoDB\n  POST /api/contact   – Send contact form email via Nodemailer + Gmail\n  GET  /api/swagger   – Return raw OpenAPI 3.0 JSON spec\n  GET  /api-docs      – Open interactive Swagger UI page\n\nSetup:\n  1. Import this collection into Postman.\n  2. Import Thabo-Portfolio.postman_environment.json and select it.\n  3. Set the admin_api_key variable to the value of ADMIN_API_KEY in .env.\n  4. Run the dev server (npm run dev) before sending requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "Base URL. Swap to production URL when testing the deployed app."
+    },
+    {
+      "key": "admin_api_key",
+      "value": "",
+      "type": "secret",
+      "description": "Value of ADMIN_API_KEY from .env — required for PUT /api/profile."
+    }
+  ],
+
+  "item": [
+
+    {
+      "name": "Profile",
+      "description": "Manages the single owner-profile document stored in MongoDB.\n\nGET returns (or auto-creates) the document.\nPUT updates whitelisted fields only — requires x-api-key header.",
+      "item": [
+
+        {
+          "name": "Get Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns profile object', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('_id');",
+                  "    pm.expect(json).to.have.property('name');",
+                  "    pm.expect(json).to.have.property('profileImageUrl');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            },
+            "description": "Returns the profile document from MongoDB.\n\nIf no document exists yet, an empty one is created automatically with default values (name, title, profileImageUrl).\n\nThis endpoint is called server-side by the home page to pre-render the profile photo.\n\nExpected response: 200 with Profile JSON object."
+          },
+          "response": []
+        },
+
+        {
+          "name": "Update Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns updated profile', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('_id');",
+                  "});",
+                  "",
+                  "pm.test('401 when no api key', () => {",
+                  "    // Run the \"Update Profile — Unauthorized\" request to verify this.",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}",
+                "description": "Must match ADMIN_API_KEY in .env. Missing or wrong value returns 401."
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profileImageUrl\": \"https://example.com/photo.jpg\",\n  \"name\": \"Balachandran Thabotharan\",\n  \"role\": \"Infrastructure Engineer\",\n  \"bio\": \"Experienced IT professional specializing in infrastructure and cybersecurity.\",\n  \"location\": \"Scarborough, Ontario, Canada\",\n  \"email\": \"balathabo96@gmail.com\",\n  \"phone\": \"+1 (437) 383-1996\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            },
+            "description": "Updates specific profile fields in MongoDB.\n\nSecurity: requires x-api-key header matching ADMIN_API_KEY in .env.\n\nMass-assignment protection: only these fields are accepted —\n  profileImageUrl, name, role, bio, location, email, phone\n\nAll other keys in the body are silently ignored.\n\nUses upsert so the document is created if it doesn't exist.\n\nExpected responses:\n  200 – Updated profile object\n  400 – No valid fields provided\n  401 – Missing or incorrect x-api-key"
+          },
+          "response": []
+        },
+
+        {
+          "name": "Update Profile — Unauthorized (no key)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401', () => pm.response.to.have.status(401));",
+                  "pm.test('Returns Unauthorized error', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.error).to.equal('Unauthorized');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            },
+            "description": "Verifies that PUT /api/profile returns 401 when no x-api-key header is supplied.\n\nExpected response: 401 { \"error\": \"Unauthorized\" }"
+          },
+          "response": []
+        },
+
+        {
+          "name": "Update Profile — Bad Request (invalid fields)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Returns error message', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"unknownField\": \"value\",\n  \"anotherBadField\": 123\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profile"]
+            },
+            "description": "Verifies that PUT /api/profile returns 400 when the body contains only non-whitelisted fields.\n\nExpected response: 400 { \"error\": \"No valid fields provided\" }"
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Resume",
+      "description": "Serves the resume PDF stored as a binary buffer in MongoDB.\n\nThe most recently uploaded document (sorted by uploadDate descending) is streamed inline so the browser opens its PDF viewer.",
+      "item": [
+
+        {
+          "name": "Get Resume PDF",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 or 404', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                  "});",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Content-Type is PDF', () => {",
+                  "        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/resume",
+              "host": ["{{base_url}}"],
+              "path": ["resume"]
+            },
+            "description": "Streams the most recently uploaded resume PDF from MongoDB.\n\nResponse headers:\n  Content-Type: application/pdf\n  Content-Disposition: inline; filename=\"resume.pdf\"\n\nExpected responses:\n  200 – PDF binary stream\n  404 – No resume document in database\n  500 – Database error"
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Contact",
+      "description": "Accepts contact form submissions and delivers them via Gmail SMTP using Nodemailer.\n\nRequired env vars: EMAIL_USER, EMAIL_PASS (Gmail App Password).",
+      "item": [
+
+        {
+          "name": "Submit Contact Form",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns success message', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.message).to.equal('Email sent successfully');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"subject\": \"Collaboration opportunity\",\n  \"message\": \"I'd like to discuss a potential collaboration with you.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contact",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contact"]
+            },
+            "description": "Sends a contact message to the portfolio owner via Gmail SMTP (Nodemailer).\n\nThe email is sent from EMAIL_USER to balathabo96@gmail.com with both plain-text and formatted HTML bodies.\n\nRequired fields: name, email, subject, message (all strings).\n\nExpected responses:\n  200 – { message: \"Email sent successfully\" }\n  500 – { error: \"Failed to send email\" }  (SMTP / auth error)"
+          },
+          "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Docs",
+      "description": "API documentation and spec endpoints.\n\nUse /api/swagger to import the spec into any OpenAPI-compatible tool.\nUse /api-docs to open the interactive Swagger UI in the browser.",
+      "item": [
+
+        {
+          "name": "Get OpenAPI JSON Spec",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns valid OpenAPI spec', () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.openapi).to.equal('3.0.0');",
+                  "    pm.expect(json).to.have.property('paths');",
+                  "    pm.expect(json).to.have.property('info');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/swagger",
+              "host": ["{{base_url}}"],
+              "path": ["api", "swagger"]
+            },
+            "description": "Returns the complete OpenAPI 3.0 specification as JSON.\n\nUse this URL to:\n  - Import the API into Postman (File → Import → Link)\n  - Import into Insomnia or any OpenAPI-compatible tool\n  - Reference in CI/CD for contract testing\n\nExpected response: 200 with the full OpenAPI object."
+          },
+          "response": []
+        },
+
+        {
+          "name": "Open Swagger UI",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Returns HTML page', () => {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('text/html');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api-docs",
+              "host": ["{{base_url}}"],
+              "path": ["api-docs"]
+            },
+            "description": "Returns the self-contained Swagger UI HTML page.\n\nThe OpenAPI spec is embedded directly in the page — no additional request is needed. Open this URL in a browser to explore and test all API endpoints interactively.\n\nThe page runs outside the Next.js layout (no header/footer) so Swagger UI owns the full viewport.\n\nExpected response: 200 text/html"
+          },
+          "response": []
+        }
+      ]
+    }
+
+  ]
+}
