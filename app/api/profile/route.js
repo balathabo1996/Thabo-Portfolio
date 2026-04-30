@@ -16,6 +16,9 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Profile from '@/lib/models/Profile';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET() {
   try {
     await connectToDatabase();

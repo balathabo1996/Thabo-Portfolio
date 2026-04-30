@@ -12,6 +12,9 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import Resume from '@/lib/models/Resume';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function GET() {
   try {
     await connectToDatabase();

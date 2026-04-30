@@ -4,6 +4,9 @@ import Project from '@/lib/models/Project';
 import Experience from '@/lib/models/Experience';
 import Profile from '@/lib/models/Profile';
 
+export const dynamic = 'force-dynamic';
+
+
 export async function POST(request) {
   try {
     const apiKey = request.headers.get('x-api-key');
