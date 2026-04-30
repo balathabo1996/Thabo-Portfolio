@@ -29,6 +29,7 @@ export async function GET() {
       },
     });
   } catch (err) {
-    return new Response('Internal server error', { status: 500 });
+    console.error('Resume error:', err);
+    return new Response(`Internal server error: ${err.message}`, { status: 500 });
   }
 }
