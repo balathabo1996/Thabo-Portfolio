@@ -21,7 +21,7 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    const sections = ['home', 'about', 'portfolio', 'contact'];
+    const sections = ['home', 'about', 'projects', 'contact'];
     
     const handleScroll = () => {
       let currentSection = 'home';
@@ -66,11 +66,11 @@ export default function Header() {
           About
         </Link>
         <Link 
-          href="/#portfolio" 
-          className={activeSection === 'portfolio' ? 'active' : ''}
-          onClick={() => setActiveSection('portfolio')}
+          href="/#projects" 
+          className={activeSection === 'projects' ? 'active' : ''}
+          onClick={() => setActiveSection('projects')}
         >
-          Portfolio
+          Projects
         </Link>
         <Link 
           href="/#contact" 
