@@ -1,3 +1,6 @@
+import { connectToDatabase } from "@/lib/mongodb";
+import Profile from "@/lib/models/Profile";
+import Experience from "@/lib/models/Experience";
 import ContactForm from "@/components/ContactForm";
 
 export const dynamic = "force-dynamic";
@@ -13,11 +16,30 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const profileImageUrl = "/images/portf.png";
-  const workExp = [];
-  const eduExp = [];
-  const achievements = [];
-  const voluntary = [];
+  // Safe defaults for static-first reliability
+  let profileImageUrl = "/images/portf.png";
+  let achievements = [];
+  let voluntary = [];
+
+  try {
+    // Attempt database connection
+    await connectToDatabase();
+
+    // 1. Fetch Profile Data (for the profile picture)
+    const profile = await Profile.findOne().lean();
+    if (profile?.profileImageUrl) {
+      profileImageUrl = profile.profileImageUrl;
+    }
+
+    // 2. Fetch Additional Experiences (Achievements & Voluntary)
+    const allExperiences = await Experience.find().sort({ order: 1 }).lean();
+    achievements = allExperiences.filter((e) => e.type === "achievement");
+    voluntary = allExperiences.filter((e) => e.type === "voluntary");
+
+  } catch (error) {
+    // Silently log error to server console; page continues with defaults
+    console.error("Database sync notice (using static fallbacks):", error.message);
+  }
 
   return (
     <>

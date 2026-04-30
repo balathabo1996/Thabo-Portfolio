@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "Thabo Portfolio API",
-    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 11 endpoints are documented:\n  GET  /api/profile      – Fetch owner profile from MongoDB\n  PUT  /api/profile      – Update profile fields (x-api-key required)\n  GET  /api/experience   – Fetch work, education, achievements, and voluntary work\n  POST /api/experience   – Add new experience (requires x-api-key)\n  GET  /api/projects     – Fetch portfolio projects\n  POST /api/projects     – Add new project (requires x-api-key)\n  GET  /resume           – Stream resume PDF from MongoDB\n  POST /api/contact      – Send contact form email\n  POST /api/seed         – Reset and seed database (requires x-api-key)\n  GET  /api/swagger      – Raw OpenAPI JSON spec\n  GET  /api-docs         – Swagger UI page",
+    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 12 endpoints are documented:\n  GET  /api/profile      – Fetch owner profile from MongoDB\n  PUT  /api/profile      – Update profile fields (x-api-key required)\n  GET  /api/experience   – Fetch work, education, achievements, and voluntary work\n  POST /api/experience   – Add new experience (requires x-api-key)\n  GET  /api/projects     – Fetch portfolio projects\n  POST /api/projects     – Add new project (requires x-api-key)\n  GET  /resume           – Stream resume PDF from MongoDB\n  POST /api/resume       – Upload new resume PDF (requires x-api-key)\n  POST /api/contact      – Send contact form email\n  POST /api/seed         – Reset and seed database (requires x-api-key)\n  GET  /api/swagger      – Raw OpenAPI JSON spec\n  GET  /api-docs         – Swagger UI page",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
 
@@ -224,6 +224,24 @@
             "description": "Streams the most recently uploaded resume PDF from MongoDB.\n\nResponse headers:\n  Content-Type: application/pdf\n  Content-Disposition: inline; filename=\"resume.pdf\"\n\nExpected responses:\n  200 – PDF binary stream\n  404 – No resume document in database\n  500 – Database error"
           },
           "response": []
+        },
+        {
+          "name": "Upload Resume PDF",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": [], "description": "The PDF file to upload" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/resume", "host": ["{{base_url}}"], "path": ["api", "resume"] },
+            "description": "Uploads a new resume PDF to MongoDB.\n\nSecurity: requires x-api-key header.\nBody: multipart/form-data with a 'file' field."
+          },
+          "response": []
         }
       ]
     },
@@ -287,7 +305,7 @@
                   "pm.test('Status 200', () => pm.response.to.have.status(200));",
                   "pm.test('Returns valid OpenAPI spec', () => {",
                   "    const json = pm.response.json();",
-                  "    pm.expect(json.openapi).to.equal('3.0.0');",
+                  "    pm.expect(json.openapi).to.equal('3.1.0');",
                   "    pm.expect(json).to.have.property('paths');",
                   "    pm.expect(json).to.have.property('info');",
                   "});"

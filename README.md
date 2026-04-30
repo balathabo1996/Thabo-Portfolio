@@ -28,7 +28,7 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 - **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam; delivers email via Gmail SMTP
 
 ### Technical
-- **REST API** — 11 endpoints documented with OpenAPI 3.1 and testable via Swagger UI at `/api-docs`
+- **REST API** — 12 endpoints documented with OpenAPI 3.1 and testable via Swagger UI at `/api-docs`
 - **Security Headers** — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, and more via `next.config.mjs`
 - **API Key Protection** — Profile update endpoint guarded by `x-api-key` header check
 - **Mass-Assignment Protection** — Only whitelisted fields accepted on profile updates
@@ -123,6 +123,7 @@ Full interactive developer documentation is available at **`/api-docs`**. This p
 | `GET` | `/api/projects` | — | Fetch all portfolio projects |
 | `POST` | `/api/projects` | `x-api-key` | Add new portfolio project |
 | `GET` | `/resume` | — | Stream latest resume PDF inline |
+| `POST` | `/api/resume` | `x-api-key` | Upload new resume PDF |
 | `POST` | `/api/contact` | — | Send contact form email via Gmail |
 | `POST` | `/api/seed` | `x-api-key` | Reset and populate DB with professional demo data |
 | `GET` | `/api/swagger` | — | Raw OpenAPI 3.1 JSON spec |
