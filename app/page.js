@@ -299,7 +299,8 @@ export default async function HomePage() {
                   <span className="badge rounded-pill">Git / GitHub</span>
                   <span className="badge rounded-pill">JIRA</span>
                   <span className="badge rounded-pill">ServiceNow</span>
-                  <span className="badge rounded-pill">Postman</span>
+                  <span className="badge rounded-pill">Postman (Automated Testing)</span>
+                  <span className="badge rounded-pill">Swagger (OpenAPI 3.1)</span>
                   <span className="badge rounded-pill">Tableau</span>
                   <span className="badge rounded-pill">
                     Microsoft Report Builder

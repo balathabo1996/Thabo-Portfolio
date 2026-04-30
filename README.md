@@ -28,7 +28,7 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 - **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam; delivers email via Gmail SMTP
 
 ### Technical
-- **REST API** — 9 endpoints documented with OpenAPI 3.0 and testable via Swagger UI at `/api-docs`
+- **REST API** — 11 endpoints documented with OpenAPI 3.1 and testable via Swagger UI at `/api-docs`
 - **Security Headers** — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, and more via `next.config.mjs`
 - **API Key Protection** — Profile update endpoint guarded by `x-api-key` header check
 - **Mass-Assignment Protection** — Only whitelisted fields accepted on profile updates
@@ -47,7 +47,7 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 | Database | MongoDB Atlas (Mongoose 9) |
 | Email | Nodemailer + Gmail SMTP |
 | Forms | react-hook-form |
-| API Docs | Swagger UI (OpenAPI 3.0) |
+| API Docs | Swagger UI (OpenAPI 3.1) |
 | Deployment | Vercel |
 
 ---
@@ -100,7 +100,7 @@ Thabo-Portfolio/
 │   └── swagger-ui/               # Swagger UI assets (local — avoids CDN/CSP issues)
 │
 ├── postman/
-│   ├── Thabo-Portfolio.postman_collection.json   # All 9 API requests + test scripts
+│   ├── Thabo-Portfolio.postman_collection.json   # All 11 API requests + test scripts
 │   └── Thabo-Portfolio.postman_environment.json  # base_url + admin_api_key variables
 │
 ├── next.config.mjs               # Security headers, image remote patterns
@@ -125,7 +125,7 @@ Full interactive developer documentation is available at **`/api-docs`**. This p
 | `GET` | `/resume` | — | Stream latest resume PDF inline |
 | `POST` | `/api/contact` | — | Send contact form email via Gmail |
 | `POST` | `/api/seed` | `x-api-key` | Reset and populate DB with professional demo data |
-| `GET` | `/api/swagger` | — | Raw OpenAPI 3.0 JSON spec |
+| `GET` | `/api/swagger` | — | Raw OpenAPI 3.1 JSON spec |
 | `GET` | `/api-docs` | — | Interactive Swagger UI page |
 
 ### Authentication
@@ -245,7 +245,7 @@ Two files are included in the `postman/` folder:
 
 | File | Purpose |
 |---|---|
-| `Thabo-Portfolio.postman_collection.json` | All 9 requests with automated test scripts |
+| `Thabo-Portfolio.postman_collection.json` | All 11 requests with automated test scripts |
 | `Thabo-Portfolio.postman_environment.json` | `base_url` and `admin_api_key` variables |
 
 **Steps to use:**

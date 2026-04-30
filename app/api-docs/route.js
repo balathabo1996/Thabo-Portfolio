@@ -18,7 +18,7 @@ export async function GET() {
   <link rel="icon" type="image/png" href="https://static1.smartbear.co/swagger/media/assets/images/favicon-32x32.png?v=2" sizes="32x32" />
   <link rel="icon" type="image/png" href="https://static1.smartbear.co/swagger/media/assets/images/favicon-16x16.png?v=2" sizes="16x16" />
   <link rel="shortcut icon" href="https://static1.smartbear.co/swagger/media/assets/images/favicon-32x32.png?v=2" />
-  <link rel="stylesheet" href="/swagger-ui/swagger-ui.css" />
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
 
   <style>
@@ -157,7 +157,30 @@ export async function GET() {
 
     /* ─── Swagger Overrides ─────────────────────────────────── */
     .swagger-ui .info, .swagger-ui .topbar, .swagger-ui .scheme-container { display: none !important; }
-    .swagger-ui .opblock-tag { font-size: 1.2rem !important; border-bottom: 2px solid #edf2f7 !important; padding-bottom: 10px !important; margin: 40px 0 20px !important; color: #1a202c !important; font-weight: 800 !important; }
+    .swagger-ui .opblock-tag { 
+      font-family: 'Outfit', sans-serif !important;
+      font-size: 1.4rem !important; 
+      border-bottom: 2px solid #edf2f7 !important; 
+      padding-bottom: 10px !important; 
+      margin: 40px 0 20px !important; 
+      color: #1a202c !important; 
+      font-weight: 800 !important; 
+    }
+    .swagger-ui .opblock .opblock-summary-method {
+      font-family: 'JetBrains Mono', monospace !important;
+      border-radius: 6px !important;
+      font-weight: 700 !important;
+    }
+    .swagger-ui .opblock .opblock-summary-path {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 0.95rem !important;
+      font-weight: 600 !important;
+      color: #2d3748 !important;
+    }
+    .swagger-ui .opblock .opblock-summary-description {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 0.9rem !important;
+    }
     .swagger-ui .opblock { 
       border-radius: 12px !important; 
       margin-bottom: 15px !important; 
@@ -168,8 +191,37 @@ export async function GET() {
       transform: translateY(-6px) !important;
       box-shadow: 0 12px 25px rgba(0,0,0,0.1) !important;
     }
-    .swagger-ui .btn.execute { background: var(--swagger-dark) !important; border-radius: 8px !important; }
-    .swagger-ui .btn.authorize { color: var(--text-main) !important; border-color: var(--border-light) !important; border-radius: 8px !important; }
+    .swagger-ui .btn.execute { 
+      background: var(--swagger-dark) !important; 
+      border-radius: 8px !important; 
+      font-family: 'Outfit', sans-serif !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1px !important;
+    }
+    .swagger-ui .btn.authorize { 
+      color: var(--text-main) !important; 
+      border-color: var(--border-light) !important; 
+      border-radius: 8px !important; 
+      font-family: 'Outfit', sans-serif !important;
+      font-weight: 600 !important;
+    }
+    .swagger-ui table thead tr td, .swagger-ui table thead tr th {
+      font-family: 'Outfit', sans-serif !important;
+      font-weight: 700 !important;
+      color: #4a5568 !important;
+    }
+    .swagger-ui .model-title {
+      font-family: 'Outfit', sans-serif !important;
+      font-weight: 700 !important;
+    }
+    .swagger-ui .parameter__name {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-weight: 700 !important;
+    }
+    .swagger-ui code, .swagger-ui .microlight {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
 
     @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.4; } 100% { transform: scale(1); opacity: 1; } }
 
@@ -264,7 +316,7 @@ export async function GET() {
     <div id="swagger-ui"></div>
   </div>
 
-  <script src="/swagger-ui/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
   <script>
     window.onload = () => {
       window.ui = SwaggerUIBundle({
