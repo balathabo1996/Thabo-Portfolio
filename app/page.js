@@ -1,7 +1,3 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import Profile from "@/lib/models/Profile";
-import Experience from "@/lib/models/Experience";
-import Project from "@/lib/models/Project";
 import ContactForm from "@/components/ContactForm";
 
 export const dynamic = "force-dynamic";
@@ -16,28 +12,12 @@ export const metadata = {
   },
 };
 
-async function getProfileImage() {
-  try {
-    await connectToDatabase();
-    const profile = await Profile.findOne().lean();
-    return profile?.profileImageUrl || "/images/portf.png";
-  } catch {
-    return "/images/portf.png";
-  }
-}
-
 export default async function HomePage() {
-  await connectToDatabase();
-  const profileImageUrl = await getProfileImage();
-
-  // Fetch all experience data
-  const allExperiences = await Experience.find().sort({ order: 1 }).lean();
-
-  // Categorize
-  const workExp = allExperiences.filter((e) => e.type === "work");
-  const eduExp = allExperiences.filter((e) => e.type === "education");
-  const achievements = allExperiences.filter((e) => e.type === "achievement");
-  const voluntary = allExperiences.filter((e) => e.type === "voluntary");
+  const profileImageUrl = "/images/portf.png";
+  const workExp = [];
+  const eduExp = [];
+  const achievements = [];
+  const voluntary = [];
 
   return (
     <>
