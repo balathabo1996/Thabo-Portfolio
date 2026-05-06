@@ -2906,30 +2906,49 @@ body {
 
 @media (max-width: 768px) {
     header {
-        padding: 1rem 1.5rem;
-        flex-wrap: wrap;
+        left: 10px;
+        right: 10px;
+        transform: none;
+        width: auto;
+        max-width: none;
+        padding: 0.5rem 1rem;
+        top: 10px;
+        border-radius: 50px;
         justify-content: space-between;
+        gap: 5px;
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
     }
 
     .logo {
-        flex: 1;
-    }
-
-    .theme-toggle {
-        margin-left: auto;
-        order: 1;
+        font-size: 1.3rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        white-space: nowrap;
     }
 
     .navigation {
-        width: 100%;
-        justify-content: center;
-        gap: 1.2rem;
-        margin-top: 0.8rem;
-        order: 2;
+        gap: 6px;
+        display: flex;
+        align-items: center;
     }
 
     .navigation a {
-        font-size: 0.85rem;
+        min-width: 36px;
+        height: 36px;
+    }
+
+    .navigation a i {
+        font-size: 0.9rem;
+    }
+
+    .navigation a span {
+        display: none;
+    }
+
+    /* Add more space at top of page on mobile */
+    body {
+        padding-top: 100px;
     }
 
     .hero-name {

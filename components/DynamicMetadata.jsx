@@ -66,17 +66,23 @@ export default function DynamicMetadata() {
       const currentIcon = existingFavicons[0]?.getAttribute('href');
 
       if (currentIcon !== icon) {
-        // Remove existing icon tags
-        existingFavicons.forEach(el => el.parentNode.removeChild(el));
-
-        // Create new icon tags for both 'icon' and 'shortcut icon'
-        ['icon', 'shortcut icon'].forEach(relType => {
-          const newIcon = document.createElement('link');
-          newIcon.type = 'image/png';
-          newIcon.rel = relType;
-          newIcon.href = icon;
-          document.getElementsByTagName('head')[0].appendChild(newIcon);
-        });
+        // Update existing favicon tags instead of removing them
+        const existingFavicons = document.querySelectorAll("link[rel*='icon']");
+        
+        if (existingFavicons.length > 0) {
+          existingFavicons.forEach(el => {
+            el.setAttribute('href', icon);
+          });
+        } else {
+          // If no favicon exists, create one safely
+          const head = document.getElementsByTagName('head')[0];
+          if (head) {
+            const newIcon = document.createElement('link');
+            newIcon.rel = 'icon';
+            newIcon.href = icon;
+            head.appendChild(newIcon);
+          }
+        }
       }
     };
 
