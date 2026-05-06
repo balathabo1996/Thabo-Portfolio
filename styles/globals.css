@@ -97,7 +97,6 @@
     --footer-bg: rgba(10, 10, 10, 0.4);
     --footer-border: rgba(255, 255, 255, 0.05);
     --card-bg: rgba(20, 20, 20, 0.6);
-    /* Section backgrounds removed for full transparency */
     --section-border: rgba(255, 255, 255, 0.05);
     --divider-color: rgba(0, 198, 255, 0.3);
 
@@ -124,6 +123,7 @@
     --badge-bg: rgba(255, 255, 255, 0.04);
 }
 
+/* --- Light Theme Overrides --- */
 [data-theme="light"] {
     --bg-body: #f8f9fa;
     --bg-card: rgba(255, 255, 255, 0.7);
@@ -1120,6 +1120,69 @@ main {
     mask-composite: exclude;
     opacity: 0;
     transition: opacity 0.3s ease;
+}
+
+/* Technical Skills Section Styles */
+.skills-category-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.skill-category-group {
+    background: var(--card-bg);
+    border: var(--glass-border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.skill-category-group:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.skill-category-title {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+.skill-item-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.skill-item-card:hover {
+    background: rgba(96, 165, 250, 0.1);
+    transform: translateX(5px);
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+.skill-icon {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    width: 24px;
+    text-align: center;
+}
+
+.skill-name {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 500;
 }
 
 .portfolio-card:hover::after {
@@ -2665,4 +2728,92 @@ textarea {
 .company-link:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.1) rotate(-10deg);
+}
+
+.scroll-to-top i {
+    font-size: 1.2rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    bottom: 90px; /* Above Scroll to Top */
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:hover {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.1) rotate(20deg);
+}
+
+.theme-toggle i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+    .theme-toggle {
+        bottom: 75px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
 }

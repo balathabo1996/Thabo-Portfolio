@@ -1,14 +1,40 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import Profile from "@/lib/models/Profile";
 import Experience from "@/lib/models/Experience";
+import Project from "@/lib/models/Project";
+import Skill from "@/lib/models/Skill";
 import ContactForm from "@/components/ContactForm";
+import ScrollToTop from "@/components/ScrollToTop";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
+  metadataBase: new URL("https://thabo-portfolio.vercel.app"),
   title: "Thabo.Projects | Thabotharan Balachandran",
   description:
     "Portfolio of Thabotharan Balachandran, an experienced Infrastructure Engineer & IT Professional specializing in System Administration and Web Development.",
+  openGraph: {
+    title: "Thabo.Projects | Thabotharan Balachandran",
+    description: "Infrastructure Engineer & IT Solutions Professional",
+    url: "https://thabo-portfolio.vercel.app",
+    siteName: "Thabo Portfolio",
+    images: [
+      {
+        url: "/images/portf.png",
+        width: 800,
+        height: 800,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Thabo.Projects | Thabotharan Balachandran",
+    description: "Infrastructure Engineer & IT Solutions Professional",
+    images: ["/images/portf.png"],
+  },
   icons: {
     icon: "https://img.icons8.com/ios-filled/50/000000/home.png",
     shortcut: "https://img.icons8.com/ios-filled/50/000000/home.png",
@@ -20,6 +46,8 @@ export default async function HomePage() {
   let profileImageUrl = "/images/portf.png";
   let achievements = [];
   let voluntary = [];
+  let dbProjects = [];
+  let dbSkills = {};
 
   try {
     // Attempt database connection
@@ -35,6 +63,17 @@ export default async function HomePage() {
     const allExperiences = await Experience.find().sort({ order: 1 }).lean();
     achievements = allExperiences.filter((e) => e.type === "achievement");
     voluntary = allExperiences.filter((e) => e.type === "voluntary");
+
+    // 3. Fetch Projects
+    dbProjects = await Project.find().sort({ order: 1 }).lean();
+
+    // 4. Fetch Skills and group them
+    const skillsList = await Skill.find().sort({ order: 1 }).lean();
+    dbSkills = skillsList.reduce((acc, skill) => {
+      if (!acc[skill.category]) acc[skill.category] = [];
+      acc[skill.category].push(skill);
+      return acc;
+    }, {});
 
   } catch (error) {
     // Silently log error to server console; page continues with defaults
@@ -171,6 +210,47 @@ export default async function HomePage() {
               </div>
             </div>
 
+            {/* Technical Skills Section */}
+            {Object.keys(dbSkills).length > 0 && (
+              <div className="section-group mt-5">
+                <div className="section-header reveal">
+                  <h2>Technical Expertise</h2>
+                  <div className="section-line"></div>
+                </div>
+                <div className="skills-grid reveal-stagger">
+                  {Object.entries(dbSkills).map(([category, skills]) => {
+                    const categoryMap = {
+                      'infra': { title: 'Infrastructure & Operating Systems', class: 'infra' },
+                      'virt': { title: 'Virtualization & Tools', class: 'virt' },
+                      'prog': { title: 'Programming & Web Technologies', class: 'prog' },
+                      'db': { title: 'Databases', class: 'db' },
+                      'sec': { title: 'Security & IT Practices', class: 'sec' },
+                      'soft': { title: 'Soft Skills & Leadership', class: 'soft' }
+                    };
+                    const catInfo = categoryMap[category] || { title: category, class: category };
+                    
+                    return (
+                      <div key={category} className={`skill-category ${catInfo.class} reveal`}>
+                        <h3>{catInfo.title}</h3>
+                        <div className="skill-tags">
+                          {skills.map((skill, idx) => (
+                            <span key={idx} className="badge rounded-pill d-inline-flex align-items-center">
+                              {skill.imageUrl ? (
+                                <img src={skill.imageUrl} alt={skill.name} className="me-2" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
+                              ) : (
+                                skill.icon && <i className={`${skill.icon} me-2`} style={{ fontSize: '0.85rem' }}></i>
+                              )}
+                              {skill.name}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Education Section */}
             <div className="section-header reveal">
               <h2>Education</h2>
@@ -261,104 +341,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Skills Section */}
-            <div className="section-header reveal">
-              <h2>Technical Expertise</h2>
-              <div className="section-line"></div>
-            </div>
-
-            <div className="skills-grid reveal-stagger">
-              <div className="skill-category infra">
-                <h3>Infrastructure &amp; Operating Systems</h3>
-                <div className="skill-tags">
-                  <span className="badge rounded-pill">
-                    Windows Administration
-                  </span>
-                  <span className="badge rounded-pill">
-                    Linux Administration
-                  </span>
-                  <span className="badge rounded-pill">
-                    Cloud (GCP, AWS, Azure)
-                  </span>
-                  <span className="badge rounded-pill">Active Directory</span>
-                  <span className="badge rounded-pill">DHCP</span>
-                  <span className="badge rounded-pill">Printer Management</span>
-                  <span className="badge rounded-pill">
-                    User &amp; Permission Management
-                  </span>
-                  <span className="badge rounded-pill">
-                    Backup &amp; Disaster Recovery
-                  </span>
-                  <span className="badge rounded-pill">OS Patching</span>
-                </div>
-              </div>
-              <div className="skill-category virt">
-                <h3>Virtualization &amp; Tools</h3>
-                <div className="skill-tags">
-                  <span className="badge rounded-pill">Hyper-V</span>
-                  <span className="badge rounded-pill">VMware</span>
-                  <span className="badge rounded-pill">Citrix</span>
-                  <span className="badge rounded-pill">Git / GitHub</span>
-                  <span className="badge rounded-pill">JIRA</span>
-                  <span className="badge rounded-pill">ServiceNow</span>
-                  <span className="badge rounded-pill">Postman (Automated Testing)</span>
-                  <span className="badge rounded-pill">Swagger (OpenAPI 3.1)</span>
-                  <span className="badge rounded-pill">Tableau</span>
-                  <span className="badge rounded-pill">
-                    Microsoft Report Builder
-                  </span>
-                </div>
-              </div>
-              <div className="skill-category prog">
-                <h3>Programming &amp; Web Technologies</h3>
-                <div className="skill-tags">
-                  <span className="badge rounded-pill">JavaScript</span>
-                  <span className="badge rounded-pill">React JS</span>
-                  <span className="badge rounded-pill">Angular</span>
-                  <span className="badge rounded-pill">Node.js</span>
-                  <span className="badge rounded-pill">Express</span>
-                  <span className="badge rounded-pill">Java</span>
-                  <span className="badge rounded-pill">HTML / CSS</span>
-                  <span className="badge rounded-pill">Bootstrap</span>
-                  <span className="badge rounded-pill">XML</span>
-                </div>
-              </div>
-              <div className="skill-category db">
-                <h3>Databases</h3>
-                <div className="skill-tags">
-                  <span className="badge rounded-pill">
-                    Microsoft SQL Server
-                  </span>
-                  <span className="badge rounded-pill">PostgreSQL</span>
-                  <span className="badge rounded-pill">MySQL</span>
-                  <span className="badge rounded-pill">MongoDB</span>
-                </div>
-              </div>
-              <div className="skill-category sec">
-                <h3>Security &amp; IT Practices</h3>
-                <div className="skill-tags">
-                  <span className="badge rounded-pill">ITIL</span>
-                  <span className="badge rounded-pill">System Hardening</span>
-                  <span className="badge rounded-pill">Security Protocols</span>
-                  <span className="badge rounded-pill">
-                    GRC &amp; Risk Awareness
-                  </span>
-                  <span className="badge rounded-pill">Documentation</span>
-                </div>
-              </div>
-              <div className="skill-category soft">
-                <h3>Soft Skills &amp; Leadership</h3>
-                <div className="skill-tags">
-                  <span className="badge rounded-pill">Team Leadership</span>
-                  <span className="badge rounded-pill">Troubleshooting</span>
-                  <span className="badge rounded-pill">Crisis Management</span>
-                  <span className="badge rounded-pill">
-                    Cross-functional Collaboration
-                  </span>
-                  <span className="badge rounded-pill">Adaptability</span>
-                </div>
-              </div>
-            </div>
+            {/* Professional Experience Section */}
 
             {/* Experience Section */}
             <div className="section-header reveal">
@@ -717,244 +700,167 @@ export default async function HomePage() {
           </h1>
 
           <div className="portfolio-grid reveal-stagger">
-            {/* LoadFlow */}
-            <a
-              href="https://loadflow.vercel.app"
-              className="portfolio-card"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="portfolio-img-wrapper">
-                <img
-                  src="/images/loadflow.jpg"
-                  alt="LoadFlow Trucking Logistics Platform"
-                />
-                <div className="portfolio-date">Jan 2026 - Apr 2026</div>
-              </div>
-              <div className="portfolio-content">
-                <div className="portfolio-header">
-                  <h3>LoadFlow</h3>
+            {(dbProjects.length > 0 ? dbProjects : [
+              {
+                title: 'LoadFlow',
+                subTitle: 'Intelligent Logistics & Dispatch Orchestration',
+                description: 'Engineered a production-grade Transportation Management System (TMS) SaaS designed to replace manual spreadsheet dispatching with real-time, role-based fleet operations.',
+                imageUrl: '/images/loadflow.jpg',
+                period: 'Jan 2026 - Apr 2026',
+                features: [
+                  'Architecture & Security: Zero-Trust model with OWASP-compliant session management.',
+                  'Role-Based Dashboards: Custom flows for Admins, Dispatchers, and Drivers.',
+                  'Workflow Automation: Integrated Cloudinary POD and Nodemailer onboarding.',
+                  'Modern Tech Stack: Built using Next.js 15, React 19, TypeScript, Tailwind CSS 4, and MongoDB Atlas.'
+                ],
+                techStack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'MongoDB', 'Google Maps API'],
+                link: 'https://loadflow.vercel.app',
+                category: 'web'
+              },
+              {
+                title: 'OracleLens VPP',
+                subTitle: 'Virtual Power Plant (VPP) Architecture',
+                award: '🏆 Winner: "Best Project in Information Technology" - Humber College Capstone EXPO 2026',
+                description: 'Engineered a production-ready, secure, and distributed energy architecture in collaboration with industry partner OracleLens to manage and optimize grid demand.',
+                imageUrl: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
+                period: 'Jan 2026 - Apr 2026',
+                features: [
+                  'Distributed Architecture: Predictive energy forecasting and hardware abstraction.',
+                  'Backend Control Logic: Engineered the central algorithmic "Brain" for discharge targets.',
+                  'SCADA UI Integration: Live telemetry tracking for battery SoC and power output.',
+                  'Measurement & Verification (M&V): Automated digital receipts for auditing.',
+                  'Cybersecurity: Secure cross-machine communication bridges.'
+                ],
+                techStack: ['Spring Boot', 'Java', 'Python', 'PostgreSQL', 'React.js'],
+                link: 'https://oraclelens.com/home',
+                category: 'infra'
+              },
+              {
+                title: 'FoodEarth',
+                subTitle: 'Recipe Management & Meal Planning Platform',
+                description: 'Designed and developed a full-stack MVC web application to help users discover international recipes and organize weekly meal schedules.',
+                imageUrl: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800',
+                period: 'Nov 2025 - Dec 2025',
+                features: [
+                  'High-Performance Data Model: Mongoose schema with embedded documents for single-query rendering.',
+                  'Secure Authentication: Robust auth system using JWT and bcrypt with HttpOnly cookies.',
+                  'Modular Architecture: Utilized MVC patterns and Handlebars partials.',
+                  'Deployment: Configured and deployed to serverless environment using Vercel.'
+                ],
+                techStack: ['Node.js', 'Express', 'MongoDB (Mongoose)', 'Handlebars', 'JWT', 'Vercel'],
+                link: 'https://food-earth.vercel.app/',
+                category: 'ops'
+              },
+              {
+                title: 'ICT Study Recommender',
+                subTitle: 'A Personalized Study Material Recommender System',
+                description: 'Designed to bridge the knowledge gap for Advanced Level ICT students by automating the delivery of study materials tailored to individual proficiency levels.',
+                imageUrl: 'https://images.pexels.com/photos/5905709/pexels-photo-5905709.jpeg?auto=compress&cs=tinysrgb&w=800',
+                period: 'Jul 2020 - Dec 2020',
+                features: [
+                  'Adaptive Assessment: 50-question MCQ exam to determine baseline knowledge.',
+                  'Machine Learning Integration: K-means clustering for targeted resource delivery.',
+                  'Automated Recommendations: Recommendation engine serving diverse media types.',
+                  'Mastery-Based Progression: "Level Up" system requiring 100% on milestone quizzes.',
+                  'Research Impact: Achieved 100% positive response rate for GCE A/L preparation.'
+                ],
+                techStack: ['Laravel', 'PHP', 'HTML5', 'JavaScript', 'Bootstrap'],
+                link: '#projects',
+                category: 'svc'
+              }
+            ]).map((project, index) => (
+              <a
+                key={index}
+                href={project.link || "#"}
+                className="portfolio-card"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="portfolio-img-wrapper">
+                  <img
+                    src={project.imageUrl || "/images/placeholder.jpg"}
+                    alt={project.title}
+                  />
+                  {project.period && <div className="portfolio-date">{project.period}</div>}
                 </div>
-                <p className="project-title-ext">Intelligent Logistics & Dispatch Orchestration</p>
-                <p className="project-desc">
-                  Engineered a production-grade Transportation Management System (TMS) SaaS designed to replace manual spreadsheet dispatching with real-time, role-based fleet operations.
-                </p>
-                <div className="features-list">
-                  <ul>
-                    <li>
-                      <strong>Architecture & Security:</strong> Architected a Zero-Trust security model utilizing OWASP-compliant session management, HttpOnly JWT cookies, and custom "Hard Revocation".
-                    </li>
-                    <li>
-                      <strong>Role-Based Dashboards:</strong> Developed custom UI flows for Admins (audit logging), Dispatchers (multi-stop route creation), and Drivers (mobile-first tracking).
-                    </li>
-                    <li>
-                      <strong>Workflow Automation:</strong> Integrated Cloudinary for instant Proof of Delivery (POD) and a secure, Nodemailer-powered automated driver onboarding pipeline.
-                    </li>
-                    <li>
-                      <strong>Modern Tech Stack:</strong> Built using Next.js 15, React 19, TypeScript, Tailwind CSS 4, and MongoDB Atlas.
-                    </li>
-                  </ul>
-                </div>
-                <div className="tech-stack-container" style={{ flexWrap: 'wrap', gap: '8px', marginTop: '15px' }}>
-                  <span className="tech-badge web">Next.js 15</span>
-                  <span className="tech-badge web">React 19</span>
-                  <span className="tech-badge web">TypeScript</span>
-                  <span className="tech-badge web">Tailwind CSS 4</span>
-                  <span className="tech-badge web">MongoDB</span>
-                  <span className="tech-badge web">Google Maps API</span>
-                </div>
-              </div>
-            </a>
+                <div className="portfolio-content">
+                  <div className="portfolio-header">
+                    <h3>{project.title}</h3>
+                  </div>
+                  {project.subTitle && <p className="project-title-ext">{project.subTitle}</p>}
+                  
+                  {project.award && (
+                    <p className="project-award">
+                      {project.award.split(':').map((part, i) => (
+                        i === 0 ? <strong key={i}>{part}:</strong> : <span key={i}>{part}</span>
+                      ))}
+                    </p>
+                  )}
 
-            {/* OracleLens VPP */}
-            <a
-              href="https://oraclelens.com/home"
-              className="portfolio-card"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="portfolio-img-wrapper">
-                <img
-                  src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80"
-                  alt="OracleLens Virtual Power Plant"
-                />
-                <div className="portfolio-date">Jan 2026 - Apr 2026</div>
-              </div>
-              <div className="portfolio-content">
-                <div className="portfolio-header">
-                  <h3>OracleLens VPP</h3>
-                </div>
-                <p className="project-title-ext">
-                  Virtual Power Plant (VPP) Architecture
-                </p>
-                <p className="project-award">
-                  🏆 <strong>Winner:</strong> "Best Project in Information
-                  Technology" - Humber College Capstone EXPO 2026
-                </p>
-                <p className="project-desc">
-                  Engineered a production-ready, secure, and distributed energy
-                  architecture in collaboration with industry partner OracleLens
-                  to manage and optimize grid demand.
-                </p>
-                <div className="features-list">
-                  <ul>
-                    <li>
-                      <strong>Distributed Architecture:</strong> Integrated
-                      real-time grid communication, predictive energy
-                      forecasting, and physical hardware abstraction into a
-                      single cohesive platform.
-                    </li>
-                    <li>
-                      <strong>Backend Control Logic:</strong> Engineered the
-                      central algorithmic "Brain" to calculate precise,
-                      physically constrained power discharge targets from
-                      automated grid signals.
-                    </li>
-                    <li>
-                      <strong>SCADA UI Integration:</strong> Developed a
-                      real-time visualization dashboard tracking live telemetry
-                      such as battery State of Charge (SoC) and active power
-                      output.
-                    </li>
-                    <li>
-                      <strong>Measurement &amp; Verification (M&amp;V):</strong>{" "}
-                      Implemented an automated telemetry logging pipeline to
-                      generate immutable "digital receipts" for grid performance
-                      auditing.
-                    </li>
-                    <li>
-                      <strong>Cybersecurity:</strong> Established secure
-                      cross-machine communication bridges to ensure
-                      authenticated messaging across the distributed network.
-                    </li>
-                  </ul>
-                </div>
-                <div
-                  className="tech-stack-container"
-                  style={{ flexWrap: "wrap", gap: "8px", marginTop: "15px" }}
-                >
-                  <span className="tech-badge infra">Spring Boot</span>
-                  <span className="tech-badge infra">Java</span>
-                  <span className="tech-badge infra">Python</span>
-                  <span className="tech-badge infra">PostgreSQL</span>
-                  <span className="tech-badge infra">React.js</span>
-                </div>
-              </div>
-            </a>
+                  <p className="project-desc">{project.description}</p>
+                  
+                  <div className="features-list">
+                    <ul>
+                      {project.features && project.features.map((feature, fIdx) => {
+                        const [title, desc] = feature.split(':');
+                        return (
+                          <li key={fIdx}>
+                            {desc ? (
+                              <>
+                                <strong>{title}:</strong> {desc}
+                              </>
+                            ) : (
+                              feature
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                  <div className="tech-stack-container" style={{ flexWrap: 'wrap', gap: '8px', marginTop: '15px' }}>
+                    {project.techStack && project.techStack.map((tech, tIdx) => {
+                      const getTechIcon = (name) => {
+                        const icons = {
+                          'Next.js 15': 'fas fa-rocket',
+                          'Next.js': 'fas fa-rocket',
+                          'React 19': 'fab fa-react',
+                          'React.js': 'fab fa-react',
+                          'TypeScript': 'fas fa-code',
+                          'Tailwind CSS 4': 'fab fa-css3-alt',
+                          'MongoDB': 'fas fa-leaf',
+                          'Google Maps API': 'fas fa-map-marker-alt',
+                          'Spring Boot': 'fas fa-leaf',
+                          'Java': 'fab fa-java',
+                          'Python': 'fab fa-python',
+                          'PostgreSQL': 'fas fa-database',
+                          'Node.js': 'fab fa-node-js',
+                          'Express.js': 'fas fa-bolt',
+                          'Express': 'fas fa-bolt',
+                          'Handlebars': 'fas fa-code',
+                          'JWT': 'fas fa-key',
+                          'Vercel': 'fas fa-cloud-upload-alt',
+                          'Laravel': 'fab fa-laravel',
+                          'PHP': 'fab fa-php',
+                          'HTML5': 'fab fa-html5',
+                          'JavaScript': 'fab fa-js',
+                          'Bootstrap': 'fab fa-bootstrap',
+                          'Firebase': 'fas fa-fire',
+                          'Material UI': 'fab fa-uikit'
+                        };
+                        return icons[name] || icons[name.split(' ')[0]] || 'fas fa-code';
+                      };
 
-            {/* FoodEarth */}
-            <a
-              href="https://food-earth.vercel.app/"
-              className="portfolio-card"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="portfolio-img-wrapper">
-                <img
-                  src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="FoodEarth Meal Planner"
-                />
-                <div className="portfolio-date">Nov 2025 - Dec 2025</div>
-              </div>
-              <div className="portfolio-content">
-                <div className="portfolio-header">
-                  <h3>FoodEarth</h3>
+                      return (
+                        <span key={tIdx} className={`tech-badge ${project.category || 'web'} d-inline-flex align-items-center`}>
+                          <i className={`${getTechIcon(tech)} me-2`}></i>
+                          {tech}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
-                <p className="project-title-ext">
-                  Recipe Management & Meal Planning Platform
-                </p>
-                <p className="project-desc">
-                  Designed and developed a full-stack MVC web application to
-                  help users discover international recipes and organize weekly
-                  meal schedules.
-                </p>
-                <div className="features-list">
-                  <ul>
-                    <li>
-                      <strong>High-Performance Data Model:</strong> Designed a
-                      Mongoose schema utilizing embedded documents for the Meal
-                      Planner feature, reducing database calls and enabling
-                      single-query dashboard rendering.
-                    </li>
-                    <li>
-                      <strong>Secure Authentication:</strong> Built a robust
-                      auth system using JSON Web Tokens (JWT) and bcrypt,
-                      storing tokens in HTTP-Only cookies to prevent XSS
-                      attacks.
-                    </li>
-                    <li>
-                      <strong>Modular Architecture:</strong> Utilized MVC
-                      patterns and Handlebars partials to create a reusable,
-                      maintainable codebase and a responsive frontend UI.
-                    </li>
-                    <li>
-                      <strong>Deployment:</strong> Configured and deployed the
-                      application to a serverless environment using Vercel.
-                    </li>
-                  </ul>
-                </div>
-                <div
-                  className="tech-stack-container"
-                  style={{ flexWrap: "wrap", gap: "8px", marginTop: "15px" }}
-                >
-                  <span className="tech-badge ops">Node.js</span>
-                  <span className="tech-badge ops">Express</span>
-                  <span className="tech-badge ops">MongoDB (Mongoose)</span>
-                  <span className="tech-badge ops">Handlebars</span>
-                  <span className="tech-badge ops">JWT</span>
-                  <span className="tech-badge ops">Vercel</span>
-                </div>
-              </div>
-            </a>
-
-            {/* ICT Recommender */}
-            <a
-              href="#projects"
-              className="portfolio-card"
-            >
-              <div className="portfolio-img-wrapper">
-                <img
-                  src="https://images.pexels.com/photos/5905709/pexels-photo-5905709.jpeg?auto=compress&cs=tinysrgb&w=800"
-                  alt="ICT Study Material Recommender System"
-                />
-                <div className="portfolio-date">Jul 2020 - Dec 2020</div>
-              </div>
-              <div className="portfolio-content">
-                <div className="portfolio-header">
-                  <h3>ICT Study Recommender</h3>
-                </div>
-                <p className="project-title-ext">A Personalized Study Material Recommender System for Advanced Level ICT Students</p>
-                <p className="project-desc">
-                  Designed to bridge the knowledge gap for Advanced Level ICT students by automating the delivery of study materials tailored to individual proficiency levels.
-                </p>
-                <div className="features-list">
-                  <ul>
-                    <li>
-                      <strong>Adaptive Assessment:</strong> Built an initial evaluation module consisting of a 50-question MCQ exam to determine a student's baseline knowledge.
-                    </li>
-                    <li>
-                      <strong>Machine Learning Integration:</strong> Implemented the K-means clustering algorithm to categorize learners into Basic, Middle, and High-level groups for targeted resource delivery.
-                    </li>
-                    <li>
-                      <strong>Automated Recommendations:</strong> Developed a recommendation engine that serves diverse media types (PDFs, videos, presentations) based on the user's specific cluster.
-                    </li>
-                    <li>
-                      <strong>Mastery-Based Progression:</strong> Created a "Level Up" system requiring students to achieve 100% on milestone quizzes before accessing advanced curriculum.
-                    </li>
-                    <li>
-                      <strong>Research Impact:</strong> Achieved a 100% positive response rate from surveyed students regarding the implementation to support GCE A/L preparation.
-                    </li>
-                  </ul>
-                </div>
-                <div className="tech-stack-container" style={{ flexWrap: 'wrap', gap: '8px', marginTop: '15px' }}>
-                  <span className="tech-badge svc">Laravel</span>
-                  <span className="tech-badge svc">PHP</span>
-                  <span className="tech-badge svc">HTML5</span>
-                  <span className="tech-badge svc">JavaScript</span>
-                  <span className="tech-badge svc">Bootstrap</span>
-                </div>
-              </div>
-            </a>
+              </a>
+            ))}
           </div>
         </div>
       </section>
@@ -1041,6 +947,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <ThemeToggle />
+      <ScrollToTop />
     </>
   );
 }

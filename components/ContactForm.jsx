@@ -58,6 +58,8 @@ export default function ContactForm() {
           message: "Thanks for your message! I'll get back to you soon.",
         });
         reset();
+        // Auto-close success modal after 5 seconds
+        setTimeout(() => setModal(null), 5000);
       } else {
         const errorMsg = json.errors
           ? json.errors.map((err) => err.message).join(', ')
