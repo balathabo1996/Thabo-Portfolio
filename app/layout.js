@@ -8,7 +8,7 @@
  *   - Anti-flash inline <script> that applies the saved theme token to
  *     <html data-theme> before React hydrates, preventing a light-flash
  *   - ThemeProvider  – dark / light mode context for the whole tree
- *   - Persistent shell: Header, Footer, ScrollToTop, ScrollReveal, DynamicMetadata
+ *   - Persistent shell: Header, Footer, ScrollToTop, DynamicMetadata
  */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -18,7 +18,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
 import ThemeToggle from '@/components/ThemeToggle';
-import ScrollReveal from '@/components/ScrollReveal';
 import DynamicMetadata from '@/components/DynamicMetadata';
 
 export const metadata = {
@@ -68,7 +67,6 @@ export default function RootLayout({ children }) {
           <Footer />
           <ThemeToggle />
           <ScrollToTop />
-          <ScrollReveal />
           <DynamicMetadata />
         </ThemeProvider>
       </body>

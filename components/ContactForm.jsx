@@ -52,14 +52,7 @@ export default function ContactForm() {
       });
       const json = await res.json();
       if (res.ok) {
-        setModal({
-          icon: '✅',
-          title: 'Success!',
-          message: "Thanks for your message! I'll get back to you soon.",
-        });
         reset();
-        // Auto-close success modal after 5 seconds
-        setTimeout(() => setModal(null), 5000);
       } else {
         const errorMsg = json.errors
           ? json.errors.map((err) => err.message).join(', ')
@@ -134,22 +127,36 @@ export default function ContactForm() {
           {errors.message && <div className="invalid-feedback">{errors.message.message}</div>}
         </div>
 
-        <button type="submit" className="btn btn-submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Sending…' : 'Send Message'}
+        <button type="submit" className="btn btn-submit d-flex align-items-center justify-content-center" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <i className="fas fa-circle-notch fa-spin me-2"></i>
+              Sending…
+            </>
+          ) : (
+            <>
+              <i className="fas fa-paper-plane me-2"></i>
+              Send Message
+            </>
+          )}
         </button>
       </form>
 
       {modal && (
         <div
-          className="modal-overlay"
+          className="contact-modal-overlay"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
         >
-          <div className="modal-card">
-            <span className="modal-icon">{modal.icon}</span>
-            <h3 className="modal-title">{modal.title}</h3>
-            <p className="modal-message">{modal.message}</p>
+          <div className={`contact-modal-card ${modal.title.toLowerCase()}`}>
+            <div className="modal-visual">
+              <span className="modal-icon">{modal.icon}</span>
+            </div>
+            <div className="modal-text">
+              <h3 className="modal-title">{modal.title}</h3>
+              <p className="modal-message">{modal.message}</p>
+            </div>
             <button className="btn btn-modal-close" onClick={closeModal}>
-              Close
+              Dismiss
             </button>
           </div>
         </div>

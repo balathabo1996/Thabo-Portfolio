@@ -4,6 +4,7 @@ import Experience from "@/lib/models/Experience";
 import Project from "@/lib/models/Project";
 import Skill from "@/lib/models/Skill";
 import ContactForm from "@/components/ContactForm";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export const dynamic = "force-dynamic";
 
@@ -736,7 +737,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
+      <ScrollReveal />
     </>
   );
 }

@@ -56,28 +56,32 @@ export default function Header() {
           className={activeSection === 'home' ? 'active' : ''}
           onClick={() => setActiveSection('home')}
         >
-          Home
+          <i className="fas fa-home"></i>
+          <span>Home</span>
         </Link>
         <Link 
           href="/#about" 
           className={activeSection === 'about' ? 'active' : ''}
           onClick={() => setActiveSection('about')}
         >
-          About
+          <i className="fas fa-user"></i>
+          <span>About</span>
         </Link>
         <Link 
           href="/#projects" 
           className={activeSection === 'projects' ? 'active' : ''}
           onClick={() => setActiveSection('projects')}
         >
-          Projects
+          <i className="fas fa-code"></i>
+          <span>Projects</span>
         </Link>
         <Link 
           href="/#contact" 
           className={activeSection === 'contact' ? 'active' : ''}
           onClick={() => setActiveSection('contact')}
         >
-          Contact
+          <i className="fas fa-paper-plane"></i>
+          <span>Contact</span>
         </Link>
       </nav>
     </header>

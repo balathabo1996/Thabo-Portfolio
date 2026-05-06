@@ -19,7 +19,10 @@ export default function ScrollReveal() {
       });
     };
 
-    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const observer = new IntersectionObserver(handleIntersect, {
+      rootMargin: '100px 0px 100px 0px',
+      threshold: 0.1,
+    });
     const targets = document.querySelectorAll('.reveal, .reveal-stagger, .reveal-scale');
     targets.forEach((target) => observer.observe(target));
 
