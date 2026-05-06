@@ -13,15 +13,14 @@ export default function ScrollReveal() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
-        } else {
-          entry.target.classList.remove('active');
         }
+        // Removed the else block to prevent sections from disappearing
       });
     };
 
     const observer = new IntersectionObserver(handleIntersect, {
-      rootMargin: '100px 0px 100px 0px',
-      threshold: 0.1,
+      rootMargin: '200px 0px 200px 0px', // More lenient margin
+      threshold: 0, // Trigger as soon as it touches the margin
     });
     const targets = document.querySelectorAll('.reveal, .reveal-stagger, .reveal-scale');
     targets.forEach((target) => observer.observe(target));

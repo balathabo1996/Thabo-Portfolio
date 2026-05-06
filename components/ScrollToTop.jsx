@@ -17,10 +17,17 @@ export default function ScrollToTop() {
   }, []);
 
   const scrollToTop = () => {
+    // Scroll to absolute top of the document
     window.scrollTo({
       top: 0,
+      left: 0,
       behavior: 'smooth',
     });
+    
+    // Update hash to home to keep it consistent with the navigation
+    if (window.history.pushState) {
+        window.history.pushState(null, null, '/#home');
+    }
   };
 
   return (

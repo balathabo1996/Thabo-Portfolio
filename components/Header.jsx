@@ -47,14 +47,28 @@ export default function Header() {
 
   return (
     <header>
-      <Link href="/#" className="logo" onClick={() => setActiveSection('home')}>
+      <Link 
+        href="/#home" 
+        className="logo" 
+        onClick={(e) => {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setActiveSection('home');
+          window.history.pushState(null, null, '/#home');
+        }}
+      >
         <span>T</span>habo.
       </Link>
       <nav className="navigation">
         <Link 
-          href="/#" 
+          href="/#home" 
           className={activeSection === 'home' ? 'active' : ''}
-          onClick={() => setActiveSection('home')}
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setActiveSection('home');
+            window.history.pushState(null, null, '/#home');
+          }}
         >
           <i className="fas fa-home"></i>
           <span>Home</span>
