@@ -23,11 +23,27 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
+    // 1. Initial Load: Check localStorage then System Preference
     const saved = localStorage.getItem('theme');
-    const preferred =
-      saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    setTheme(preferred);
-    document.documentElement.setAttribute('data-theme', preferred);
+    const systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    const initialTheme = saved || systemTheme;
+    
+    setTheme(initialTheme);
+    document.documentElement.setAttribute('data-theme', initialTheme);
+
+    // 2. Listen for System Theme Changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+    const handleChange = (e) => {
+      // Only auto-switch if the user hasn't set a manual preference
+      if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'light' : 'dark';
+        setTheme(newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const toggleTheme = () => {

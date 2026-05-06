@@ -17,6 +17,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
+import ThemeToggle from '@/components/ThemeToggle';
 import ScrollReveal from '@/components/ScrollReveal';
 import DynamicMetadata from '@/components/DynamicMetadata';
 
@@ -65,6 +66,7 @@ export default function RootLayout({ children }) {
           <Header />
           {children}
           <Footer />
+          <ThemeToggle />
           <ScrollToTop />
           <ScrollReveal />
           <DynamicMetadata />

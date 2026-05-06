@@ -4,8 +4,6 @@ import Experience from "@/lib/models/Experience";
 import Project from "@/lib/models/Project";
 import Skill from "@/lib/models/Skill";
 import ContactForm from "@/components/ContactForm";
-import ScrollToTop from "@/components/ScrollToTop";
-import ThemeToggle from "@/components/ThemeToggle";
 
 export const dynamic = "force-dynamic";
 
@@ -372,49 +370,15 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <ul>
-                    <li>
-                      Manage daily fuel expense tracking for fleet operations,
-                      monitoring fuel usage, costs, and identifying
-                      opportunities to optimize fuel consumption.
-                    </li>
-                    <li>
-                      Coordinate with fuel suppliers to ensure competitive
-                      pricing and uninterrupted fuel availability for fleet
-                      vehicles.
-                    </li>
-                    <li>
-                      Conduct and maintain records of truck safety inspections,
-                      ensuring compliance with transportation safety standards
-                      and regulations.
-                    </li>
-                    <li>
-                      Schedule and track vehicle maintenance activities to
-                      reduce breakdown risks and improve operational
-                      reliability.
-                    </li>
-                    <li>
-                      Support driver safety initiatives by assisting with safety
-                      training coordination and incident follow-ups.
-                    </li>
-                    <li>
-                      Utilize fleet management software to monitor vehicle
-                      performance, maintenance requirements, and operational
-                      data.
-                    </li>
-                    <li>
-                      Prepare detailed fuel, safety, and performance reports for
-                      management review and decision-making.
-                    </li>
-                    <li>
-                      Handle invoicing and billing operations, including
-                      verification of trip details such as mileage, fuel
-                      charges, detention hours, and accessorial fees.
-                    </li>
-                    <li>
-                      Track payments, manage outstanding invoices, and
-                      coordinate with accounting teams to ensure accurate
-                      financial reconciliation.
-                    </li>
+                    <li>Manage daily fuel expense tracking for fleet operations, monitoring fuel usage, costs, and identifying opportunities to optimize fuel consumption.</li>
+                    <li>Coordinate with fuel suppliers to ensure competitive pricing and uninterrupted fuel availability for fleet vehicles.</li>
+                    <li>Conduct and maintain records of truck safety inspections, ensuring compliance with transportation safety standards and regulations.</li>
+                    <li>Schedule and track vehicle maintenance activities to reduce breakdown risks and improve operational reliability.</li>
+                    <li>Support driver safety initiatives by assisting with safety training coordination and incident follow-ups.</li>
+                    <li>Utilize fleet management software to monitor vehicle performance, maintenance requirements, and operational data.</li>
+                    <li>Prepare detailed fuel, safety, and performance reports for management review and decision-making.</li>
+                    <li>Handle invoicing and billing operations, including verification of trip details such as mileage, fuel charges, detention hours, and accessorial fees.</li>
+                    <li>Track payments, manage outstanding invoices, and coordinate with accounting teams to ensure accurate financial reconciliation.</li>
                   </ul>
                 </div>
               </div>
@@ -437,53 +401,16 @@ export default async function HomePage() {
                     </div>
                     <div className="meta-info">
                       <span className="date-badge">Jan 2026 – Apr 2026</span>
-                      <span className="location">
-                        Toronto, Ontario, Canada (Remote)
-                      </span>
+                      <span className="location">Toronto, Ontario, Canada (Remote)</span>
                     </div>
                   </div>
                   <ul>
-                    <li>
-                      <strong>Award:</strong> Awarded "Best Project in
-                      Information Technology Solutions" at the Humber College
-                      Capstone EXPO for engineering a distributed Virtual Power
-                      Plant (VPP) architecture in collaboration with industry
-                      sponsor OracleLens.
-                    </li>
-                    <li>
-                      <strong>Systems Architecture:</strong> Engineered a
-                      secure, containerized control plane that integrated
-                      real-time grid communication, predictive energy
-                      forecasting, and physical hardware abstraction into a
-                      single cohesive platform.
-                    </li>
-                    <li>
-                      <strong>Backend Dispatch Logic:</strong> Developed the
-                      central algorithmic "Brain" to ingest percentage-based
-                      load shed signals and calculate precise, physically
-                      constrained kW discharge targets for simulated energy
-                      assets.
-                    </li>
-                    <li>
-                      <strong>SCADA UI Development:</strong> Built a real-time
-                      Human-Machine Interface (HMI) to visually orchestrate
-                      dispatch events, mapping backend control logic to live
-                      dashboard animations of battery State of Charge (SoC) and
-                      power output.
-                    </li>
-                    <li>
-                      <strong>Measurement &amp; Verification (M&amp;V):</strong>{" "}
-                      Implemented a high-fidelity telemetry logging pipeline to
-                      generate immutable digital receipts (baseline kW,
-                      delivered kWh, timestamps) required for grid performance
-                      verification.
-                    </li>
-                    <li>
-                      <strong>Network Security:</strong> Established secure
-                      cross-machine communication bridges utilizing
-                      cryptographic key management to ensure authenticated
-                      messaging across the distributed network.
-                    </li>
+                    <li><strong>Award:</strong> Awarded "Best Project in Information Technology Solutions" at the Humber College Capstone EXPO for engineering a distributed Virtual Power Plant (VPP) architecture in collaboration with industry sponsor OracleLens.</li>
+                    <li><strong>Systems Architecture:</strong> Engineered a secure, containerized control plane that integrated real-time grid communication, predictive energy forecasting, and physical hardware abstraction into a single cohesive platform.</li>
+                    <li><strong>Backend Dispatch Logic:</strong> Developed the central algorithmic "Brain" to ingest percentage-based load shed signals and calculate precise, physically constrained kW discharge targets for simulated energy assets.</li>
+                    <li><strong>SCADA UI Development:</strong> Built a real-time Human-Machine Interface (HMI) to visually orchestrate dispatch events, mapping backend control logic to live dashboard animations of battery State of Charge (SoC) and power output.</li>
+                    <li><strong>Measurement &amp; Verification (M&amp;V):</strong> Implemented a high-fidelity telemetry logging pipeline to generate immutable digital receipts (baseline kW, delivered kWh, timestamps) required for grid performance verification.</li>
+                    <li><strong>Network Security:</strong> Established secure cross-machine communication bridges utilizing cryptographic key management to ensure authenticated messaging across the distributed network.</li>
                   </ul>
                 </div>
               </div>
@@ -510,32 +437,12 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <ul>
-                    <li>
-                      Designed and implemented Windows-based infrastructure
-                      solutions aligned with organizational needs, ensuring
-                      scalability, security, and optimal performance.
-                    </li>
-                    <li>
-                      Deployed and configured Windows servers and workstations,
-                      including Active Directory, user accounts, permissions,
-                      and network configurations.
-                    </li>
-                    <li>
-                      Utilized virtualization technologies such as Hyper-V and
-                      VMware to improve infrastructure efficiency.
-                    </li>
-                    <li>
-                      Implemented backup strategies and disaster recovery plans
-                      to protect critical data and minimize downtime.
-                    </li>
-                    <li>
-                      Maintained detailed technical documentation for system
-                      configurations and troubleshooting procedures.
-                    </li>
-                    <li>
-                      Applied industry-standard security practices to protect
-                      systems from vulnerabilities and threats.
-                    </li>
+                    <li>Designed and implemented Windows-based infrastructure solutions aligned with organizational needs, ensuring scalability, security, and optimal performance.</li>
+                    <li>Deployed and configured Windows servers and workstations, including Active Directory, user accounts, permissions, and network configurations.</li>
+                    <li>Utilized virtualization technologies such as Hyper-V and VMware to improve infrastructure efficiency.</li>
+                    <li>Implemented backup strategies and disaster recovery plans to protect critical data and minimize downtime.</li>
+                    <li>Maintained detailed technical documentation for system configurations and troubleshooting procedures.</li>
+                    <li>Applied industry-standard security practices to protect systems from vulnerabilities and threats.</li>
                   </ul>
                 </div>
               </div>
@@ -562,25 +469,10 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <ul>
-                    <li>
-                      Publicized effective collaboration with front-end
-                      developers, integrating user-facing elements with
-                      server-side logic for an enhanced user experience.
-                    </li>
-                    <li>
-                      Improved application performance by fine-tuning database
-                      queries and server processes.
-                    </li>
-                    <li>
-                      Participated in code reviews, delivering constructive
-                      feedback to maintain high code quality and adherence to
-                      best practices.
-                    </li>
-                    <li>
-                      Collaborated with cross-functional teams, including UI/UX
-                      designers and product managers, ensuring timely and
-                      successful project delivery.
-                    </li>
+                    <li>Publicized effective collaboration with front-end developers, integrating user-facing elements with server-side logic for an enhanced user experience.</li>
+                    <li>Improved application performance by fine-tuning database queries and server processes.</li>
+                    <li>Participated in code reviews, delivering constructive feedback to maintain high code quality and adherence to best practices.</li>
+                    <li>Collaborated with cross-functional teams, including UI/UX designers and product managers, ensuring timely and successful project delivery.</li>
                   </ul>
                 </div>
               </div>
@@ -607,23 +499,10 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <ul>
-                    <li>
-                      Provided exceptional customer service, resolving inquiries
-                      and issues with a positive and professional approach.
-                    </li>
-                    <li>
-                      Gained valuable insights into banking operations,
-                      processing transactions, and updating customer information
-                      while adhering to policies.
-                    </li>
-                    <li>
-                      Synthesized risk management efforts, assisting in
-                      identifying potential operational risks.
-                    </li>
-                    <li>
-                      Ensured compliance with banking regulations and legal
-                      requirements, fostering a well-regulated environment.
-                    </li>
+                    <li>Provided exceptional customer service, resolving inquiries and issues with a positive and professional approach.</li>
+                    <li>Gained valuable insights into banking operations, processing transactions, and updating customer information while adhering to policies.</li>
+                    <li>Synthesized risk management efforts, assisting in identifying potential operational risks.</li>
+                    <li>Ensured compliance with banking regulations and legal requirements, fostering a well-regulated environment.</li>
                   </ul>
                 </div>
               </div>
@@ -639,19 +518,8 @@ export default async function HomePage() {
                 <div className="skills-grid reveal-stagger">
                   {achievements.map((item, idx) => (
                     <div key={idx} className="skill-category achievement-card">
-                      <h3
-                        style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}
-                      >
-                        {item.role}
-                      </h3>
-                      <p
-                        style={{
-                          color: "var(--text-secondary)",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {item.company}
-                      </p>
+                      <h3 style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>{item.role}</h3>
+                      <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>{item.company}</p>
                     </div>
                   ))}
                 </div>
@@ -668,19 +536,8 @@ export default async function HomePage() {
                 <div className="skills-grid reveal-stagger">
                   {voluntary.map((item, idx) => (
                     <div key={idx} className="skill-category voluntary-card">
-                      <h3
-                        style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}
-                      >
-                        {item.role}
-                      </h3>
-                      <p
-                        style={{
-                          color: "var(--text-secondary)",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {item.company}
-                      </p>
+                      <h3 style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>{item.role}</h3>
+                      <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem" }}>{item.company}</p>
                     </div>
                   ))}
                 </div>
@@ -700,75 +557,7 @@ export default async function HomePage() {
           </h1>
 
           <div className="portfolio-grid reveal-stagger">
-            {(dbProjects.length > 0 ? dbProjects : [
-              {
-                title: 'LoadFlow',
-                subTitle: 'Intelligent Logistics & Dispatch Orchestration',
-                description: 'Engineered a production-grade Transportation Management System (TMS) SaaS designed to replace manual spreadsheet dispatching with real-time, role-based fleet operations.',
-                imageUrl: '/images/loadflow.jpg',
-                period: 'Jan 2026 - Apr 2026',
-                features: [
-                  'Architecture & Security: Zero-Trust model with OWASP-compliant session management.',
-                  'Role-Based Dashboards: Custom flows for Admins, Dispatchers, and Drivers.',
-                  'Workflow Automation: Integrated Cloudinary POD and Nodemailer onboarding.',
-                  'Modern Tech Stack: Built using Next.js 15, React 19, TypeScript, Tailwind CSS 4, and MongoDB Atlas.'
-                ],
-                techStack: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS 4', 'MongoDB', 'Google Maps API'],
-                link: 'https://loadflow.vercel.app',
-                category: 'web'
-              },
-              {
-                title: 'OracleLens VPP',
-                subTitle: 'Virtual Power Plant (VPP) Architecture',
-                award: '🏆 Winner: "Best Project in Information Technology" - Humber College Capstone EXPO 2026',
-                description: 'Engineered a production-ready, secure, and distributed energy architecture in collaboration with industry partner OracleLens to manage and optimize grid demand.',
-                imageUrl: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
-                period: 'Jan 2026 - Apr 2026',
-                features: [
-                  'Distributed Architecture: Predictive energy forecasting and hardware abstraction.',
-                  'Backend Control Logic: Engineered the central algorithmic "Brain" for discharge targets.',
-                  'SCADA UI Integration: Live telemetry tracking for battery SoC and power output.',
-                  'Measurement & Verification (M&V): Automated digital receipts for auditing.',
-                  'Cybersecurity: Secure cross-machine communication bridges.'
-                ],
-                techStack: ['Spring Boot', 'Java', 'Python', 'PostgreSQL', 'React.js'],
-                link: 'https://oraclelens.com/home',
-                category: 'infra'
-              },
-              {
-                title: 'FoodEarth',
-                subTitle: 'Recipe Management & Meal Planning Platform',
-                description: 'Designed and developed a full-stack MVC web application to help users discover international recipes and organize weekly meal schedules.',
-                imageUrl: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800',
-                period: 'Nov 2025 - Dec 2025',
-                features: [
-                  'High-Performance Data Model: Mongoose schema with embedded documents for single-query rendering.',
-                  'Secure Authentication: Robust auth system using JWT and bcrypt with HttpOnly cookies.',
-                  'Modular Architecture: Utilized MVC patterns and Handlebars partials.',
-                  'Deployment: Configured and deployed to serverless environment using Vercel.'
-                ],
-                techStack: ['Node.js', 'Express', 'MongoDB (Mongoose)', 'Handlebars', 'JWT', 'Vercel'],
-                link: 'https://food-earth.vercel.app/',
-                category: 'ops'
-              },
-              {
-                title: 'ICT Study Recommender',
-                subTitle: 'A Personalized Study Material Recommender System',
-                description: 'Designed to bridge the knowledge gap for Advanced Level ICT students by automating the delivery of study materials tailored to individual proficiency levels.',
-                imageUrl: 'https://images.pexels.com/photos/5905709/pexels-photo-5905709.jpeg?auto=compress&cs=tinysrgb&w=800',
-                period: 'Jul 2020 - Dec 2020',
-                features: [
-                  'Adaptive Assessment: 50-question MCQ exam to determine baseline knowledge.',
-                  'Machine Learning Integration: K-means clustering for targeted resource delivery.',
-                  'Automated Recommendations: Recommendation engine serving diverse media types.',
-                  'Mastery-Based Progression: "Level Up" system requiring 100% on milestone quizzes.',
-                  'Research Impact: Achieved 100% positive response rate for GCE A/L preparation.'
-                ],
-                techStack: ['Laravel', 'PHP', 'HTML5', 'JavaScript', 'Bootstrap'],
-                link: '#projects',
-                category: 'svc'
-              }
-            ]).map((project, index) => (
+            {dbProjects.map((project, index) => (
               <a
                 key={index}
                 href={project.link || "#"}
@@ -948,8 +737,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <ThemeToggle />
-      <ScrollToTop />
     </>
   );
 }
