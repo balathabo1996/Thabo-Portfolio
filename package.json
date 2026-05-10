@@ -12,6 +12,7 @@
     "@fortawesome/fontawesome-free": "^7.2.0",
     "bootstrap": "^5.3.8",
     "dotenv": "^17.4.2",
+    "framer-motion": "^12.38.0",
     "mongoose": "^9.6.2",
     "next": "^16.2.6",
     "nodemailer": "^8.0.7",

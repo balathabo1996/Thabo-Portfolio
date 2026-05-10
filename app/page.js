@@ -5,8 +5,10 @@ import Project from "@/lib/models/Project";
 import Skill from "@/lib/models/Skill";
 import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
+import Image from "next/image";
 
-export const dynamic = "force-dynamic";
+// Use Incremental Static Regeneration (ISR) to rebuild page every 1 hour (3600s)
+export const revalidate = 3600;
 
 export const metadata = {
   metadataBase: new URL("https://thabo-portfolio.vercel.app"),
@@ -149,7 +151,7 @@ export default async function HomePage() {
           </p>
 
           <div className="hero-actions">
-            <a href="/resume" target="_blank" className="btn btn-cta">
+            <a href="/resume.pdf" target="_blank" className="btn btn-cta">
               VIEW RESUME
             </a>
           </div>
@@ -157,10 +159,15 @@ export default async function HomePage() {
 
         <div className="hero-image">
           <div className="image-wrapper reveal">
-            <img
+            <Image
               id="profile-image"
               src={profileImageUrl}
               alt="Thabotharan - Infrastructure Engineer"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{ width: "auto", height: "auto" }}
+              priority
             />
           </div>
         </div>
@@ -227,7 +234,7 @@ export default async function HomePage() {
                       'soft': { title: 'Soft Skills & Leadership', class: 'soft' }
                     };
                     const catInfo = categoryMap[category] || { title: category, class: category };
-                    
+
                     return (
                       <div key={category} className={`skill-category ${catInfo.class} reveal`}>
                         <h3>{catInfo.title}</h3>
@@ -235,7 +242,7 @@ export default async function HomePage() {
                           {skills.map((skill, idx) => (
                             <span key={idx} className="badge rounded-pill d-inline-flex align-items-center">
                               {skill.imageUrl ? (
-                                <img src={skill.imageUrl} alt={skill.name} className="me-2" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
+                                <Image src={skill.imageUrl} alt={skill.name} className="me-2" width={18} height={18} />
                               ) : (
                                 skill.icon && <i className={`${skill.icon} me-2`} style={{ fontSize: '0.85rem' }}></i>
                               )}
@@ -567,9 +574,11 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
               >
                 <div className="portfolio-img-wrapper">
-                  <img
+                  <Image
                     src={project.imageUrl || "/images/placeholder.jpg"}
                     alt={project.title}
+                    width={800}
+                    height={600}
                   />
                   {project.period && <div className="portfolio-date">{project.period}</div>}
                 </div>
@@ -578,7 +587,7 @@ export default async function HomePage() {
                     <h3>{project.title}</h3>
                   </div>
                   {project.subTitle && <p className="project-title-ext">{project.subTitle}</p>}
-                  
+
                   {project.award && (
                     <p className="project-award">
                       {project.award.split(':').map((part, i) => (
@@ -588,7 +597,7 @@ export default async function HomePage() {
                   )}
 
                   <p className="project-desc">{project.description}</p>
-                  
+
                   <div className="features-list">
                     <ul>
                       {project.features && project.features.map((feature, fIdx) => {

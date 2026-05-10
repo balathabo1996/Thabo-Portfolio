@@ -13,12 +13,25 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/globals.css';
+import { Outfit, Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
 import ThemeToggle from '@/components/ThemeToggle';
 import DynamicMetadata from '@/components/DynamicMetadata';
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata = {
   title: 'Thabo.Portfolio',
@@ -59,8 +72,25 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Balachandran Thabotharan",
+              jobTitle: "Infrastructure Engineer & IT Solutions Professional",
+              url: "https://thabo-portfolio.vercel.app",
+              image: "https://thabo-portfolio.vercel.app/images/portf.png",
+              sameAs: [
+                "https://www.linkedin.com/in/balachandran-thabotharan-261895131",
+                "https://github.com/balathabo1996"
+              ]
+            })
+          }}
+        />
       </head>
-      <body suppressHydrationWarning>
+      <body className={`${outfit.variable} ${inter.variable}`} suppressHydrationWarning>
         <ThemeProvider>
           <Header />
           {children}

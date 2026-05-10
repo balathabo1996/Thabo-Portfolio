@@ -23,9 +23,39 @@ import nodemailer from 'nodemailer';
 export const dynamic = 'force-dynamic';
 
 
+// In-memory rate limiting map (per server instance)
+const rateLimitMap = new Map();
+
 export async function POST(req) {
   try {
-    const { name, email, subject, message } = await req.json();
+    const ip = req.ip || req.headers.get('x-forwarded-for') || 'unknown';
+    const windowMs = 10 * 60 * 1000; // 10 minutes window
+    const maxRequests = 5; // limit to 5 emails per window
+
+    if (!rateLimitMap.has(ip)) {
+      rateLimitMap.set(ip, { count: 1, resetTime: Date.now() + windowMs });
+    } else {
+      const data = rateLimitMap.get(ip);
+      if (Date.now() > data.resetTime) {
+        rateLimitMap.set(ip, { count: 1, resetTime: Date.now() + windowMs });
+      } else {
+        data.count++;
+        if (data.count > maxRequests) {
+          return new Response(JSON.stringify({ error: 'Too many requests, please try again later.' }), {
+            status: 429,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      }
+    }
+
+    const { name, email, subject, message, honeypot } = await req.json();
+
+    // Backend honeypot check (if bots bypass frontend)
+    if (honeypot) {
+      // Silently return success to trick the bot
+      return new Response(JSON.stringify({ message: 'Email sent successfully' }), { status: 200 });
+    }
 
     // Create a transporter using Gmail (default recommendation)
     const transporter = nodemailer.createTransport({

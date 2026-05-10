@@ -1,34 +1,133 @@
-'use client';
-import { useEffect } from 'react';
+"use client";
+import { useEffect } from "react";
+import { animate, inView, stagger } from "framer-motion";
 
 export default function ScrollReveal() {
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px 0px -50px 0px',
-      threshold: 0.05,
-    };
+    // 1. Simple Reveal
+    inView(
+      ".reveal",
+      (element) => {
+        animate(
+          element,
+          { opacity: [0, 1], y: [40, 0] },
+          { duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] },
+        );
+      },
+      { margin: "-50px" },
+    );
 
-    const handleIntersect = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
+    // 2. Generic Stagger
+    inView(
+      ".reveal-stagger",
+      (element) => {
+        const children = Array.from(element.children);
+        if (children.length) {
+          animate(
+            children,
+            { opacity: [0, 1], y: [30, 0] },
+            {
+              duration: 0.6,
+              delay: stagger(0.15),
+              ease: [0.21, 0.47, 0.32, 0.98],
+            },
+          );
         }
-        // Removed the else block to prevent sections from disappearing
-      });
-    };
+      },
+      { margin: "-50px" },
+    );
 
-    const observer = new IntersectionObserver(handleIntersect, {
-      rootMargin: '200px 0px 200px 0px', // More lenient margin
-      threshold: 0, // Trigger as soon as it touches the margin
-    });
-    const targets = document.querySelectorAll('.reveal, .reveal-stagger, .reveal-scale');
-    targets.forEach((target) => observer.observe(target));
+    // 3. Timeline Stagger
+    inView(
+      ".timeline",
+      (element) => {
+        const items = element.querySelectorAll(".timeline-item");
+        if (items.length) {
+          animate(
+            items,
+            { opacity: [0, 1], y: [40, 0] },
+            {
+              duration: 0.6,
+              delay: stagger(0.15),
+              ease: [0.21, 0.47, 0.32, 0.98],
+            },
+          );
+        }
+      },
+      { margin: "-50px" },
+    );
 
-    return () => {
-      targets.forEach((target) => observer.unobserve(target));
-    };
+    // 4. Portfolio Stagger
+    inView(
+      ".portfolio-grid",
+      (element) => {
+        const items = element.querySelectorAll(".portfolio-card");
+        if (items.length) {
+          animate(
+            items,
+            { opacity: [0, 1], y: [50, 0] },
+            {
+              duration: 0.7,
+              delay: stagger(0.15),
+              ease: [0.21, 0.47, 0.32, 0.98],
+            },
+          );
+        }
+      },
+      { margin: "-50px" },
+    );
+
+    // 5. Skills Stagger
+    inView(
+      ".skills-category-container",
+      (element) => {
+        const items = element.querySelectorAll(".skill-category-group");
+        if (items.length) {
+          animate(
+            items,
+            { opacity: [0, 1], scale: [0.95, 1] },
+            { duration: 0.5, delay: stagger(0.1), ease: "easeOut" },
+          );
+        }
+      },
+      { margin: "-50px" },
+    );
+
+    // 6. Generic Simple Cards (Certifications, Volunteer)
+    inView(
+      ".grid-2-col",
+      (element) => {
+        const items = element.querySelectorAll(".simple-card");
+        if (items.length) {
+          animate(
+            items,
+            { opacity: [0, 1], y: [30, 0] },
+            {
+              duration: 0.6,
+              delay: stagger(0.1),
+              ease: [0.21, 0.47, 0.32, 0.98],
+            },
+          );
+        }
+      },
+      { margin: "-50px" },
+    );
   }, []);
 
-  return null;
+  return (
+    <style
+      dangerouslySetInnerHTML={{
+        __html: `
+      .reveal, .timeline-item, .portfolio-card, .skill-category-group, .simple-card { opacity: 0; }
+      .reveal-stagger > * { opacity: 0; }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal, .timeline-item, .portfolio-card, .skill-category-group, .simple-card, .reveal-stagger > * {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      }
+    `,
+      }}
+    />
+  );
 }
