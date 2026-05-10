@@ -24,11 +24,11 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 - **Scroll Reveal Animations** — Elements animate in/out using `IntersectionObserver`
 - **Dynamic Tab Title & Favicon** — Browser tab updates as you scroll between sections
 - **Dynamic Profile Photo** — Loaded server-side from MongoDB; falls back to a local image
-- **Resume Viewer** — "View Resume" opens the latest PDF stored in MongoDB directly in the browser
-- **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam; delivers email via Gmail SMTP
+- **Resume Viewer** — "View Resume" opens a static, optimized PDF hosted securely in the public directory
+- **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam and backend IP rate limiting; delivers email via Gmail SMTP
 
 ### Technical
-- **REST API** — 12 endpoints documented with OpenAPI 3.1 and testable via Swagger UI at `/api-docs`
+- **REST API** — 10 endpoints documented with OpenAPI 3.1 and testable via Swagger UI at `/api-docs`
 - **Security Headers** — HSTS, CSP, X-Frame-Options, X-Content-Type-Options, and more via `next.config.mjs`
 - **API Key Protection** — Profile update endpoint guarded by `x-api-key` header check
 - **Mass-Assignment Protection** — Only whitelisted fields accepted on profile updates
@@ -70,8 +70,7 @@ Thabo-Portfolio/
 │   │   ├── swagger/route.js      # GET /api/swagger  (OpenAPI JSON)
 │   │   └── seed/route.js         # POST /api/seed    (Reset + Populate)
 │   │
-│   ├── api-docs/route.js         # GET /api-docs  (Swagger UI page)
-│   └── resume/route.js           # GET /resume    (PDF stream)
+│   └── api-docs/route.js         # GET /api-docs  (Swagger UI page)
 │
 ├── components/
 │   ├── Header.jsx                # Sticky nav with scroll-tracked active link
@@ -88,8 +87,7 @@ Thabo-Portfolio/
 │   └── models/
 │       ├── Profile.js            # Mongoose schema — owner profile
 │       ├── Experience.js         # Mongoose schema — work/edu history
-│       ├── Project.js            # Mongoose schema — portfolio projects
-│       └── Resume.js             # Mongoose schema — resume PDF binary
+│       └── Project.js            # Mongoose schema — portfolio projects
 │
 ├── styles/
 │   └── globals.css               # Full design system (variables, layout, animations)
@@ -100,7 +98,7 @@ Thabo-Portfolio/
 │   └── swagger-ui/               # Swagger UI assets (local — avoids CDN/CSP issues)
 │
 ├── postman/
-│   ├── Thabo-Portfolio.postman_collection.json   # All 11 API requests + test scripts
+│   ├── Thabo-Portfolio.postman_collection.json   # API requests + test scripts
 │   └── Thabo-Portfolio.postman_environment.json  # base_url + admin_api_key variables
 │
 ├── next.config.mjs               # Security headers, image remote patterns
@@ -122,8 +120,6 @@ Full interactive developer documentation is available at **`/api-docs`**. This p
 | `POST` | `/api/experience` | `x-api-key` | Add new work, education, achievement, or voluntary entry |
 | `GET` | `/api/projects` | — | Fetch all portfolio projects |
 | `POST` | `/api/projects` | `x-api-key` | Add new portfolio project |
-| `GET` | `/resume` | — | Stream latest resume PDF inline |
-| `POST` | `/api/resume` | `x-api-key` | Upload new resume PDF |
 | `POST` | `/api/contact` | — | Send contact form email via Gmail |
 | `POST` | `/api/seed` | `x-api-key` | Reset and populate DB with professional demo data |
 | `GET` | `/api/swagger` | — | Raw OpenAPI 3.1 JSON spec |
@@ -182,7 +178,6 @@ Create a `.env` file in the project root:
 # MongoDB Atlas
 MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net
 MONGO_DB=Thabo-Portfolio
-MONGO_COLLECTION=Resume
 
 # Admin API key  — protects PUT /api/profile
 ADMIN_API_KEY=your_strong_secret_key
@@ -223,20 +218,9 @@ npm run dev
 
 Send a `PUT /api/profile` request with a new `profileImageUrl`. The home page fetches the profile server-side, so the change appears immediately on the next page load — no redeployment needed.
 
-### Uploading a New Resume
+### Updating Your Resume
 
-Insert a new document into the `Resume` MongoDB collection with:
-
-```js
-{
-  name: "resume.pdf",
-  data: <Buffer>,          // raw PDF binary
-  contentType: "application/pdf",
-  uploadDate: new Date()
-}
-```
-
-`GET /resume` always streams the document with the **latest** `uploadDate`.
+Since the resume is served statically for optimal performance, simply replace the `resume.pdf` file inside your `/public` directory and commit the change to GitHub to trigger a deployment.
 
 ---
 
@@ -246,7 +230,7 @@ Two files are included in the `postman/` folder:
 
 | File | Purpose |
 |---|---|
-| `Thabo-Portfolio.postman_collection.json` | All 11 requests with automated test scripts |
+| `Thabo-Portfolio.postman_collection.json` | API requests with automated test scripts |
 | `Thabo-Portfolio.postman_environment.json` | `base_url` and `admin_api_key` variables |
 
 **Steps to use:**

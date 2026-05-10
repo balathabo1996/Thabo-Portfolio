@@ -2,10 +2,9 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "Thabo Portfolio API",
-    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 12 endpoints are documented:\n  GET  /api/profile      – Fetch owner profile from MongoDB\n  PUT  /api/profile      – Update profile fields (x-api-key required)\n  GET  /api/experience   – Fetch work, education, achievements, and voluntary work\n  POST /api/experience   – Add new experience (requires x-api-key)\n  GET  /api/projects     – Fetch portfolio projects\n  POST /api/projects     – Add new project (requires x-api-key)\n  GET  /resume           – Stream resume PDF from MongoDB\n  POST /api/resume       – Upload new resume PDF (requires x-api-key)\n  POST /api/contact      – Send contact form email\n  POST /api/seed         – Reset and seed database (requires x-api-key)\n  GET  /api/swagger      – Raw OpenAPI JSON spec\n  GET  /api-docs         – Swagger UI page",
+    "description": "Complete Postman collection for the Thabo.Portfolio REST API.\n\nAll 10 endpoints are documented:\n  GET  /api/profile      – Fetch owner profile from MongoDB\n  PUT  /api/profile      – Update profile fields (x-api-key required)\n  GET  /api/experience   – Fetch work, education, achievements, and voluntary work\n  POST /api/experience   – Add new experience (requires x-api-key)\n  GET  /api/projects     – Fetch portfolio projects\n  POST /api/projects     – Add new project (requires x-api-key)\n  POST /api/contact      – Send contact form email\n  POST /api/seed         – Reset and seed database (requires x-api-key)\n  GET  /api/swagger      – Raw OpenAPI JSON spec\n  GET  /api-docs         – Swagger UI page",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-
   "variable": [
     {
       "key": "base_url",
@@ -20,14 +19,11 @@
       "description": "Value of ADMIN_API_KEY from .env — required for PUT /api/profile."
     }
   ],
-
   "item": [
-
     {
       "name": "Profile",
       "description": "Manages the single owner-profile document stored in MongoDB.\n\nGET returns (or auto-creates) the document.\nPUT updates whitelisted fields only — requires x-api-key header.",
       "item": [
-
         {
           "name": "Get Profile",
           "event": [
@@ -52,14 +48,18 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             },
             "description": "Returns the profile document from MongoDB.\n\nIf no document exists yet, an empty one is created automatically with default values (name, title, profileImageUrl).\n\nThis endpoint is called server-side by the home page to pre-render the profile photo.\n\nExpected response: 200 with Profile JSON object."
           },
           "response": []
         },
-
         {
           "name": "Update Profile",
           "event": [
@@ -98,19 +98,25 @@
               "mode": "raw",
               "raw": "{\n  \"profileImageUrl\": \"https://example.com/photo.jpg\",\n  \"name\": \"Balachandran Thabotharan\",\n  \"role\": \"Infrastructure Engineer\",\n  \"bio\": \"Experienced IT professional specializing in infrastructure and cybersecurity.\",\n  \"location\": \"Scarborough, Ontario, Canada\",\n  \"email\": \"balathabo96@gmail.com\",\n  \"phone\": \"+1 (437) 383-1996\"\n}",
               "options": {
-                "raw": { "language": "json" }
+                "raw": {
+                  "language": "json"
+                }
               }
             },
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             },
             "description": "Updates specific profile fields in MongoDB.\n\nSecurity: requires x-api-key header matching ADMIN_API_KEY in .env.\n\nMass-assignment protection: only these fields are accepted —\n  profileImageUrl, name, role, bio, location, email, phone\n\nAll other keys in the body are silently ignored.\n\nUses upsert so the document is created if it doesn't exist.\n\nExpected responses:\n  200 – Updated profile object\n  400 – No valid fields provided\n  401 – Missing or incorrect x-api-key"
           },
           "response": []
         },
-
         {
           "name": "Update Profile — Unauthorized (no key)",
           "event": [
@@ -131,23 +137,34 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Test\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             },
             "description": "Verifies that PUT /api/profile returns 401 when no x-api-key header is supplied.\n\nExpected response: 401 { \"error\": \"Unauthorized\" }"
           },
           "response": []
         },
-
         {
           "name": "Update Profile — Bad Request (invalid fields)",
           "event": [
@@ -168,18 +185,33 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"unknownField\": \"value\",\n  \"anotherBadField\": 123\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             },
             "description": "Verifies that PUT /api/profile returns 400 when the body contains only non-whitelisted fields.\n\nExpected response: 400 { \"error\": \"No valid fields provided\" }"
           },
@@ -187,70 +219,10 @@
         }
       ]
     },
-
-    {
-      "name": "Resume",
-      "description": "Serves the resume PDF stored as a binary buffer in MongoDB.\n\nThe most recently uploaded document (sorted by uploadDate descending) is streamed inline so the browser opens its PDF viewer.",
-      "item": [
-
-        {
-          "name": "Get Resume PDF",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Status 200 or 404', () => {",
-                  "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
-                  "});",
-                  "if (pm.response.code === 200) {",
-                  "    pm.test('Content-Type is PDF', () => {",
-                  "        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf');",
-                  "    });",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/resume",
-              "host": ["{{base_url}}"],
-              "path": ["resume"]
-            },
-            "description": "Streams the most recently uploaded resume PDF from MongoDB.\n\nResponse headers:\n  Content-Type: application/pdf\n  Content-Disposition: inline; filename=\"resume.pdf\"\n\nExpected responses:\n  200 – PDF binary stream\n  404 – No resume document in database\n  500 – Database error"
-          },
-          "response": []
-        },
-        {
-          "name": "Upload Resume PDF",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                { "key": "file", "type": "file", "src": [], "description": "The PDF file to upload" }
-              ]
-            },
-            "url": { "raw": "{{base_url}}/api/resume", "host": ["{{base_url}}"], "path": ["api", "resume"] },
-            "description": "Uploads a new resume PDF to MongoDB.\n\nSecurity: requires x-api-key header.\nBody: multipart/form-data with a 'file' field."
-          },
-          "response": []
-        }
-      ]
-    },
-
     {
       "name": "Contact",
       "description": "Accepts contact form submissions and delivers them via Gmail SMTP using Nodemailer.\n\nRequired env vars: EMAIL_USER, EMAIL_PASS (Gmail App Password).",
       "item": [
-
         {
           "name": "Submit Contact Form",
           "event": [
@@ -271,17 +243,29 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"subject\": \"Collaboration opportunity\",\n  \"message\": \"I'd like to discuss a potential collaboration with you.\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/contact",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contact"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contact"
+              ]
             },
             "description": "Sends a contact message to the portfolio owner via Gmail SMTP (Nodemailer).\n\nThe email is sent from EMAIL_USER to balathabo96@gmail.com with both plain-text and formatted HTML bodies.\n\nRequired fields: name, email, subject, message (all strings).\n\nExpected responses:\n  200 – { message: \"Email sent successfully\" }\n  500 – { error: \"Failed to send email\" }  (SMTP / auth error)"
           },
@@ -289,12 +273,10 @@
         }
       ]
     },
-
     {
       "name": "Docs",
       "description": "API documentation and spec endpoints.\n\nUse /api/swagger to import the spec into any OpenAPI-compatible tool.\nUse /api-docs to open the interactive Swagger UI in the browser.",
       "item": [
-
         {
           "name": "Get OpenAPI JSON Spec",
           "event": [
@@ -319,14 +301,18 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/swagger",
-              "host": ["{{base_url}}"],
-              "path": ["api", "swagger"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "swagger"
+              ]
             },
             "description": "Returns the complete OpenAPI 3.0 specification as JSON.\n\nUse this URL to:\n  - Import the API into Postman (File → Import → Link)\n  - Import into Insomnia or any OpenAPI-compatible tool\n  - Reference in CI/CD for contract testing\n\nExpected response: 200 with the full OpenAPI object."
           },
           "response": []
         },
-
         {
           "name": "Open Swagger UI",
           "event": [
@@ -348,8 +334,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api-docs",
-              "host": ["{{base_url}}"],
-              "path": ["api-docs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-docs"
+              ]
             },
             "description": "Returns the self-contained Swagger UI HTML page.\n\nThe OpenAPI spec is embedded directly in the page — no additional request is needed. Open this URL in a browser to explore and test all API endpoints interactively.\n\nThe page runs outside the Next.js layout (no header/footer) so Swagger UI owns the full viewport.\n\nExpected response: 200 text/html"
           },
@@ -366,7 +356,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{base_url}}/api/experience", "host": ["{{base_url}}"], "path": ["api", "experience"] }
+            "url": {
+              "raw": "{{base_url}}/api/experience",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ]
+            }
           }
         },
         {
@@ -374,14 +373,29 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"role\": \"Diploma in ICT\",\n  \"company\": \"DMI\",\n  \"type\": \"achievement\",\n  \"order\": 1\n}"
             },
-            "url": { "raw": "{{base_url}}/api/experience", "host": ["{{base_url}}"], "path": ["api", "experience"] }
+            "url": {
+              "raw": "{{base_url}}/api/experience",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ]
+            }
           }
         }
       ]
@@ -395,7 +409,16 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api", "projects"] }
+            "url": {
+              "raw": "{{base_url}}/api/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
+            }
           }
         },
         {
@@ -403,14 +426,29 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"title\": \"New Project\",\n  \"description\": \"Project description\"\n}"
             },
-            "url": { "raw": "{{base_url}}/api/projects", "host": ["{{base_url}}"], "path": ["api", "projects"] }
+            "url": {
+              "raw": "{{base_url}}/api/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
+            }
           }
         }
       ]
@@ -424,9 +462,21 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
-            "url": { "raw": "{{base_url}}/api/seed", "host": ["{{base_url}}"], "path": ["api", "seed"] }
+            "url": {
+              "raw": "{{base_url}}/api/seed",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "seed"
+              ]
+            }
           }
         }
       ]
