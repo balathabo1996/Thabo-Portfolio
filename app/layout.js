@@ -56,6 +56,8 @@ export const generateViewport = () => ({
   maximumScale: 1,
 });
 
+import SmoothScrolling from '@/components/SmoothScrolling';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -91,14 +93,16 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${outfit.variable} ${inter.variable}`} suppressHydrationWarning>
-        <ThemeProvider>
-          <Header />
-          {children}
-          <Footer />
-          <ThemeToggle />
-          <ScrollToTop />
-          <DynamicMetadata />
-        </ThemeProvider>
+        <SmoothScrolling>
+          <ThemeProvider>
+            <Header />
+            {children}
+            <Footer />
+            <ThemeToggle />
+            <ScrollToTop />
+            <DynamicMetadata />
+          </ThemeProvider>
+        </SmoothScrolling>
       </body>
     </html>
   );

@@ -180,7 +180,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 
 #about,
@@ -3321,3 +3320,65 @@ textarea {
     height: 45px;
   }
 }
+
+/* --- PREMIUM UI ENHANCEMENTS --- */
+
+@keyframes premiumFloat {
+  0% { transform: translateY(0px); filter: drop-shadow(0 10px 20px rgba(0, 114, 255, 0.3)); }
+  50% { transform: translateY(-20px); filter: drop-shadow(0 30px 25px rgba(0, 114, 255, 0.6)); }
+  100% { transform: translateY(0px); filter: drop-shadow(0 10px 20px rgba(0, 114, 255, 0.3)); }
+}
+
+.hero-image {
+  animation: premiumFloat 6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(0, 114, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0); }
+}
+
+.btn-cta {
+  animation: pulseGlow 2.5s infinite;
+  background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease;
+}
+
+.btn-cta:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 114, 255, 0.5) !important;
+}
+
+.portfolio-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-10px) scale(1.02) !important;
+  box-shadow: 0 20px 40px rgba(0, 114, 255, 0.2) !important;
+  border-color: rgba(0, 114, 255, 0.4) !important;
+}
+
+
+
+/* --- TRENDY ANIMATED TEXT GRADIENT --- */
+@keyframes gradientText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-name span {
+  background: linear-gradient(-45deg, #00c6ff, #0072ff, #00c6ff, #0072ff);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientText 6s ease infinite;
+  display: inline-block;
+}
+

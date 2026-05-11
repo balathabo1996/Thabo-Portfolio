@@ -19,11 +19,14 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 ## Features
 
 ### User-Facing
-- **Single-Page Layout** — Hero, About, Portfolio, and Contact sections on one page with smooth scroll navigation
+- **Lenis Smooth Scrolling** — Buttery-smooth, physics-based scrolling interpolation across the entire app
+- **Magnetic Micro-Interactions** — Buttons and social links strictly follow the user's cursor using Framer Motion spring physics
+- **Fluid Animated Typography** — Hero headers feature flowing, continuous liquid color gradients
+- **Cyber-Network Particle Engine** — An ambient, physics-driven canvas background that flows continuously
+- **Glassmorphism & 3D Depth** — Frosted glass navigation bars and project cards that physically tilt and lift on hover
 - **Dark / Light Mode** — Toggle with persistent preference saved to `localStorage`; no flash on load
-- **Scroll Reveal Animations** — Elements animate in/out using `IntersectionObserver`
 - **Dynamic Tab Title & Favicon** — Browser tab updates as you scroll between sections
-- **Dynamic Profile Photo** — Loaded server-side from MongoDB; falls back to a local image
+- **Dynamic Profile Photo** — Loaded server-side from MongoDB; falls back to a local image with a continuous floating animation
 - **Resume Viewer** — "View Resume" opens a static, optimized PDF hosted securely in the public directory
 - **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam and backend IP rate limiting; delivers email via Gmail SMTP
 
@@ -43,6 +46,7 @@ Built with **Next.js 15**, **React 19**, and **MongoDB**, featuring a single-pag
 | Framework | Next.js 15 (App Router) |
 | UI Library | React 19 |
 | Styling | CSS3 Custom Properties + Bootstrap 5.3 |
+| Animations | Framer Motion + Lenis Smooth Scroll |
 | Icons | Font Awesome 6 |
 | Database | MongoDB Atlas (Mongoose 9) |
 | Email | Nodemailer + Gmail SMTP |
@@ -73,12 +77,15 @@ Thabo-Portfolio/
 │   └── api-docs/route.js         # GET /api-docs  (Swagger UI page)
 │
 ├── components/
-│   ├── Header.jsx                # Sticky nav with scroll-tracked active link
+│   ├── Header.jsx                # Frosted glass nav with scroll-tracked active link
 │   ├── Footer.jsx                # Social links + copyright
 │   ├── ThemeProvider.jsx         # Dark/light mode context + useTheme hook
 │   ├── ContactForm.jsx           # react-hook-form contact form + modal feedback
 │   ├── DynamicMetadata.jsx       # Scroll-driven tab title + favicon updates
 │   ├── ScrollReveal.jsx          # IntersectionObserver animation driver
+│   ├── SmoothScrolling.jsx       # Lenis physics-based smooth scroll engine
+│   ├── Magnetic.jsx              # Framer motion spring physics for buttons
+│   ├── NetworkBackground.jsx     # Ambient HTML5 Canvas particle background
 │   └── ScrollToTop.jsx           # Floating theme toggle + scroll-to-top buttons
 │
 ├── lib/

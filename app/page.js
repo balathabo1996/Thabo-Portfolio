@@ -5,6 +5,8 @@ import Project from "@/lib/models/Project";
 import Skill from "@/lib/models/Skill";
 import ContactForm from "@/components/ContactForm";
 import ScrollReveal from "@/components/ScrollReveal";
+import Magnetic from "@/components/Magnetic";
+import NetworkBackground from "@/components/NetworkBackground";
 import Image from "next/image";
 
 // Use Incremental Static Regeneration (ISR) to rebuild page every 1 hour (3600s)
@@ -84,8 +86,9 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="hero container" id="home">
-        <div className="hero-content reveal">
+      <section className="hero container" id="home" style={{ position: 'relative' }}>
+        <NetworkBackground />
+        <div className="hero-content reveal" style={{ position: 'relative', zIndex: 1 }}>
           <h2 className="hero-name">
             <span>Thabotharan</span> <br />
             <span>Balachandran</span>
@@ -123,24 +126,28 @@ export default async function HomePage() {
             <div className="contact-row">
               <span className="contact-item">
                 <i className="fab fa-linkedin"></i>
-                <a
-                  href="https://www.linkedin.com/in/balachandran-thabotharan-261895131"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Balachandran Thabotharan
-                </a>
+                <Magnetic strength={0.15}>
+                  <a
+                    href="https://www.linkedin.com/in/balachandran-thabotharan-261895131"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Balachandran Thabotharan
+                  </a>
+                </Magnetic>
               </span>
               <span className="separator">|</span>
               <span className="contact-item">
                 <i className="fab fa-github"></i>
-                <a
-                  href="https://github.com/balathabo1996"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  balathabo1996
-                </a>
+                <Magnetic strength={0.15}>
+                  <a
+                    href="https://github.com/balathabo1996"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    balathabo1996
+                  </a>
+                </Magnetic>
               </span>
             </div>
           </div>
@@ -151,13 +158,15 @@ export default async function HomePage() {
           </p>
 
           <div className="hero-actions">
-            <a href="/resume.pdf" target="_blank" className="btn btn-cta">
-              VIEW RESUME
-            </a>
+            <Magnetic>
+              <a href="/resume.pdf" target="_blank" className="btn btn-cta">
+                VIEW RESUME
+              </a>
+            </Magnetic>
           </div>
         </div>
 
-        <div className="hero-image">
+        <div className="hero-image" style={{ position: 'relative', zIndex: 1 }}>
           <div className="image-wrapper reveal">
             <Image
               id="profile-image"
