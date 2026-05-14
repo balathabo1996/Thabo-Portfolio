@@ -45,7 +45,11 @@ export async function PUT(request) {
     const data = await request.json();
 
     // Input Validation: Only allow specific fields to be updated
-    const allowedFields = ['profileImageUrl', 'bio', 'name', 'role', 'location', 'email', 'phone'];
+    const allowedFields = [
+      'profileImageUrl', 'bio', 'firstName', 'lastName', 'role', 'title', 
+      'location', 'email', 'phone', 'linkedinUrl', 'githubUrl',
+      'tagline', 'heroDescription', 'resumeUrl', 'missionTitle', 'missionDescription'
+    ];
     const filteredData = Object.keys(data)
       .filter((key) => allowedFields.includes(key))
       .reduce((obj, key) => {
@@ -58,7 +62,7 @@ export async function PUT(request) {
     }
 
     const profile = await Profile.findOneAndUpdate({}, filteredData, {
-      new: true,
+      returnDocument: 'after',
       upsert: true,
     }).lean();
     return NextResponse.json(profile);

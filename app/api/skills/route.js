@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import Experience from '@/lib/models/Experience';
+import Skill from '@/lib/models/Skill';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
     await connectToDatabase();
-    const experiences = await Experience.find().sort({ order: 1 }).lean();
-    return NextResponse.json(experiences);
+    const skills = await Skill.find().sort({ order: 1 }).lean();
+    return NextResponse.json(skills);
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -23,8 +23,8 @@ export async function POST(request) {
 
     await connectToDatabase();
     const data = await request.json();
-    const experience = await Experience.create(data);
-    return NextResponse.json(experience, { status: 201 });
+    const skill = await Skill.create(data);
+    return NextResponse.json(skill, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -42,11 +42,11 @@ export async function PUT(request) {
     const { _id, ...updateData } = data;
 
     if (!_id) {
-      return NextResponse.json({ error: 'Experience ID required' }, { status: 400 });
+      return NextResponse.json({ error: 'Skill ID required' }, { status: 400 });
     }
 
-    const experience = await Experience.findByIdAndUpdate(_id, updateData, { returnDocument: 'after' });
-    return NextResponse.json(experience);
+    const skill = await Skill.findByIdAndUpdate(_id, updateData, { returnDocument: 'after' });
+    return NextResponse.json(skill);
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -63,12 +63,12 @@ export async function DELETE(request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'Experience ID required' }, { status: 400 });
+      return NextResponse.json({ error: 'Skill ID required' }, { status: 400 });
     }
 
     await connectToDatabase();
-    await Experience.findByIdAndDelete(id);
-    return NextResponse.json({ message: 'Experience deleted' });
+    await Skill.findByIdAndDelete(id);
+    return NextResponse.json({ message: 'Skill deleted' });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }

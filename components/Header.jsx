@@ -17,8 +17,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 export default function Header() {
   const [activeSection, setActiveSection] = useState('home');
+  const pathname = usePathname();
+
+  if (pathname === '/admin') return null;
 
   useEffect(() => {
     const sections = ['home', 'about', 'projects', 'contact'];

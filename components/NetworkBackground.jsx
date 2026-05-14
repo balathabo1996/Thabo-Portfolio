@@ -11,6 +11,24 @@ export default function NetworkBackground() {
     
     let particlesArray = [];
     let animationFrameId;
+    const mouse = {
+      x: null,
+      y: null,
+      radius: 180
+    };
+
+    const handleMouseMove = (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    };
+
+    const handleMouseOut = () => {
+      mouse.x = null;
+      mouse.y = null;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseout', handleMouseOut);
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -27,6 +45,8 @@ export default function NetworkBackground() {
         this.dx = dx;
         this.dy = dy;
         this.size = size;
+        this.baseX = this.x;
+        this.baseY = this.y;
       }
       draw() {
         ctx.beginPath();
@@ -38,6 +58,17 @@ export default function NetworkBackground() {
         if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
         if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
 
+        // Mouse interaction
+        if (mouse.x !== null && mouse.y !== null) {
+          let dx = mouse.x - this.x;
+          let dy = mouse.y - this.y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < mouse.radius) {
+            this.x += dx * 0.01;
+            this.y += dy * 0.01;
+          }
+        }
+
         this.x += this.dx;
         this.y += this.dy;
         this.draw();
@@ -46,7 +77,7 @@ export default function NetworkBackground() {
 
     const init = () => {
       particlesArray = [];
-      const numberOfParticles = (canvas.width * canvas.height) / 7000;
+      const numberOfParticles = (canvas.width * canvas.height) / 7500;
       for (let i = 0; i < numberOfParticles; i++) {
         let size = Math.random() * 2 + 1.5;
         let x = Math.random() * (canvas.width - size * 2) + size * 2;
@@ -74,6 +105,22 @@ export default function NetworkBackground() {
             ctx.stroke();
           }
         }
+
+        // Connect to mouse
+        if (mouse.x !== null && mouse.y !== null) {
+          let dxMouse = particlesArray[a].x - mouse.x;
+          let dyMouse = particlesArray[a].y - mouse.y;
+          let mouseDistance = dxMouse * dxMouse + dyMouse * dyMouse;
+          if (mouseDistance < mouse.radius * mouse.radius) {
+            let opacityValue = 1 - (mouseDistance / (mouse.radius * mouse.radius));
+            ctx.strokeStyle = `rgba(0, 198, 255, ${opacityValue * 0.5})`;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
       }
     };
 
@@ -91,6 +138,8 @@ export default function NetworkBackground() {
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseout', handleMouseOut);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
