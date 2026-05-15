@@ -8,8 +8,7 @@
  *         Used by the home page server component to pre-render the profile photo.
  *
  * PUT  — Updates specific profile fields (profileImageUrl, bio, name, role,
- *         location, email, phone).  Protected by an x-api-key header check
- *         against the ADMIN_API_KEY environment variable.
+ *         location, email, phone).  Protected by JWT middleware.
  *         Only whitelisted fields are written to prevent mass-assignment attacks.
  */
 import { NextResponse } from 'next/server';
@@ -35,12 +34,6 @@ export async function GET() {
 
 export async function PUT(request) {
   try {
-    // Basic security: check for API key in headers
-    const apiKey = request.headers.get('x-api-key');
-    if (apiKey !== process.env.ADMIN_API_KEY) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     await connectToDatabase();
     const data = await request.json();
 

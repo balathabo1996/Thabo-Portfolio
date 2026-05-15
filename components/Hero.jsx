@@ -106,6 +106,8 @@ export default function Hero({ profile = {} }) {
             src={profileImageUrl}
             alt={`${firstName} - Infrastructure Engineer`}
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+            loading="eager"
+            fetchpriority="high"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
         </div>

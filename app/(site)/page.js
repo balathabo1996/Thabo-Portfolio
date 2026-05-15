@@ -62,8 +62,8 @@ export default async function HomePage() {
     const rawProfile = await Profile.findOne().lean();
     profileData = rawProfile ? JSON.parse(JSON.stringify(rawProfile)) : {};
 
-    // 2. Fetch All Experiences and group them
-    const rawExperiences = await Experience.find().sort({ order: 1 }).lean();
+    // 2. Fetch All Experiences and group them (Exclude drafts)
+    const rawExperiences = await Experience.find({ status: { $ne: "draft" } }).sort({ order: 1 }).lean();
     const allExperiences = JSON.parse(JSON.stringify(rawExperiences));
     
     // Grouping by type
@@ -72,12 +72,12 @@ export default async function HomePage() {
     educationExperience = allExperiences.filter((e) => e.type === "education");
     workExperience = allExperiences.filter((e) => e.type === "work");
 
-    // 3. Fetch Projects
-    const rawProjects = await Project.find().sort({ order: 1 }).lean();
+    // 3. Fetch Projects (Exclude drafts)
+    const rawProjects = await Project.find({ status: { $ne: "draft" } }).sort({ order: 1 }).lean();
     dbProjects = JSON.parse(JSON.stringify(rawProjects));
 
-    // 4. Fetch Skills and group them
-    const rawSkills = await Skill.find().sort({ order: 1 }).lean();
+    // 4. Fetch Skills (Exclude drafts)
+    const rawSkills = await Skill.find({ status: { $ne: "draft" } }).sort({ order: 1 }).lean();
     const skillsList = JSON.parse(JSON.stringify(rawSkills));
     dbSkills = skillsList.reduce((acc, skill) => {
       if (!acc[skill.category]) acc[skill.category] = [];

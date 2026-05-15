@@ -4,10 +4,13 @@ import Project from '@/lib/models/Project';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request) {
   try {
     await connectToDatabase();
-    const projects = await Project.find().sort({ order: 1 }).lean();
+    const { searchParams } = new URL(request.url);
+    const showAll = searchParams.get('all') === 'true';
+    const query = showAll ? {} : { status: { $ne: 'draft' } };
+    const projects = await Project.find(query).sort({ order: 1 }).lean();
     return NextResponse.json(projects);
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -16,11 +19,6 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const apiKey = request.headers.get('x-api-key');
-    if (apiKey !== process.env.ADMIN_API_KEY) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     await connectToDatabase();
     const data = await request.json();
     const project = await Project.create(data);
@@ -32,11 +30,6 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const apiKey = request.headers.get('x-api-key');
-    if (apiKey !== process.env.ADMIN_API_KEY) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     await connectToDatabase();
     const data = await request.json();
     const { _id, ...updateData } = data;
@@ -54,11 +47,6 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   try {
-    const apiKey = request.headers.get('x-api-key');
-    if (apiKey !== process.env.ADMIN_API_KEY) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 

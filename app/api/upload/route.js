@@ -9,11 +9,6 @@ cloudinary.config({
 
 export async function POST(request) {
   try {
-    const apiKey = request.headers.get('x-api-key');
-    if (apiKey !== process.env.ADMIN_API_KEY) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const formData = await request.formData();
     const file = formData.get('file');
     const field = formData.get('field') || 'general';
