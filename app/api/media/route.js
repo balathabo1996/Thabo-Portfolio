@@ -9,13 +9,16 @@ cloudinary.config({
 
 export async function GET() {
   try {
-    const { resources } = await cloudinary.api.resources({
+    console.log('[Cloudinary] Fetching assets with prefix: thabo-portfolio');
+    const result = await cloudinary.api.resources({
       type: 'upload',
       prefix: 'thabo-portfolio',
       max_results: 100,
     });
-    return NextResponse.json({ resources });
+    console.log(`[Cloudinary] Found ${result.resources?.length || 0} assets`);
+    return NextResponse.json({ resources: result.resources });
   } catch (error) {
+    console.error('[Cloudinary] API Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
