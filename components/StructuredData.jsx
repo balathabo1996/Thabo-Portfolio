@@ -5,7 +5,7 @@ export default function StructuredData({ profile = {} }) {
     firstName = "Thabotharan",
     lastName = "Balachandran",
     title = "Infrastructure Engineer",
-    profileImageUrl = "/images/portf.png",
+    profileImageUrl = "https://res.cloudinary.com/dk4kvk0kw/image/upload/v1/thabo-portfolio/profileImageUrl.png",
     location = "Scarborough, Ontario, Canada"
   } = profile;
 
@@ -16,7 +16,7 @@ export default function StructuredData({ profile = {} }) {
     "@type": "Person",
     "name": fullName,
     "url": "https://thabo-portfolio.vercel.app",
-    "image": profileImageUrl || "https://thabo-portfolio.vercel.app/images/portf.png",
+    "image": profileImageUrl || "https://res.cloudinary.com/dk4kvk0kw/image/upload/v1/thabo-portfolio/profileImageUrl.png",
     "jobTitle": title,
     "description": `Portfolio of ${fullName}, an experienced Infrastructure Engineer & IT Professional specializing in System Administration and Web Development.`,
     "sameAs": [

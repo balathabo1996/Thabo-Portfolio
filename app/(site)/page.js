@@ -25,7 +25,7 @@ export const metadata = {
     siteName: "Thabo Portfolio",
     images: [
       {
-        url: "/images/portf.png",
+        url: "https://res.cloudinary.com/dk4kvk0kw/image/upload/v1/thabo-portfolio/profileImageUrl.png",
         width: 800,
         height: 800,
       },
@@ -37,7 +37,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Thabo.Projects | Thabotharan Balachandran",
     description: "Infrastructure Engineer & IT Solutions Professional",
-    images: ["/images/portf.png"],
+    images: ["https://res.cloudinary.com/dk4kvk0kw/image/upload/v1/thabo-portfolio/profileImageUrl.png"],
   },
   icons: {
     icon: "https://img.icons8.com/ios-filled/50/000000/home.png",
