@@ -61,3 +61,25 @@ export async function DELETE(request) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+export async function PATCH(request) {
+  try {
+    await connectToDatabase();
+    const { items } = await request.json(); // Array of { _id, order }
+
+    if (!Array.isArray(items)) {
+      return NextResponse.json({ error: 'Items array required' }, { status: 400 });
+    }
+
+    const bulkOps = items.map((item) => ({
+      updateOne: {
+        filter: { _id: item._id },
+        update: { $set: { order: item.order } },
+      },
+    }));
+
+    await Project.bulkWrite(bulkOps);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}

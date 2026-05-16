@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
   BarChart,
   Bar,
@@ -154,6 +154,49 @@ export default function AdminDashboard() {
   const showMessage = (text, type = "success") => {
     setMessage({ text, type });
     setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+  };
+
+  const handleReorder = async (newItems, type, groupField = null, groupValue = null) => {
+    // type is 'projects', 'experience', or 'skills'
+    const setterMap = {
+      projects: setProjects,
+      experience: setExperience,
+      skills: setSkills,
+    };
+    
+    const currentState = type === 'projects' ? projects : (type === 'experience' ? experience : skills);
+    
+    let updatedFullState;
+    if (groupField && groupValue) {
+      // Reordered a subset (e.g. skills in one category)
+      const otherItems = currentState.filter(item => item[groupField] !== groupValue);
+      updatedFullState = [...otherItems, ...newItems];
+      setterMap[type](updatedFullState);
+    } else {
+      updatedFullState = newItems;
+      setterMap[type](newItems);
+    }
+
+    // Prepare bulk update payload for the items that were just reordered
+    const itemsWithOrder = newItems.map((item, index) => ({
+      _id: item._id,
+      order: index + 1,
+    }));
+
+    try {
+      const res = await fetch(`/api/${type}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": authToken,
+        },
+        body: JSON.stringify({ items: itemsWithOrder }),
+      });
+      if (!res.ok) throw new Error("Reorder failed");
+    } catch (err) {
+      console.error(err);
+      setMessage({ text: "Reorder failed to save", type: "error" });
+    }
   };
 
   const apiCall = async (url, method, body) => {
@@ -2461,14 +2504,6 @@ export default function AdminDashboard() {
                           {...register("techStack")}
                         />
                       </div>
-                      <div className="input-wrap">
-                        <label>Order</label>
-                        <input
-                          type="number"
-                          {...register("order", { valueAsNumber: true })}
-                          placeholder="0"
-                        />
-                      </div>
                       <div style={{ display: "flex", gap: "1rem" }}>
                         <button
                           type="submit"
@@ -2516,9 +2551,7 @@ export default function AdminDashboard() {
                     </div>
                     {loading && projects.length === 0 ? (
                       <>
-                        <ItemRowSkeleton />
-                        <ItemRowSkeleton />
-                        <ItemRowSkeleton />
+                          <ItemRowSkeleton />
                       </>
                     ) : projects.filter(
                         (p) =>
@@ -2529,104 +2562,126 @@ export default function AdminDashboard() {
                             .toLowerCase()
                             .includes(searchQuery.toLowerCase()),
                       ).length > 0 ? (
-                      projects
-                        .filter(
-                          (p) =>
-                            p.title
-                              ?.toLowerCase()
-                              .includes(searchQuery.toLowerCase()) ||
-                            (p.subTitle || "")
-                              .toLowerCase()
-                              .includes(searchQuery.toLowerCase()),
-                        )
-                        .map((item) => (
-                          <div
-                            key={item._id}
-                            className="item-row"
-                            style={{
-                              opacity: item.status === "draft" ? 0.65 : 1,
-                            }}
-                          >
-                            <div className="item-info">
-                              <h4
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "0.5rem",
-                                }}
-                              >
-                                {item.title}
-                                {item.status === "draft" && (
-                                  <span
+                      <Reorder.Group
+                        axis="y"
+                        values={projects}
+                        onReorder={(newItems) => handleReorder(newItems, "projects")}
+                        style={{ display: "grid", gap: "1rem", listStyle: "none", padding: 0 }}
+                      >
+                        {projects
+                          .filter(
+                            (p) =>
+                              p.title
+                                ?.toLowerCase()
+                                .includes(searchQuery.toLowerCase()) ||
+                              (p.subTitle || "")
+                                .toLowerCase()
+                                .includes(searchQuery.toLowerCase()),
+                          )
+                          .map((item) => (
+                            <Reorder.Item
+                              key={item._id}
+                              value={item}
+                              className="item-row"
+                              style={{
+                                opacity: item.status === "draft" ? 0.65 : 1,
+                                cursor: "grab",
+                                background: "rgba(30, 41, 59, 0.5)",
+                                padding: "1.25rem",
+                                borderRadius: "1rem",
+                                border: "1px solid #334155",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center"
+                              }}
+                              whileDrag={{ scale: 1.02, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <div style={{ color: '#64748b', cursor: 'grab' }}>
+                                  <i className="fas fa-grip-lines"></i>
+                                </div>
+                                <div className="item-info">
+                                  <h4
                                     style={{
-                                      fontSize: "0.6rem",
-                                      fontWeight: 800,
-                                      color: "#fbbf24",
-                                      background: "rgba(251,191,36,0.1)",
-                                      border: "1px solid rgba(251,191,36,0.3)",
-                                      borderRadius: "0.3rem",
-                                      padding: "0.15rem 0.4rem",
-                                      letterSpacing: "0.05em",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "0.5rem",
                                     }}
                                   >
-                                    DRAFT
-                                  </span>
-                                )}
-                              </h4>
-                              <p>{item.subTitle || item.category}</p>
-                            </div>
-                            <div className="item-actions">
-                              <div
-                                className="action-icon"
-                                title={
-                                  item.status === "draft"
-                                    ? "Publish"
-                                    : "Set as Draft"
-                                }
-                                onClick={() =>
-                                  apiCall("/api/projects", "PUT", {
-                                    _id: item._id,
-                                    status:
+                                    {item.title}
+                                    {item.status === "draft" && (
+                                      <span
+                                        style={{
+                                          fontSize: "0.6rem",
+                                          fontWeight: 800,
+                                          color: "#fbbf24",
+                                          background: "rgba(251,191,36,0.1)",
+                                          border: "1px solid rgba(251,191,36,0.3)",
+                                          borderRadius: "0.3rem",
+                                          padding: "0.15rem 0.4rem",
+                                          letterSpacing: "0.05em",
+                                        }}
+                                      >
+                                        DRAFT
+                                      </span>
+                                    )}
+                                  </h4>
+                                  <p>{item.subTitle || item.category}</p>
+                                </div>
+                              </div>
+                              <div className="item-actions" onClick={(e) => e.stopPropagation()}>
+                                <div
+                                  className="action-icon"
+                                  title={
+                                    item.status === "draft"
+                                      ? "Publish"
+                                      : "Set as Draft"
+                                  }
+                                  onClick={() =>
+                                    apiCall("/api/projects", "PUT", {
+                                      _id: item._id,
+                                      status:
+                                        item.status === "draft"
+                                          ? "published"
+                                          : "draft",
+                                    })
+                                  }
+                                  style={{
+                                    color:
                                       item.status === "draft"
-                                        ? "published"
-                                        : "draft",
-                                  })
-                                }
-                                style={{
-                                  color:
-                                    item.status === "draft"
-                                      ? "#fbbf24"
-                                      : "#34d399",
-                                  background:
-                                    item.status === "draft"
-                                      ? "rgba(251,191,36,0.08)"
-                                      : "rgba(52,211,153,0.08)",
-                                }}
-                              >
-                                <i
-                                  className={`fas fa-${item.status === "draft" ? "eye-slash" : "eye"}`}
-                                ></i>
+                                        ? "#fbbf24"
+                                        : "#34d399",
+                                    background:
+                                      item.status === "draft"
+                                        ? "rgba(251,191,36,0.08)"
+                                        : "rgba(52,211,153,0.08)",
+                                  }}
+                                >
+                                  <i
+                                    className={`fas fa-${item.status === "draft" ? "eye-slash" : "eye"}`}
+                                  ></i>
+                                </div>
+                                <div
+                                  className="action-icon edit"
+                                  onClick={() => startEdit(item)}
+                                >
+                                  <i className="fas fa-edit"></i>
+                                </div>
+                                <div
+                                  className="action-icon delete"
+                                  onClick={() =>
+                                    apiCall(
+                                      `/api/projects?id=${item._id}`,
+                                      "DELETE",
+                                    )
+                                  }
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </div>
                               </div>
-                              <div
-                                className="action-icon edit"
-                                onClick={() => startEdit(item)}
-                              >
-                                <i className="fas fa-edit"></i>
-                              </div>
-                              <div
-                                className="action-icon delete"
-                                onClick={() =>
-                                  apiCall(
-                                    `/api/projects?id=${item._id}`,
-                                    "DELETE",
-                                  )
-                                }
-                              >
-                                <i className="fas fa-trash"></i>
-                              </div>
-                            </div>
-                          </div>
-                        ))
+                            </Reorder.Item>
+                          ))}
+                      </Reorder.Group>
                     ) : (
                       <p
                         style={{
@@ -3200,14 +3255,6 @@ export default function AdminDashboard() {
                             </AnimatePresence>
                           </div>
                         </div>
-                        <div className="input-wrap">
-                          <label>Order</label>
-                          <input
-                            type="number"
-                            {...register("order", { valueAsNumber: true })}
-                            placeholder="0"
-                          />
-                        </div>
                       </div>
                       <div style={{ display: "flex", gap: "1rem" }}>
                         <button
@@ -3284,91 +3331,117 @@ export default function AdminDashboard() {
                           >
                             {fullNames[cat] || cat}
                           </div>
-                          {items.map((item) => (
-                            <div key={item._id} className="item-row">
-                              <div className="item-info">
-                                <h4
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "0.5rem",
-                                  }}
-                                >
-                                  {item.name}
-                                  {item.status === "draft" && (
-                                    <span
+                          <Reorder.Group
+                            axis="y"
+                            values={items}
+                            onReorder={(newItems) => handleReorder(newItems, "skills", "category", cat)}
+                            style={{ display: "grid", gap: "1rem", listStyle: "none", padding: 0 }}
+                          >
+                            {items.map((item) => (
+                              <Reorder.Item
+                                key={item._id}
+                                value={item}
+                                className="item-row"
+                                style={{
+                                  opacity: item.status === "draft" ? 0.65 : 1,
+                                  cursor: "grab",
+                                  background: "rgba(30, 41, 59, 0.5)",
+                                  padding: "1.25rem",
+                                  borderRadius: "1rem",
+                                  border: "1px solid #334155",
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  alignItems: "center"
+                                }}
+                                whileDrag={{ scale: 1.02, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                              >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                  <div style={{ color: '#64748b', cursor: 'grab' }}>
+                                    <i className="fas fa-grip-lines"></i>
+                                  </div>
+                                  <div className="item-info">
+                                    <h4
                                       style={{
-                                        fontSize: "0.6rem",
-                                        fontWeight: 800,
-                                        color: "#fbbf24",
-                                        background: "rgba(251,191,36,0.1)",
-                                        border:
-                                          "1px solid rgba(251,191,36,0.3)",
-                                        borderRadius: "0.3rem",
-                                        padding: "0.15rem 0.4rem",
-                                        letterSpacing: "0.05em",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "0.5rem",
                                       }}
                                     >
-                                      DRAFT
-                                    </span>
-                                  )}
-                                </h4>
-                                <p>
-                                  {fullNames[item.category] || item.category}
-                                </p>
-                              </div>
-                              <div className="item-actions">
-                                <div
-                                  className="action-icon"
-                                  title={
-                                    item.status === "draft"
-                                      ? "Publish"
-                                      : "Set as Draft"
-                                  }
-                                  onClick={() =>
-                                    apiCall("/api/skills", "PUT", {
-                                      _id: item._id,
-                                      status:
+                                      {item.name}
+                                      {item.status === "draft" && (
+                                        <span
+                                          style={{
+                                            fontSize: "0.6rem",
+                                            fontWeight: 800,
+                                            color: "#fbbf24",
+                                            background: "rgba(251,191,36,0.1)",
+                                            border: "1px solid rgba(251,191,36,0.3)",
+                                            borderRadius: "0.3rem",
+                                            padding: "0.15rem 0.4rem",
+                                            letterSpacing: "0.05em",
+                                          }}
+                                        >
+                                          DRAFT
+                                        </span>
+                                      )}
+                                    </h4>
+                                    <p>{fullNames[item.category] || item.category}</p>
+                                  </div>
+                                </div>
+                                <div className="item-actions" onClick={(e) => e.stopPropagation()}>
+                                  <div
+                                    className="action-icon"
+                                    title={
+                                      item.status === "draft"
+                                        ? "Publish"
+                                        : "Set as Draft"
+                                    }
+                                    onClick={() =>
+                                      apiCall("/api/skills", "PUT", {
+                                        _id: item._id,
+                                        status:
+                                          item.status === "draft"
+                                            ? "published"
+                                            : "draft",
+                                      })
+                                    }
+                                    style={{
+                                      color:
                                         item.status === "draft"
-                                          ? "published"
-                                          : "draft",
-                                    })
-                                  }
-                                  style={{
-                                    color:
-                                      item.status === "draft"
-                                        ? "#fbbf24"
-                                        : "#34d399",
-                                    background:
-                                      item.status === "draft"
-                                        ? "rgba(251,191,36,0.08)"
-                                        : "rgba(52,211,153,0.08)",
-                                  }}
-                                >
-                                  <i
-                                    className={`fas fa-${item.status === "draft" ? "eye-slash" : "eye"}`}
-                                  ></i>
+                                          ? "#fbbf24"
+                                          : "#34d399",
+                                      background:
+                                        item.status === "draft"
+                                          ? "rgba(251,191,36,0.08)"
+                                          : "rgba(52,211,153,0.08)",
+                                    }}
+                                  >
+                                    <i
+                                      className={`fas fa-${item.status === "draft" ? "eye-slash" : "eye"}`}
+                                    ></i>
+                                  </div>
+                                  <div
+                                    className="action-icon edit"
+                                    onClick={() => startEdit(item)}
+                                  >
+                                    <i className="fas fa-edit"></i>
+                                  </div>
+                                  <div
+                                    className="action-icon delete"
+                                    onClick={() =>
+                                      apiCall(
+                                        `/api/skills?id=${item._id}`,
+                                        "DELETE",
+                                      )
+                                    }
+                                  >
+                                    <i className="fas fa-trash"></i>
+                                  </div>
                                 </div>
-                                <div
-                                  className="action-icon edit"
-                                  onClick={() => startEdit(item)}
-                                >
-                                  <i className="fas fa-edit"></i>
-                                </div>
-                                <div
-                                  className="action-icon delete"
-                                  onClick={() =>
-                                    apiCall(
-                                      `/api/skills?id=${item._id}`,
-                                      "DELETE",
-                                    )
-                                  }
-                                >
-                                  <i className="fas fa-trash"></i>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                              </Reorder.Item>
+                            ))}
+                          </Reorder.Group>
+
                         </div>
                       ))}
                   </div>
@@ -3480,14 +3553,6 @@ export default function AdminDashboard() {
                           {...register("description")}
                         />
                       </div>
-                      <div className="input-wrap">
-                        <label>Order</label>
-                        <input
-                          type="number"
-                          {...register("order", { valueAsNumber: true })}
-                          placeholder="0"
-                        />
-                      </div>
                       <div style={{ display: "flex", gap: "1rem" }}>
                         <button
                           type="submit"
@@ -3543,107 +3608,126 @@ export default function AdminDashboard() {
                           .toLowerCase()
                           .includes(searchQuery.toLowerCase()),
                     ).length > 0 ? (
-                      filtered
-                        .filter(
-                          (e) =>
-                            (e.role || "")
-                              .toLowerCase()
-                              .includes(searchQuery.toLowerCase()) ||
-                            (e.company || "")
-                              .toLowerCase()
-                              .includes(searchQuery.toLowerCase()),
-                        )
-                        .map((item) => (
-                          <div
-                            key={item._id}
-                            className="item-row"
-                            style={{
-                              opacity: item.status === "draft" ? 0.65 : 1,
-                            }}
-                          >
-                            <div className="item-info">
-                              <h4
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "0.5rem",
-                                }}
-                              >
-                                {item.role}
-                                {item.status === "draft" && (
-                                  <span
+                      <Reorder.Group
+                        axis="y"
+                        values={filtered}
+                        onReorder={(newItems) => handleReorder(newItems, "experience", "type", typeMap[activeTab])}
+                        style={{ display: "grid", gap: "1rem", listStyle: "none", padding: 0 }}
+                      >
+                        {filtered
+                          .filter(
+                            (e) =>
+                              (e.role || "")
+                                .toLowerCase()
+                                .includes(searchQuery.toLowerCase()) ||
+                              (e.company || "")
+                                .toLowerCase()
+                                .includes(searchQuery.toLowerCase()),
+                          )
+                          .map((item) => (
+                            <Reorder.Item
+                              key={item._id}
+                              value={item}
+                              className="item-row"
+                              style={{
+                                opacity: item.status === "draft" ? 0.65 : 1,
+                                cursor: "grab",
+                                background: "rgba(30, 41, 59, 0.5)",
+                                padding: "1.25rem",
+                                borderRadius: "1rem",
+                                border: "1px solid #334155",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center"
+                              }}
+                              whileDrag={{ scale: 1.02, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", backgroundColor: "rgba(51, 65, 85, 0.8)" }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <div style={{ color: '#64748b', cursor: 'grab' }}>
+                                  <i className="fas fa-grip-lines"></i>
+                                </div>
+                                <div className="item-info">
+                                  <h4
                                     style={{
-                                      fontSize: "0.6rem",
-                                      fontWeight: 800,
-                                      color: "#fbbf24",
-                                      background: "rgba(251,191,36,0.1)",
-                                      border: "1px solid rgba(251,191,36,0.3)",
-                                      borderRadius: "0.3rem",
-                                      padding: "0.15rem 0.4rem",
-                                      letterSpacing: "0.05em",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: "0.5rem",
                                     }}
                                   >
-                                    DRAFT
-                                  </span>
-                                )}
-                              </h4>
-                              <p>
-                                {item.company}
-                                {item.period ? ` · ${item.period}` : ""}
-                              </p>
-                            </div>
-                            <div className="item-actions">
-                              <div
-                                className="action-icon"
-                                title={
-                                  item.status === "draft"
-                                    ? "Publish"
-                                    : "Set as Draft"
-                                }
-                                onClick={() =>
-                                  apiCall("/api/experience", "PUT", {
-                                    _id: item._id,
-                                    status:
+                                    {item.role}
+                                    {item.status === "draft" && (
+                                      <span
+                                        style={{
+                                          fontSize: "0.6rem",
+                                          fontWeight: 800,
+                                          color: "#fbbf24",
+                                          background: "rgba(251,191,36,0.1)",
+                                          border: "1px solid rgba(251,191,36,0.3)",
+                                          borderRadius: "0.3rem",
+                                          padding: "0.15rem 0.4rem",
+                                          letterSpacing: "0.05em",
+                                        }}
+                                      >
+                                        DRAFT
+                                      </span>
+                                    )}
+                                  </h4>
+                                  <p>{item.company}{item.period ? ` · ${item.period}` : ""}</p>
+                                </div>
+                              </div>
+                              <div className="item-actions" onClick={(e) => e.stopPropagation()}>
+                                <div
+                                  className="action-icon"
+                                  title={
+                                    item.status === "draft"
+                                      ? "Publish"
+                                      : "Set as Draft"
+                                  }
+                                  onClick={() =>
+                                    apiCall("/api/experience", "PUT", {
+                                      _id: item._id,
+                                      status:
+                                        item.status === "draft"
+                                          ? "published"
+                                          : "draft",
+                                    })
+                                  }
+                                  style={{
+                                    color:
                                       item.status === "draft"
-                                        ? "published"
-                                        : "draft",
-                                  })
-                                }
-                                style={{
-                                  color:
-                                    item.status === "draft"
-                                      ? "#fbbf24"
-                                      : "#34d399",
-                                  background:
-                                    item.status === "draft"
-                                      ? "rgba(251,191,36,0.08)"
-                                      : "rgba(52,211,153,0.08)",
-                                }}
-                              >
-                                <i
-                                  className={`fas fa-${item.status === "draft" ? "eye-slash" : "eye"}`}
-                                ></i>
+                                        ? "#fbbf24"
+                                        : "#34d399",
+                                    background:
+                                      item.status === "draft"
+                                        ? "rgba(251,191,36,0.08)"
+                                        : "rgba(52,211,153,0.08)",
+                                  }}
+                                >
+                                  <i
+                                    className={`fas fa-${item.status === "draft" ? "eye-slash" : "eye"}`}
+                                  ></i>
+                                </div>
+                                <div
+                                  className="action-icon edit"
+                                  onClick={() => startEdit(item)}
+                                >
+                                  <i className="fas fa-edit"></i>
+                                </div>
+                                <div
+                                  className="action-icon delete"
+                                  onClick={() =>
+                                    apiCall(
+                                      `/api/experience?id=${item._id}`,
+                                      "DELETE",
+                                    )
+                                  }
+                                >
+                                  <i className="fas fa-trash"></i>
+                                </div>
                               </div>
-                              <div
-                                className="action-icon edit"
-                                onClick={() => startEdit(item)}
-                              >
-                                <i className="fas fa-edit"></i>
-                              </div>
-                              <div
-                                className="action-icon delete"
-                                onClick={() =>
-                                  apiCall(
-                                    `/api/experience?id=${item._id}`,
-                                    "DELETE",
-                                  )
-                                }
-                              >
-                                <i className="fas fa-trash"></i>
-                              </div>
-                            </div>
-                          </div>
-                        ))
+                            </Reorder.Item>
+                          ))}
+                      </Reorder.Group>
                     ) : (
                       <p
                         style={{
