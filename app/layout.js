@@ -25,8 +25,10 @@ const inter = Inter({
 export const metadata = {
   title: 'Thabo.Portfolio',
   description: 'Portfolio of Balachandran Thabotharan',
+  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.png',
+    apple: '/apple-icon.png',
   },
 };
 

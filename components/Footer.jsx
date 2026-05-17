@@ -6,6 +6,7 @@
  */
 'use client';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Footer({ profile = {} }) {
   const pathname = usePathname();
@@ -43,7 +44,12 @@ export default function Footer({ profile = {} }) {
           </a>
         )}
       </div>
-      <p>&copy; {currentYear} {fullName}. All rights reserved.</p>
+      <p>
+        <Link href="/admin" style={{ color: 'inherit', textDecoration: 'none' }}>
+          &copy;
+        </Link>{' '}
+        {currentYear} {fullName}. All rights reserved.
+      </p>
     </footer>
   );
 }
