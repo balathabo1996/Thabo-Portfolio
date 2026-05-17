@@ -48,7 +48,10 @@ export default function Footer({ profile = {} }) {
         <Link href="/admin" style={{ color: 'inherit', textDecoration: 'none' }}>
           &copy;
         </Link>{' '}
-        {currentYear} {fullName}. All rights reserved.
+        {currentYear} {fullName}. All rights reserved
+        <Link href="/api-docs" style={{ color: 'inherit', textDecoration: 'none' }}>
+          .
+        </Link>
       </p>
     </footer>
   );

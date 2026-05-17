@@ -30,6 +30,18 @@
           "sizes": "192x192"
         }
       ]
+    },
+    {
+      "name": "API Documentation",
+      "short_name": "API Docs",
+      "description": "Interactive Swagger API Reference",
+      "url": "/api-docs",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
