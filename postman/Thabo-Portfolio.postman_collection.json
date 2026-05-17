@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "Thabo Portfolio API",
-    "description": "Complete Postman collection for the Thabo.Portfolio REST API (v2).\n\nArchitecture:\n  - Profile Image → Cloudinary (POST /api/upload)\n  - Resume        → Google Drive shareable link (stored as resumeUrl in profile)\n  - Admin UI      → http://localhost:3000/admin (protected by x-api-key)\n\nEndpoints:\n  GET  /api/profile             – Fetch owner profile\n  PUT  /api/profile             – Update profile fields (x-api-key required)\n  POST /api/upload              – Upload profile image to Cloudinary (x-api-key required)\n  GET  /api/experience          – Fetch experience entries\n  POST /api/experience          – Add new experience (x-api-key required)\n  PUT  /api/experience          – Update experience entry\n  DELETE /api/experience        – Delete experience entry\n  GET  /api/projects            – Fetch portfolio projects\n  POST /api/projects            – Add new project (x-api-key required)\n  PUT  /api/projects            – Update project\n  DELETE /api/projects          – Delete project\n  GET  /api/skills              – Fetch skills\n  POST /api/skills              – Add new skill (x-api-key required)\n  PUT  /api/skills              – Update skill\n  DELETE /api/skills            – Delete skill\n  POST /api/contact             – Send contact form email\n  POST /api/analytics/resume    – Track resume view click\n  GET  /api/analytics/resume     – Get resume download count\n  POST /api/seed                – Reset and seed database (x-api-key required)\n  GET  /api/swagger             – Raw OpenAPI JSON spec\n  GET  /api-docs                – Swagger UI page",
+    "description": "Complete Postman collection for the Thabo.Portfolio REST API (v2).\n\nArchitecture:\n  - Profile Image → Cloudinary (POST /api/upload)\n  - Resume        → Google Drive shareable link (stored as resumeUrl in profile)\n  - Admin UI      → http://localhost:3000/admin (protected by x-api-key)\n\nEndpoints:\n  GET  /api/profile             – Fetch owner profile\n  PUT  /api/profile             – Update profile fields (x-api-key required)\n  POST /api/upload              – Upload profile image to Cloudinary (x-api-key required)\n  GET  /api/experience          – Fetch experience entries\n  POST /api/experience          – Add new experience (x-api-key required)\n  PUT  /api/experience          – Update experience entry\n  DELETE /api/experience        – Delete experience entry\n  PATCH  /api/experience        – Bulk update experiences (reorder)\n  GET  /api/projects            – Fetch portfolio projects\n  POST /api/projects            – Add new project (x-api-key required)\n  PUT  /api/projects            – Update project\n  DELETE /api/projects          – Delete project\n  PATCH  /api/projects          – Bulk update projects (reorder)\n  GET  /api/skills              – Fetch skills\n  POST /api/skills              – Add new skill (x-api-key required)\n  PUT  /api/skills              – Update skill\n  DELETE /api/skills            – Delete skill\n  PATCH  /api/skills            – Bulk update skills (reorder)\n  POST /api/contact             – Send contact form email\n  POST /api/analytics/resume    – Track resume view click\n  GET  /api/analytics/resume     – Get resume download count\n  POST /api/seed                – Reset and seed database (x-api-key required)\n  GET  /api/swagger             – Raw OpenAPI JSON spec\n  GET  /api-docs                – Swagger UI page",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -48,8 +48,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             },
             "description": "Returns the profile document from MongoDB."
           },
@@ -60,8 +65,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -69,8 +80,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             },
             "description": "Updates profile fields. Requires x-api-key."
           },
@@ -81,19 +97,36 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "file", "type": "file", "src": [], "description": "Select an image file" },
-                { "key": "field", "value": "profileImageUrl", "type": "text" }
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Select an image file"
+                },
+                {
+                  "key": "field",
+                  "value": "profileImageUrl",
+                  "type": "text"
+                }
               ]
             },
             "url": {
               "raw": "{{base_url}}/api/upload",
-              "host": ["{{base_url}}"],
-              "path": ["api", "upload"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "upload"
+              ]
             },
             "description": "Uploads an image to Cloudinary. Requires x-api-key."
           },
@@ -111,8 +144,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/experience",
-              "host": ["{{base_url}}"],
-              "path": ["api", "experience"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ]
             }
           }
         },
@@ -121,8 +159,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -130,8 +174,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/experience",
-              "host": ["{{base_url}}"],
-              "path": ["api", "experience"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ]
             }
           }
         },
@@ -140,8 +189,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -149,8 +204,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/experience",
-              "host": ["{{base_url}}"],
-              "path": ["api", "experience"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ]
             }
           }
         },
@@ -159,15 +219,60 @@
           "request": {
             "method": "DELETE",
             "header": [
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/api/experience?id=PASTE_ID_HERE",
-              "host": ["{{base_url}}"],
-              "path": ["api", "experience"],
-              "query": [{ "key": "id", "value": "PASTE_ID_HERE" }]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "PASTE_ID_HERE"
+                }
+              ]
             }
           }
+        },
+        {
+          "name": "Bulk Update Experiences",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"_id\": \"ID_1\",\n    \"order\": 1\n  },\n  {\n    \"_id\": \"ID_2\",\n    \"order\": 2\n  }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/experience",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "experience"
+              ]
+            },
+            "description": "Bulk updates documents. Primary use case: Drag and drop reordering. Requires array of objects containing _id and new order."
+          },
+          "response": []
         }
       ]
     },
@@ -181,8 +286,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/projects",
-              "host": ["{{base_url}}"],
-              "path": ["api", "projects"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
             }
           }
         },
@@ -191,8 +301,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -200,8 +316,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/projects",
-              "host": ["{{base_url}}"],
-              "path": ["api", "projects"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
             }
           }
         },
@@ -210,8 +331,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -219,8 +346,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/projects",
-              "host": ["{{base_url}}"],
-              "path": ["api", "projects"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
             }
           }
         },
@@ -229,15 +361,60 @@
           "request": {
             "method": "DELETE",
             "header": [
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/api/projects?id=PASTE_ID_HERE",
-              "host": ["{{base_url}}"],
-              "path": ["api", "projects"],
-              "query": [{ "key": "id", "value": "PASTE_ID_HERE" }]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "PASTE_ID_HERE"
+                }
+              ]
             }
           }
+        },
+        {
+          "name": "Bulk Update Projects",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"_id\": \"ID_1\",\n    \"order\": 1\n  },\n  {\n    \"_id\": \"ID_2\",\n    \"order\": 2\n  }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/projects",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "projects"
+              ]
+            },
+            "description": "Bulk updates documents. Primary use case: Drag and drop reordering. Requires array of objects containing _id and new order."
+          },
+          "response": []
         }
       ]
     },
@@ -251,8 +428,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/skills",
-              "host": ["{{base_url}}"],
-              "path": ["api", "skills"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ]
             }
           }
         },
@@ -261,8 +443,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -270,8 +458,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/skills",
-              "host": ["{{base_url}}"],
-              "path": ["api", "skills"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ]
             }
           }
         },
@@ -280,8 +473,14 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -289,8 +488,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/skills",
-              "host": ["{{base_url}}"],
-              "path": ["api", "skills"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ]
             }
           }
         },
@@ -299,15 +503,60 @@
           "request": {
             "method": "DELETE",
             "header": [
-              { "key": "x-api-key", "value": "{{admin_api_key}}" }
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/api/skills?id=PASTE_ID_HERE",
-              "host": ["{{base_url}}"],
-              "path": ["api", "skills"],
-              "query": [{ "key": "id", "value": "PASTE_ID_HERE" }]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "PASTE_ID_HERE"
+                }
+              ]
             }
           }
+        },
+        {
+          "name": "Bulk Update Skills",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"_id\": \"ID_1\",\n    \"order\": 1\n  },\n  {\n    \"_id\": \"ID_2\",\n    \"order\": 2\n  }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/skills",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "skills"
+              ]
+            },
+            "description": "Bulk updates documents. Primary use case: Drag and drop reordering. Requires array of objects containing _id and new order."
+          },
+          "response": []
         }
       ]
     },
@@ -318,15 +567,25 @@
           "name": "Submit Contact Form",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"subject\": \"Collaboration\",\n  \"message\": \"I'd like to work with you.\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/contact",
-              "host": ["{{base_url}}"],
-              "path": ["api", "contact"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contact"
+              ]
             }
           }
         }
@@ -342,8 +601,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/analytics/resume",
-              "host": ["{{base_url}}"],
-              "path": ["api", "analytics", "resume"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "resume"
+              ]
             }
           }
         },
@@ -354,8 +619,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/analytics/resume",
-              "host": ["{{base_url}}"],
-              "path": ["api", "analytics", "resume"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "analytics",
+                "resume"
+              ]
             }
           }
         }
@@ -368,11 +639,21 @@
           "name": "Seed Database",
           "request": {
             "method": "POST",
-            "header": [{ "key": "x-api-key", "value": "{{admin_api_key}}" }],
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{admin_api_key}}"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/seed",
-              "host": ["{{base_url}}"],
-              "path": ["api", "seed"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "seed"
+              ]
             }
           }
         },
@@ -383,8 +664,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/swagger",
-              "host": ["{{base_url}}"],
-              "path": ["api", "swagger"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "swagger"
+              ]
             }
           }
         },
@@ -395,8 +681,12 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api-docs",
-              "host": ["{{base_url}}"],
-              "path": ["api-docs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api-docs"
+              ]
             }
           }
         }

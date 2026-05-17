@@ -37,7 +37,8 @@ Built with **Next.js 16**, **React 19**, **MongoDB**, and **Cloudinary**, featur
 - **Security Headers** — HSTS, X-Frame-Options, X-Content-Type-Options, and more via `next.config.mjs`
 - **API Key Protection** — Write endpoints guarded by `x-api-key` header check
 - **Mass-Assignment Protection** — Only whitelisted fields accepted on profile updates
-- **PWA Ready** — `manifest.json` and theme-color viewport meta for installability
+- **Drag-and-Drop Reordering** — Framer Motion `Reorder` integrated into the CMS with optimized bulk-update `PATCH` endpoints.
+- **PWA Ready** — `manifest.json` App Shortcuts (long-press icon to access Admin) and custom AI-generated high-fidelity logos.
 - **ISR Disabled** — `revalidate = 0` ensures all pages are always dynamically rendered from live DB data
 
 ---
@@ -141,14 +142,17 @@ Full interactive documentation available at **`/api-docs`**.
 | `GET` | `/api/experience` | — | Fetch all experience entries |
 | `POST` | `/api/experience` | `x-api-key` | Add new experience entry |
 | `PUT` | `/api/experience` | `x-api-key` | Update experience entry by ID |
+| `PATCH` | `/api/experience` | `x-api-key` | Bulk update experiences (drag-and-drop reorder) |
 | `DELETE` | `/api/experience` | `x-api-key` | Delete experience entry by ID |
 | `GET` | `/api/projects` | — | Fetch all portfolio projects |
 | `POST` | `/api/projects` | `x-api-key` | Add new project |
 | `PUT` | `/api/projects` | `x-api-key` | Update project by ID |
+| `PATCH` | `/api/projects` | `x-api-key` | Bulk update projects (drag-and-drop reorder) |
 | `DELETE` | `/api/projects` | `x-api-key` | Delete project by ID |
 | `GET` | `/api/skills` | — | Fetch all skills |
 | `POST` | `/api/skills` | `x-api-key` | Add new skill |
 | `PUT` | `/api/skills` | `x-api-key` | Update skill by ID |
+| `PATCH` | `/api/skills` | `x-api-key` | Bulk update skills (drag-and-drop reorder) |
 | `DELETE` | `/api/skills` | `x-api-key` | Delete skill by ID |
 | `POST` | `/api/upload` | `x-api-key` | Upload profile image to Cloudinary |
 | `POST` | `/api/contact` | — | Send contact form email via Gmail |
