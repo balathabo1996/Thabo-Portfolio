@@ -1,5 +1,31 @@
+/**
+ * Projects Portfolio Showcase Grid — components/ProjectsGrid.jsx
+ * =============================================================
+ * Renders a grid portfolio containing individual card links mapping project records.
+ * Integrates visual category indicators, technology specific FontAwesome/custom icons,
+ * lists core features, highlight badges, awards details, and timeline information.
+ */
+
 import Image from "next/image";
 
+/**
+ * ProjectsGrid Component
+ * Generates an interactive visual grid mapping projects items from database models.
+ *
+ * @param {Object} props
+ * @param {Array} props.dbProjects - List of project records fetched from MongoDB
+ * @param {string} props.dbProjects[].title - Primary project title name
+ * @param {string} [props.dbProjects[].subTitle] - Secondary project subtitle or scope description
+ * @param {string} [props.dbProjects[].link] - Hyperlink target of the project or case study
+ * @param {string} [props.dbProjects[].imageUrl] - Project preview image asset URL
+ * @param {string} [props.dbProjects[].period] - Duration timeline of the work
+ * @param {string} [props.dbProjects[].category] - Category value for specific color coding (e.g. "web", "infra")
+ * @param {string} [props.dbProjects[].award] - Optional recognition or honors title
+ * @param {string} [props.dbProjects[].description] - Descriptive summary paragraph
+ * @param {Array<string>} [props.dbProjects[].features] - Major features/bullet points
+ * @param {Array<string>} [props.dbProjects[].techStack] - Array of technology names used
+ * @returns {React.ReactElement} The styled grid and title section
+ */
 export default function ProjectsGrid({ dbProjects = [] }) {
   const getTechIcon = (name) => {
     const icons = {

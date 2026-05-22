@@ -1,42 +1,91 @@
 /**
- * API Route: /api/contact  —  app/api/contact/route.js
+ * Contact API Endpoint — app/api/contact/route.js
  * ======================================================
- * POST — Accepts a contact form submission and delivers it to the
- *         portfolio owner's inbox via Nodemailer + Gmail SMTP.
+ * Accepts inquiries from the portfolio contact form, verifies the honeypot,
+ * applies rate limits to prevent spam, and delivers notifications to the owner's inbox.
  *
- * Request body (JSON):
- *   name     {string}  Sender's full name
- *   email    {string}  Sender's email address
- *   subject  {string}  Message subject
- *   message  {string}  Message body (plain text; newlines converted to <br>)
- *
- * Environment variables required:
- *   EMAIL_USER  – Gmail address used as the SMTP sender
- *   EMAIL_PASS  – Gmail App Password (not the account password)
- *
- * Responses:
- *   200  { message: "Email sent successfully" }
- *   500  { error:   "Failed to send email"    }
+ * Utilizes Nodemailer configured with Gmail SMTP for high-deliverability transport.
  */
+
 import nodemailer from 'nodemailer';
 
+// Force dynamic execution to bypass Next.js static optimizations
 export const dynamic = 'force-dynamic';
 
-
-// In-memory rate limiting map (per server instance)
+// In-memory rate limiting map tracking IP submission frequency (per server instance)
 const rateLimitMap = new Map();
 
+/**
+ * @swagger
+ * /api/contact:
+ *   post:
+ *     summary: Submit contact form message
+ *     description: Validates form submission, verifies bot protection (honeypot), enforces rate limits, and sends a styled notification email to the site owner via Gmail SMTP.
+ *     tags:
+ *       - Contact
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - subject
+ *               - message
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Sender's name.
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Sender's email address.
+ *                 example: john.doe@example.com
+ *               subject:
+ *                 type: string
+ *                 description: Subject of the inquiry.
+ *                 example: Collaboration Inquiry
+ *               message:
+ *                 type: string
+ *                 description: Content of the message.
+ *                 example: I'd like to discuss a potential contract opportunity.
+ *               honeypot:
+ *                 type: string
+ *                 description: Hidden anti-bot spam input field. Must be empty.
+ *     responses:
+ *       200:
+ *         description: Inquiry sent successfully.
+ *       400:
+ *         description: Missing fields or invalid request.
+ *       429:
+ *         description: Rate limit exceeded.
+ *       500:
+ *         description: Mailer transport failure.
+ */
+
+/**
+ * POST /api/contact
+ * Handles contact form submittals, checks for bot abuse, rate limits, and mails the inquiry.
+ *
+ * @param {Request} req - Next.js Request object with contact fields
+ * @returns {Promise<Response>} JSON success/error response
+ */
 export async function POST(req) {
   try {
+    // 1. IP Rate Limiting Evaluation
     const ip = req.ip || req.headers.get('x-forwarded-for') || 'unknown';
     const windowMs = 10 * 60 * 1000; // 10 minutes window
-    const maxRequests = 5; // limit to 5 emails per window
+    const maxRequests = 5; // Limit to 5 emails per window per IP
 
     if (!rateLimitMap.has(ip)) {
       rateLimitMap.set(ip, { count: 1, resetTime: Date.now() + windowMs });
     } else {
       const data = rateLimitMap.get(ip);
       if (Date.now() > data.resetTime) {
+        // Reset window if time elapsed
         rateLimitMap.set(ip, { count: 1, resetTime: Date.now() + windowMs });
       } else {
         data.count++;
@@ -49,28 +98,30 @@ export async function POST(req) {
       }
     }
 
+    // 2. Body Payload Parsing
     const { name, email, subject, message, honeypot } = await req.json();
 
-    // Backend honeypot check (if bots bypass frontend)
+    // 3. Backend Honeypot Check (Spam Prevention)
+    // If a bot fills out the hidden "honeypot" field, we silently succeed to avoid alert alarms
     if (honeypot) {
-      // Silently return success to trick the bot
+      console.warn(`[Honeypot Triggered] Spambot detected from IP: ${ip}. Silently dropping message.`);
       return new Response(JSON.stringify({ message: 'Email sent successfully' }), { status: 200 });
     }
 
-    // Create a transporter using Gmail (default recommendation)
+    // 4. Nodemailer SMTP Transporter Initializer
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Use an App Password from Google
+        pass: process.env.EMAIL_PASS, // Secure Google App Password
       },
     });
 
-    // Email to the portfolio owner (You)
+    // 5. Build Styled Email Payload
     const mailOptions = {
       from: `"Thabo Portfolio" <${process.env.EMAIL_USER}>`,
-      to: 'balathabo96@gmail.com',
-      replyTo: email, // Allows you to just click "Reply" in your email client
+      to: 'balathabo96@gmail.com', // Recipient owner email
+      replyTo: email, // Directly links client reply
       subject: `🚀 New Inquiry: ${subject} from ${name}`,
       text: `New message from ${name} (${email}):\n\nSubject: ${subject}\n\n${message}`,
       html: `

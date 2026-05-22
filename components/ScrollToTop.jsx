@@ -1,6 +1,20 @@
+/**
+ * Sticky Scroll-To-Top Navigation Shortcut — components/ScrollToTop.jsx
+ * ===================================================================
+ * Client component that triggers a floating button when the user scrolls past
+ * 300 vertical pixels. Clicking the action smooth scrolls back to the top
+ * of the document and clears/resets the browser hash location path.
+ */
+
 'use client';
 import { useState, useEffect } from 'react';
 
+/**
+ * ScrollToTop Component
+ * Sticky circular scroll shortcut mapping user viewport coordinates to trigger visibility.
+ *
+ * @returns {React.ReactElement} The circular arrow button container
+ */
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 

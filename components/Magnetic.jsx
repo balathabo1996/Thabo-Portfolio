@@ -1,7 +1,23 @@
+/**
+ * Magnetic Wrapper Component — components/Magnetic.jsx
+ * ====================================================
+ * An interactive wrapper component that pulls nested content towards the user's cursor
+ * using Framer Motion spring physics. Ideal for interactive icons, badges, and CTA links.
+ */
+
 'use client';
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * Magnetic Component
+ * Applies cursor attraction logic to its children.
+ *
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Component node elements to apply the magnetic effect on
+ * @param {number} [props.strength=0.2] - Force modifier that adjusts mouse-pull offset (higher = stronger attraction)
+ * @returns {React.ReactElement} The framer-motion wrap segment
+ */
 export default function Magnetic({ children, strength = 0.2 }) {
   const ref = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });

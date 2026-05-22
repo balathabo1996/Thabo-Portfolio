@@ -21,6 +21,15 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+/**
+ * ContactForm Component
+ * Renders an interactive client-side form using react-hook-form.
+ * Submits validated feedback or inquiries via POST to /api/contact.
+ * Integrates anti-spam honeypot mechanism to prevent bots.
+ * Shows transactional statuses using a dynamic modal dialog.
+ *
+ * @returns {React.ReactElement} The interactive ContactForm JSX structure
+ */
 export default function ContactForm() {
   const {
     register,

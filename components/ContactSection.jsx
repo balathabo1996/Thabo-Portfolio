@@ -1,5 +1,26 @@
+/**
+ * Contact Section Component — components/ContactSection.jsx
+ * =========================================================
+ * Displays the contact methods, phone number, email, locations, and social links
+ * retrieved from the profile. Includes the interactive client-side ContactForm.
+ */
+
 import ContactForm from "./ContactForm";
 
+/**
+ * ContactSection Component
+ * Renders the structural layout for the contact panel containing personal details
+ * and the submission form.
+ *
+ * @param {Object} props
+ * @param {Object} props.profile - User profile object containing contact information
+ * @param {string} [props.profile.email] - Contact email address
+ * @param {string} [props.profile.linkedinUrl] - URL of LinkedIn profile
+ * @param {string} [props.profile.githubUrl] - URL of GitHub profile
+ * @param {string} [props.profile.phone] - Contact telephone number
+ * @param {string} [props.profile.location] - Geographical location address
+ * @returns {React.ReactElement} The styled ContactSection component
+ */
 export default function ContactSection({ profile = {} }) {
   return (
     <section id="contact" className="py-5 reveal">

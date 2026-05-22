@@ -1,6 +1,29 @@
+/**
+ * Professional Profile Section Component — components/About.jsx
+ * =============================================================
+ * Renders the narrative biography, technical expertise, work timeline,
+ * education credentials, voluntary contributions, and professional honors sections.
+ * Combines responsive grid alignment with interactive dynamic badges and hover scales.
+ */
+
 import Image from "next/image";
 import ExperienceTimeline from "./ExperienceTimeline";
 
+/**
+ * About Component
+ * Renders the main identity summary, capabilities categories, and timeline elements.
+ * 
+ * @param {Object} props
+ * @param {Object} [props.profile] - Primary owner profile details
+ * @param {string} [props.profile.bio] - Multiline professional narrative intro
+ * @param {string} [props.profile.missionTitle] - Subtitle for professional mission
+ * @param {string} [props.profile.missionDescription] - Description paragraph for the mission
+ * @param {Object} [props.dbSkills] - Technical skill lists categorized by type key (infra, virt, prog, db, sec, soft)
+ * @param {Array} [props.achievements] - Key achievements timeline list
+ * @param {Array} [props.voluntary] - Volunteer contributions timeline list
+ * @param {Array} [props.educationExperience] - Academic background timeline list
+ * @param {Array} [props.workExperience] - Professional employment timeline list
+ */
 export default function About({ 
   profile = {},
   dbSkills = {}, 
@@ -8,7 +31,7 @@ export default function About({
   voluntary = [], 
   educationExperience = [],
   workExperience = []
-}) {
+ }) {
   const {
     bio = "Experienced Infrastructure Engineer specializing in Windows environments and virtualization.",
     missionTitle = "Professional Mission",
@@ -18,20 +41,23 @@ export default function About({
   return (
     <section id="about" className="py-5 reveal">
       <div className="container">
+        {/* Title bar with visual icon */}
         <h1 className="page-title display-5 fw-bold reveal">
           <i className="fas fa-user-tie"></i> Professional{" "}
           <span>Profile</span>
         </h1>
 
         <div className="resume-section">
-          {/* Intro / Summary */}
+          {/* Intro / Summary block */}
           <div className="about-intro reveal">
             <div className="lead">
+              {/* Parse double-line spacing paragraph chunks cleanly */}
               {bio.split('\n').map((para, i) => (
                 <p key={i} className={i === 0 ? "lead" : ""}>{para}</p>
               ))}
             </div>
 
+            {/* Sub-card describing professional target values or mission goals */}
             <div className="career-goal">
               <h4>{missionTitle}</h4>
               <div className="mission-content">
@@ -42,7 +68,7 @@ export default function About({
             </div>
           </div>
 
-          {/* Technical Skills Section */}
+          {/* Technical Skills and capabilities grid section */}
           {Object.keys(dbSkills).length > 0 && (
             <div className="section-group mt-5">
               <div className="section-header reveal">
@@ -51,6 +77,7 @@ export default function About({
               </div>
               <div className="skills-grid reveal-stagger">
                 {Object.entries(dbSkills).map(([category, skills]) => {
+                  // Mappings keys to friendly visual headings
                   const categoryMap = {
                     'infra': { title: 'Infrastructure & Operating Systems', class: 'infra' },
                     'virt': { title: 'Virtualization & Tools', class: 'virt' },
@@ -67,6 +94,7 @@ export default function About({
                       <div className="skill-tags">
                         {skills.map((skill, idx) => (
                           <span key={idx} className="badge rounded-pill d-inline-flex align-items-center">
+                            {/* Prioritize customizable branded image icon, fallback to FontAwesome vector icon */}
                             {skill.imageUrl ? (
                               <Image src={skill.imageUrl} alt={skill.name} className="me-2" width={18} height={18} />
                             ) : (
@@ -83,9 +111,10 @@ export default function About({
             </div>
           )}
 
+          {/* Work Employment history interactive timeline widget */}
           <ExperienceTimeline workExperience={workExperience} />
 
-          {/* Education Section */}
+          {/* Education background section */}
           <div className="section-header reveal">
             <h2>Education</h2>
             <div className="section-line"></div>
@@ -114,6 +143,7 @@ export default function About({
                         <span className="location">{edu.location}</span>
                       </div>
                     </div>
+                    {/* Render sub bullet points detailing courses or graduation status */}
                     {edu.description && edu.description.length > 0 && (
                       <ul>
                         {edu.description.map((point, pIdx) => (
@@ -129,7 +159,7 @@ export default function About({
             )}
           </div>
 
-          {/* Key Achievements & Certifications */}
+          {/* Key Achievements, honors, and certificates category */}
           {achievements.length > 0 && (
             <div className="section-group mt-5">
               <div className="section-header reveal">
@@ -150,7 +180,7 @@ export default function About({
             </div>
           )}
 
-          {/* Voluntary Contributions */}
+          {/* Voluntary contributions and communities involvement */}
           {voluntary.length > 0 && (
             <div className="section-group mt-5">
               <div className="section-header reveal">
@@ -175,3 +205,4 @@ export default function About({
     </section>
   );
 }
+

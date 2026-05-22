@@ -1,3 +1,17 @@
+/**
+ * Administrative Control Panel Page — app/admin/page.jsx
+ * =======================================================
+ * A Client-Side Rendered (CSR) Next.js administrator control dashboard.
+ * 
+ * Major Functionalities:
+ *   - Security: API-Key based access token caching in localStorage.
+ *   - Telemetry Charts: Renders Recharts bar charts for resume download counters.
+ *   - Mongoose CRUD forms: Full management panels for Profiles, Projects, Skills, and Experience.
+ *   - Drag-and-Drop Sequencing: Framer Motion <Reorder.Group> drag re-sequencing for skills,
+ *     projects, and experiences mapping directly to PATCH route bulk ordering.
+ *   - Dynamic uploads: Media uploads directly routed to Cloudinary via Next.js API endpoints.
+ */
+
 "use client";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -16,7 +30,691 @@ import {
 } from "recharts";
 import NetworkBackground from "@/components/NetworkBackground";
 
+/**
+ * Helper to parse experience/project periods (e.g. "Jan 2022 – Present", "Jan 2022 – Dec 2024")
+ */
+function parsePeriod(periodStr) {
+  const result = {
+    startMonth: "",
+    startYear: "",
+    endMonth: "",
+    endYear: "",
+    isCurrent: false,
+    isCustom: false,
+    customValue: periodStr || ""
+  };
+
+  if (!periodStr) return result;
+
+  const trimmed = periodStr.trim();
+  
+  // 1. Try to match: Month Year – Present
+  const currentRegex = /^([a-zA-Z]+)\s+(\d{4})\s*[-–—]\s*Present$/i;
+  const currentMatch = trimmed.match(currentRegex);
+  if (currentMatch) {
+    result.startMonth = formatMonth(currentMatch[1]);
+    result.startYear = currentMatch[2];
+    result.isCurrent = true;
+    return result;
+  }
+
+  // 2. Try to match: Month Year – Month Year
+  const rangeRegex = /^([a-zA-Z]+)\s+(\d{4})\s*[-–—]\s*([a-zA-Z]+)\s+(\d{4})$/i;
+  const rangeMatch = trimmed.match(rangeRegex);
+  if (rangeMatch) {
+    result.startMonth = formatMonth(rangeMatch[1]);
+    result.startYear = rangeMatch[2];
+    result.endMonth = formatMonth(rangeMatch[3]);
+    result.endYear = rangeMatch[4];
+    return result;
+  }
+
+  // 3. Try to match: Year – Year (e.g. "2023 - 2026")
+  const yearRangeRegex = /^(\d{4})\s*[-–—]\s*(\d{4})$/;
+  const yearRangeMatch = trimmed.match(yearRangeRegex);
+  if (yearRangeMatch) {
+    result.startYear = yearRangeMatch[1];
+    result.endYear = yearRangeMatch[2];
+    return result;
+  }
+
+  // Fallback to custom mode if unable to parse
+  result.isCustom = true;
+  return result;
+}
+
+function formatMonth(month) {
+  if (!month) return "";
+  const m = month.trim().toLowerCase();
+  const months = {
+    jan: "Jan", january: "Jan",
+    feb: "Feb", february: "Feb",
+    mar: "Mar", march: "Mar",
+    apr: "Apr", april: "Apr",
+    may: "May",
+    jun: "Jun", june: "Jun",
+    jul: "Jul", july: "Jul",
+    aug: "Aug", august: "Aug",
+    sep: "Sep", september: "Sep",
+    oct: "Oct", october: "Oct",
+    nov: "Nov", november: "Nov",
+    dec: "Dec", december: "Dec"
+  };
+  return months[m] || (month.charAt(0).toUpperCase() + month.slice(1));
+}
+
+/**
+ * PeriodPicker Component
+ * Renders custom dropdown selectors for Start Month/Year, End Month/Year or Ongoing/Present.
+ * Features an ultra-premium glassmorphic card design with custom styled select elements,
+ * an iOS-style segmented mode switch, interactive emerald switch toggle, and desktop timeline connectors.
+ */
+function PeriodPicker({ value, onChange }) {
+  const [isCustom, setIsCustom] = useState(false);
+  const [customVal, setCustomVal] = useState("");
+  const [startMonth, setStartMonth] = useState("");
+  const [startYear, setStartYear] = useState("");
+  const [endMonth, setEndMonth] = useState("");
+  const [endYear, setEndYear] = useState("");
+  const [isCurrent, setIsCurrent] = useState(false);
+
+  // Synchronize local picker state when remote form value changes
+  useEffect(() => {
+    if (!value) {
+      setStartMonth("");
+      setStartYear("");
+      setEndMonth("");
+      setEndYear("");
+      setIsCurrent(false);
+      setIsCustom(false);
+      setCustomVal("");
+      return;
+    }
+
+    const parsed = parsePeriod(value);
+    if (parsed.isCustom) {
+      setIsCustom(true);
+      setCustomVal(value);
+    } else {
+      setIsCustom(false);
+      setStartMonth(parsed.startMonth);
+      setStartYear(parsed.startYear);
+      setEndMonth(parsed.endMonth);
+      setEndYear(parsed.endYear);
+      setIsCurrent(parsed.isCurrent);
+    }
+  }, [value]);
+
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let y = currentYear + 5; y >= 1990; y--) {
+    years.push(y.toString());
+  }
+
+  // Update outer form state
+  const triggerChange = (updated) => {
+    let finalStr = "";
+    if (updated.isCustom) {
+      finalStr = updated.customVal;
+    } else {
+      const start = [updated.startMonth, updated.startYear].filter(Boolean).join(" ");
+      let end = "";
+      if (updated.isCurrent) {
+        end = "Present";
+      } else {
+        end = [updated.endMonth, updated.endYear].filter(Boolean).join(" ");
+      }
+      
+      if (start && end) {
+        finalStr = `${start} – ${end}`;
+      } else if (start) {
+        finalStr = start;
+      } else if (end) {
+        finalStr = end;
+      }
+    }
+    onChange(finalStr);
+  };
+
+  const handleCustomChange = (e) => {
+    const val = e.target.value;
+    setCustomVal(val);
+    triggerChange({ isCustom: true, customVal: val });
+  };
+
+  const handleStartMonthChange = (e) => {
+    const val = e.target.value;
+    setStartMonth(val);
+    triggerChange({ isCustom, startMonth: val, startYear, endMonth, endYear, isCurrent });
+  };
+
+  const handleStartYearChange = (e) => {
+    const val = e.target.value;
+    setStartYear(val);
+    triggerChange({ isCustom, startMonth, startYear: val, endMonth, endYear, isCurrent });
+  };
+
+  const handleEndMonthChange = (e) => {
+    const val = e.target.value;
+    setEndMonth(val);
+    triggerChange({ isCustom, startMonth, startYear, endMonth: val, endYear, isCurrent });
+  };
+
+  const handleEndYearChange = (e) => {
+    const val = e.target.value;
+    setEndYear(val);
+    triggerChange({ isCustom, startMonth, startYear, endMonth, endYear: val, isCurrent });
+  };
+
+  const handleCurrentToggle = () => {
+    const nextVal = !isCurrent;
+    setIsCurrent(nextVal);
+    triggerChange({ isCustom, startMonth, startYear, endMonth, endYear, isCurrent: nextVal });
+  };
+
+  const toggleMode = (targetCustom) => {
+    if (targetCustom === isCustom) return;
+    
+    if (isCustom) {
+      // Switching from custom text back to structured dropdown selectors
+      setIsCustom(false);
+      triggerChange({
+        isCustom: false,
+        startMonth: startMonth || "Jan",
+        startYear: startYear || currentYear.toString(),
+        endMonth: endMonth || "Dec",
+        endYear: endYear || currentYear.toString(),
+        isCurrent
+      });
+    } else {
+      // Switching from dropdown selectors to custom text fallback
+      setIsCustom(true);
+      const start = [startMonth, startYear].filter(Boolean).join(" ");
+      const end = isCurrent ? "Present" : [endMonth, endYear].filter(Boolean).join(" ");
+      const defVal = start && end ? `${start} – ${end}` : (start || end || "");
+      setCustomVal(defVal);
+      triggerChange({ isCustom: true, customVal: defVal });
+    }
+  };
+
+  return (
+    <div className="period-picker-container">
+      <style jsx>{`
+        .period-picker-container {
+          background: rgba(17, 24, 39, 0.45);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-left: 3px solid #6366f1;
+          border-radius: 0.85rem;
+          padding: 1.25rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.1rem;
+          width: 100%;
+          backdrop-filter: blur(12px) saturate(180%);
+          box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+          position: relative;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .period-picker-container:hover {
+          border-color: rgba(255, 255, 255, 0.12);
+          border-left-color: #818cf8;
+          box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+          transform: translateY(-2px);
+        }
+        
+        .picker-header {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          justify-content: space-between;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          padding-bottom: 0.75rem;
+        }
+        @media (min-width: 640px) {
+          .picker-header {
+            flex-direction: row;
+            align-items: center;
+          }
+        }
+        
+        .picker-header-title {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.78rem;
+          font-weight: 800;
+          color: #e2e8f0;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .picker-header-title i {
+          font-size: 0.9rem;
+          background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        
+        /* Premium Segmented Switcher */
+        .mode-switch-container {
+          display: flex;
+          background: rgba(15, 23, 42, 0.75);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 9999px;
+          padding: 3px;
+          align-items: center;
+          gap: 2px;
+          min-width: 290px;
+        }
+        .mode-tab-btn {
+          flex: 1;
+          padding: 0.4rem 0.85rem;
+          font-size: 0.68rem;
+          font-weight: 700;
+          color: #94a3b8;
+          border-radius: 9999px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.4rem;
+          white-space: nowrap;
+        }
+        .mode-tab-btn.active {
+          background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+          color: #ffffff;
+          box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+        }
+        .mode-tab-btn:hover:not(.active) {
+          color: #e2e8f0;
+          background: rgba(255, 255, 255, 0.04);
+        }
+        
+        /* Content area with subtle animation */
+        .picker-content {
+          animation: picker-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+          width: 100%;
+        }
+        @keyframes picker-fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(4px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        /* Grid Layout & Timeline Connector */
+        .picker-grid-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          position: relative;
+          width: 100%;
+        }
+        @media (min-width: 768px) {
+          .picker-grid-wrapper {
+            flex-direction: row;
+            align-items: flex-end;
+          }
+        }
+        
+        .selector-group {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+        }
+        
+        .selector-title-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 24px;
+        }
+        
+        .selector-title {
+          font-size: 0.68rem;
+          color: #94a3b8;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        
+        .timeline-connector {
+          display: none;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          width: 48px;
+          height: 44px;
+          margin-bottom: 0px;
+        }
+        @media (min-width: 768px) {
+          .timeline-connector {
+            display: flex;
+          }
+        }
+        .connector-line {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
+          z-index: 1;
+          transition: all 0.3s ease;
+        }
+        .connector-arrow {
+          color: #818cf8;
+          background: #0f172a;
+          border: 1px solid rgba(99, 102, 241, 0.25);
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 2;
+          font-size: 0.65rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .period-picker-container:hover .connector-line {
+          background: linear-gradient(90deg, rgba(99, 102, 241, 0.6) 0%, rgba(16, 185, 129, 0.6) 100%);
+        }
+        .period-picker-container:hover .connector-arrow {
+          border-color: #6366f1;
+          color: #34d399;
+          transform: scale(1.1) rotate(360deg);
+          box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+        }
+        
+        .select-row {
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 0.5rem;
+          width: 100%;
+        }
+        
+        /* Tactile Dropdown Overrides */
+        select {
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          background: rgba(15, 23, 42, 0.6);
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 0.75rem center;
+          background-size: 0.9rem;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 0.6rem;
+          color: #f1f5f9;
+          font-size: 0.82rem;
+          font-weight: 600;
+          height: 44px;
+          padding: 0 2.25rem 0 0.85rem !important;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          outline: none;
+          cursor: pointer;
+        }
+        select:hover:not(:disabled) {
+          border-color: rgba(99, 102, 241, 0.55);
+          background-color: rgba(30, 41, 59, 0.85);
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23818cf8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+          transform: translateY(-0.5px);
+        }
+        select:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+          background-color: rgba(30, 41, 59, 0.95);
+        }
+        select:disabled {
+          opacity: 0.25;
+          cursor: not-allowed;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23334155'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+          border-color: rgba(255, 255, 255, 0.02);
+        }
+        select option {
+          background: #0f172a;
+          color: #f1f5f9;
+          font-weight: 500;
+          padding: 8px;
+        }
+        
+        /* Premium Custom Toggle Switch */
+        .custom-switch {
+          display: flex;
+          align-items: center;
+          gap: 0.45rem;
+          background: rgba(15, 23, 42, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 9999px;
+          padding: 3px 8px 3px 3px;
+          cursor: pointer;
+          user-select: none;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .custom-switch:hover {
+          border-color: rgba(16, 185, 129, 0.35);
+          background: rgba(15, 23, 42, 0.85);
+          transform: translateY(-0.5px);
+        }
+        .custom-switch.active {
+          background: rgba(16, 185, 129, 0.08);
+          border-color: rgba(16, 185, 129, 0.25);
+        }
+        .custom-switch.active:hover {
+          border-color: rgba(16, 185, 129, 0.5);
+        }
+        .switch-track {
+          width: 24px;
+          height: 14px;
+          background: rgba(71, 85, 105, 0.5);
+          border-radius: 9999px;
+          position: relative;
+          transition: all 0.25s ease;
+        }
+        .switch-knob {
+          width: 10px;
+          height: 10px;
+          background: #94a3b8;
+          border-radius: 50%;
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .custom-switch.active .switch-track {
+          background: rgba(16, 185, 129, 0.5);
+        }
+        .custom-switch.active .switch-knob {
+          left: 12px;
+          background: #34d399;
+          box-shadow: 0 0 6px #10b981;
+        }
+        .switch-text {
+          font-size: 0.65rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #94a3b8;
+          transition: color 0.25s;
+        }
+        .custom-switch.active .switch-text {
+          color: #34d399;
+        }
+        
+        /* Custom Input Mode Style */
+        .custom-input-box {
+          position: relative;
+          width: 100%;
+          display: flex;
+          align-items: center;
+        }
+        .custom-input-box i {
+          position: absolute;
+          left: 0.9rem;
+          color: #818cf8;
+          font-size: 0.85rem;
+          pointer-events: none;
+        }
+        .custom-input-box input {
+          width: 100%;
+          background: rgba(15, 23, 42, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 0.6rem;
+          padding: 0 1rem 0 2.25rem;
+          height: 44px;
+          color: white;
+          font-size: 0.85rem;
+          font-weight: 500;
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          outline: none;
+        }
+        .custom-input-box input:hover {
+          border-color: rgba(99, 102, 241, 0.5);
+          background-color: rgba(30, 41, 59, 0.85);
+        }
+        .custom-input-box input:focus {
+          border-color: #6366f1;
+          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+          background-color: rgba(30, 41, 59, 0.95);
+        }
+        
+        .helper-text {
+          font-size: 0.65rem;
+          color: #64748b;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+          margin-top: 0.25rem;
+          letter-spacing: 0.02em;
+        }
+        .helper-text i {
+          color: #94a3b8;
+        }
+      `}</style>
+
+      <div className="picker-header">
+        <div className="picker-header-title">
+          <i className="far fa-calendar-alt"></i>
+          <span>Period Duration</span>
+        </div>
+        <div className="mode-switch-container">
+          <button 
+            type="button" 
+            className={`mode-tab-btn ${!isCustom ? 'active' : ''}`}
+            onClick={() => toggleMode(false)}
+          >
+            <i className="fas fa-list-ul"></i> Dropdowns
+          </button>
+          <button 
+            type="button" 
+            className={`mode-tab-btn ${isCustom ? 'active' : ''}`}
+            onClick={() => toggleMode(true)}
+          >
+            <i className="fas fa-keyboard"></i> Custom Text
+          </button>
+        </div>
+      </div>
+
+      <div className="picker-content">
+        {isCustom ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <div className="custom-input-box">
+              <i className="fas fa-pen-fancy"></i>
+              <input
+                type="text"
+                placeholder="e.g., Jan 2024 – Present or Winter 2025"
+                value={customVal}
+                onChange={handleCustomChange}
+              />
+            </div>
+            <div className="helper-text">
+              <i className="fas fa-info-circle"></i>
+              <span>Use manual entry for custom terms, specific breaks, or unconventional timelines.</span>
+            </div>
+          </div>
+        ) : (
+          <div className="picker-grid-wrapper">
+            {/* Start Date Selector */}
+            <div className="selector-group">
+              <div className="selector-title-bar">
+                <div className="selector-title">
+                  <i className="fas fa-calendar-plus" style={{ color: '#818cf8', fontSize: '0.75rem' }}></i>
+                  <span>Start Date</span>
+                </div>
+              </div>
+              <div className="select-row">
+                <select value={startMonth} onChange={handleStartMonthChange}>
+                  <option value="">Month</option>
+                  {months.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+                <select value={startYear} onChange={handleStartYearChange}>
+                  <option value="">Year</option>
+                  {years.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+            </div>
+
+            {/* Visual Timeline Connector */}
+            <div className="timeline-connector">
+              <div className="connector-line"></div>
+              <div className="connector-arrow">
+                <i className="fas fa-chevron-right"></i>
+              </div>
+            </div>
+
+            {/* End Date Selector */}
+            <div className="selector-group">
+              <div className="selector-title-bar">
+                <div className="selector-title">
+                  <i className="fas fa-calendar-check" style={{ color: isCurrent ? '#475569' : '#34d399', fontSize: '0.75rem' }}></i>
+                  <span>End Date</span>
+                </div>
+                <div className={`custom-switch ${isCurrent ? 'active' : ''}`} onClick={handleCurrentToggle}>
+                  <div className="switch-track">
+                    <span className="switch-knob"></span>
+                  </div>
+                  <span className="switch-text">Present</span>
+                </div>
+              </div>
+              <div className="select-row">
+                <select value={endMonth} onChange={handleEndMonthChange} disabled={isCurrent}>
+                  <option value="">Month</option>
+                  {months.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+                <select value={endYear} onChange={handleEndYearChange} disabled={isCurrent}>
+                  <option value="">Year</option>
+                  {years.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * AdminDashboard Component
+ * Renders either the Secure Login form or the full portfolio management dashboard panels.
+ */
 export default function AdminDashboard() {
+
   const { register, handleSubmit, reset, setValue, watch } = useForm({
     defaultValues: {
       category: "",
@@ -2372,11 +3070,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="grid-2">
                         <div className="input-wrap">
-                          <label>Period</label>
-                          <input
-                            placeholder="e.g., Jan 2024 – Present"
-                            {...register("period")}
-                          />
+                          <PeriodPicker value={watch("period")} onChange={(val) => setValue("period", val)} />
                         </div>
                         <div className="input-wrap">
                           <label>Project Link</label>
@@ -3531,11 +4225,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="grid-2">
                         <div className="input-wrap">
-                          <label>Period</label>
-                          <input
-                            placeholder="e.g., Jan 2022 – Present"
-                            {...register("period")}
-                          />
+                          <PeriodPicker value={watch("period")} onChange={(val) => setValue("period", val)} />
                         </div>
                         <div className="input-wrap">
                           <label>Location</label>

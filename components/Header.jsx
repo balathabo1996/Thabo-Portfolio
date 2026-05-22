@@ -19,6 +19,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+/**
+ * Header Component
+ * Renders the primary navigation bar.
+ * Connects hash scroll positions to trigger active status animations on layout links.
+ * Hidden in admin layouts.
+ *
+ * @returns {React.ReactElement|null} The styled Header component or null if in admin view
+ */
 export default function Header() {
   const [activeSection, setActiveSection] = useState('home');
   const pathname = usePathname();

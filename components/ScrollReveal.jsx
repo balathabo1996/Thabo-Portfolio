@@ -1,7 +1,22 @@
+/**
+ * Smooth Scroll-Reveal Animation Provider — components/ScrollReveal.jsx
+ * ====================================================================
+ * Client component that configures dynamic staggered viewports, opacity fades,
+ * and translation lifts as elements enter or leave the viewport using Framer Motion.
+ * Fallback patterns automatically enable instant visibility if users prefer reduced motion.
+ */
+
 "use client";
 import { useEffect } from "react";
 import { animate, inView, stagger } from "framer-motion";
 
+/**
+ * ScrollReveal Component
+ * Side-effect client component that tracks elements matching CSS selectors (.reveal,
+ * .reveal-stagger, .timeline, etc.) and animates them inside the viewport.
+ *
+ * @returns {React.ReactElement} A styled template tag containing prefers-reduced-motion fallback directives
+ */
 export default function ScrollReveal() {
   useEffect(() => {
     // 1. Simple Reveal

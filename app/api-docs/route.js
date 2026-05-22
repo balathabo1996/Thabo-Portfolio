@@ -6,7 +6,15 @@
  */
 import swaggerSpec from '@/lib/swagger';
 
+/**
+ * GET /api-docs
+ * Renders the custom branded Swagger UI HTML interface in the browser.
+ * Serializes the OpenAPI JSON spec, escaping closing script tags to prevent injection issues.
+ *
+ * @returns {Promise<Response>} Self-contained HTML response representing the API Docs Explorer interface
+ */
 export async function GET() {
+  // Prevent cross-site scripting (XSS) or browser parser confusion by escaping script closing tags
   const specJson = JSON.stringify(swaggerSpec).replace(/<\/script>/gi, '<\\/script>');
 
   const html = `<!DOCTYPE html>

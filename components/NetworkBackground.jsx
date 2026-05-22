@@ -1,6 +1,21 @@
+/**
+ * Interactive Network Particle Canvas Background — components/NetworkBackground.jsx
+ * =================================================================================
+ * Renders a full-screen, high-performance HTML5 Canvas simulation that renders floating
+ * nodes (particles) which automatically connect to neighboring nodes and the user's cursor when close.
+ * Employs requestAnimationFrame for smooth drawing cycles, custom particle classes,
+ * mouse-tracking offsets, dynamic connection opacities, and canvas resize listeners.
+ */
+
 'use client';
 import { useEffect, useRef } from 'react';
 
+/**
+ * NetworkBackground Component
+ * Renders the canvas element and orchestrates particle physics algorithms.
+ *
+ * @returns {React.ReactElement} The background canvas container
+ */
 export default function NetworkBackground() {
   const canvasRef = useRef(null);
 

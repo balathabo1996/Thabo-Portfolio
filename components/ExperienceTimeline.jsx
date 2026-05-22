@@ -1,3 +1,24 @@
+/**
+ * ExperienceTimeline Component — components/ExperienceTimeline.jsx
+ * ================================================================
+ * Renders an interactive vertical timeline detailing employment history,
+ * job roles, company associations, geographical locations, and key responsibilities.
+ */
+
+/**
+ * ExperienceTimeline Component
+ * Generates employment timeline events mapping professional experience models.
+ *
+ * @param {Object} props
+ * @param {Array} props.workExperience - Array of work experience objects
+ * @param {string} props.workExperience[].role - Job title or position held
+ * @param {string} props.workExperience[].company - Name of the organization
+ * @param {string} [props.workExperience[].companyUrl] - Optional link to the company website
+ * @param {string} props.workExperience[].period - Date duration or period (e.g., "2020 - Present")
+ * @param {string} props.workExperience[].location - Location of the company
+ * @param {Array<string>} [props.workExperience[].description] - Responsibilities or achievements list
+ * @returns {React.ReactElement} The styled work experience timeline
+ */
 export default function ExperienceTimeline({ workExperience = [] }) {
   return (
     <>

@@ -1,9 +1,38 @@
+/**
+ * Hero Component — components/Hero.jsx
+ * ====================================
+ * Renders the introductory primary landing screen.
+ * Displays profile snapshot image, key technical descriptors, localized contact
+ * pointers, social shortcuts (embedded in magnetic interactive frames), and call to actions.
+ * Features an interactive dynamic canvas-drawn network particle background.
+ */
+
 'use client';
 
 import NetworkBackground from "./NetworkBackground";
 import ResumeButton from "./ResumeButton";
 import Magnetic from "./Magnetic";
 
+/**
+ * Hero Component
+ * Renders the primary portfolio welcome block and social pointers.
+ *
+ * @param {Object} props
+ * @param {Object} props.profile - User profile information
+ * @param {string} [props.profile.firstName] - Owner's first name
+ * @param {string} [props.profile.lastName] - Owner's last name
+ * @param {string} [props.profile.title] - Job title descriptor string
+ * @param {string} [props.profile.profileImageUrl] - Cloudinary or local profile image URL
+ * @param {string} [props.profile.location] - Target geography or office location
+ * @param {string} [props.profile.email] - Contact email address
+ * @param {string} [props.profile.phone] - Telephony contact number
+ * @param {string} [props.profile.linkedinUrl] - URL pointer for LinkedIn profile
+ * @param {string} [props.profile.githubUrl] - URL pointer for GitHub profile
+ * @param {string} [props.profile.tagline] - Primary sub-heading statement
+ * @param {string} [props.profile.heroDescription] - Narrative overview block
+ * @param {string} [props.profile.resumeUrl] - URL mapping to the downloadable Resume document
+ * @returns {React.ReactElement} The styled Hero component
+ */
 export default function Hero({ profile = {} }) {
   const {
     firstName = "Thabotharan",

@@ -17,7 +17,25 @@ import Profile from '@/lib/models/Profile';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * @swagger
+ * /api/profile:
+ *   get:
+ *     summary: Retrieve owner profile
+ *     description: Returns the portfolio owner's configuration metadata. Automatically bootstraps an empty profile if none is registered.
+ *     responses:
+ *       200:
+ *         description: Profile document retrieved successfully.
+ *       500:
+ *         description: Database bootstrap or fetch failure.
+ */
 
+/**
+ * GET /api/profile
+ * Retrieves the singular profile configuration from MongoDB.
+ *
+ * @returns {NextResponse} The JSON profile document object
+ */
 export async function GET() {
   try {
     await connectToDatabase();
@@ -32,6 +50,69 @@ export async function GET() {
   }
 }
 
+/**
+ * @swagger
+ * /api/profile:
+ *   put:
+ *     summary: Update owner profile details
+ *     description: Modifies existing attributes. Enforces whitelist checks to prevent mass assignment exploits.
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profileImageUrl:
+ *                 type: string
+ *               bio:
+ *                 type: string
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               linkedinUrl:
+ *                 type: string
+ *               githubUrl:
+ *                 type: string
+ *               tagline:
+ *                 type: string
+ *               heroDescription:
+ *                 type: string
+ *               resumeUrl:
+ *                 type: string
+ *               missionTitle:
+ *                 type: string
+ *               missionDescription:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully.
+ *       400:
+ *         description: No valid update parameters provided.
+ *       500:
+ *         description: Server database update failure.
+ */
+
+/**
+ * PUT /api/profile
+ * Safely writes filtered key parameters to the single profile document.
+ *
+ * @param {Request} request - Next.js Request with JSON updating object
+ * @returns {NextResponse} The JSON modified profile document
+ */
 export async function PUT(request) {
   try {
     await connectToDatabase();

@@ -8,6 +8,20 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
+/**
+ * Footer Component
+ * Renders the global footer elements including copyright, links, and social items.
+ * Suppressed when rendering the admin panel layout.
+ *
+ * @param {Object} props
+ * @param {Object} props.profile - User profile info containing social URLs
+ * @param {string} [props.profile.email] - Contact email address
+ * @param {string} [props.profile.linkedinUrl] - LinkedIn profile URL
+ * @param {string} [props.profile.githubUrl] - GitHub profile URL
+ * @param {string} [props.profile.firstName] - Owner's first name
+ * @param {string} [props.profile.lastName] - Owner's last name
+ * @returns {React.ReactElement|null} The styled footer or null if in admin view
+ */
 export default function Footer({ profile = {} }) {
   const pathname = usePathname();
   if (pathname === '/admin') return null;
