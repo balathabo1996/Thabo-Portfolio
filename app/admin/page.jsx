@@ -952,6 +952,7 @@ export default function AdminDashboard() {
         category: "",
         role: "",
         company: "",
+        companyUrl: "",
         location: "",
         name: "",
         icon: "",
@@ -4223,15 +4224,31 @@ export default function AdminDashboard() {
                           />
                         </div>
                       </div>
+                      <div className="input-wrap">
+                        <PeriodPicker value={watch("period")} onChange={(val) => setValue("period", val)} />
+                      </div>
                       <div className="grid-2">
-                        <div className="input-wrap">
-                          <PeriodPicker value={watch("period")} onChange={(val) => setValue("period", val)} />
-                        </div>
                         <div className="input-wrap">
                           <label>Location</label>
                           <input
                             placeholder="e.g., Ontario, Canada"
                             {...register("location")}
+                          />
+                        </div>
+                        <div className="input-wrap">
+                          <label>
+                            {activeTab === "exp-edu"
+                              ? "Institution Website URL"
+                              : "Company Website URL"}
+                          </label>
+                          <input
+                            type="url"
+                            placeholder={
+                              activeTab === "exp-edu"
+                                ? "e.g. https://utoronto.ca"
+                                : "e.g. https://globaltech.com"
+                            }
+                            {...register("companyUrl")}
                           />
                         </div>
                       </div>
