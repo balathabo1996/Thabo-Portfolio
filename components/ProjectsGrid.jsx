@@ -76,7 +76,7 @@ export default function ProjectsGrid({ dbProjects = [] }) {
             >
               <div className="portfolio-img-wrapper">
                 <Image
-                  src={project.imageUrl || "/images/placeholder.jpg"}
+                  src={project.imageUrl || "/images/placeholder.png"}
                   alt={project.title}
                   width={800}
                   height={600}

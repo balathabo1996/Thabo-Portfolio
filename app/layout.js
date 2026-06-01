@@ -65,7 +65,7 @@ export const generateViewport = () => ({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <body className={`${outfit.variable} ${inter.variable}`} suppressHydrationWarning>
+      <body className={`${outfit.variable}  ${inter.variable}`} suppressHydrationWarning>
         <SmoothScrolling>
           {children}
         </SmoothScrolling>
