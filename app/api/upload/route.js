@@ -85,12 +85,14 @@ export async function POST(request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    const uniqueId = `${field}_${Date.now()}`;
+
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
           resource_type: 'image',
           folder: 'thabo-portfolio',
-          public_id: field,
+          public_id: uniqueId,
           overwrite: true,
           invalidate: true,
           access_mode: 'public',

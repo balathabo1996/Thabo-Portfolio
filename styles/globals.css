@@ -1658,6 +1658,12 @@ main {
   color: #818cf8;
 }
 
+.tech-badge.ai {
+  border-color: rgba(217, 70, 239, 0.3);
+  background: rgba(217, 70, 239, 0.08);
+  color: #e879f9;
+}
+
 .portfolio-card:hover .tech-badge {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -1772,6 +1778,12 @@ main {
 
 .portfolio-card:hover .tech-badge.svc {
   background: #6366f1;
+  color: white;
+  border-color: transparent;
+}
+
+.portfolio-card:hover .tech-badge.ai {
+  background: #d946ef;
   color: white;
   border-color: transparent;
 }

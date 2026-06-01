@@ -1005,7 +1005,9 @@ export default function AdminDashboard() {
       });
       const data = await res.json();
       if (res.ok) {
-        setProfile({ ...profile, [field]: data.url });
+        if (activeTab === "profile") {
+          setProfile({ ...profile, [field]: data.url });
+        }
         setValue(field, data.url);
         showMessage("File uploaded successfully");
       } else {
@@ -3127,6 +3129,7 @@ export default function AdminDashboard() {
                                       app: "Mobile App",
                                       infra: "Infrastructure",
                                       sec: "Security",
+                                      ai: "Artificial Intelligence",
                                     }[watch("category")]
                                   : "Select Category"}
                               </span>
@@ -3155,6 +3158,7 @@ export default function AdminDashboard() {
                                     { id: "app", name: "Mobile App" },
                                     { id: "infra", name: "Infrastructure" },
                                     { id: "sec", name: "Security" },
+                                    { id: "ai", name: "Artificial Intelligence" },
                                   ].map((opt) => (
                                     <div
                                       key={opt.id}
