@@ -989,15 +989,57 @@ export default function AdminDashboard() {
   }, [activeTab, profile]);
 
   const handleFileUpload = async (e, field) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("field", field);
+    const originalFile = e.target.files[0];
+    if (!originalFile) return;
 
     setLoading(true);
+
     try {
+      // Client-side compression to prevent 4.5MB Vercel Serverless limits
+      const compressedFile = await new Promise((resolve, reject) => {
+        if (!originalFile.type.startsWith('image/')) return resolve(originalFile);
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(originalFile);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_DIMENSION = 1920;
+            let { width, height } = img;
+
+            if (width > height && width > MAX_DIMENSION) {
+              height *= MAX_DIMENSION / width;
+              width = MAX_DIMENSION;
+            } else if (height > MAX_DIMENSION) {
+              width *= MAX_DIMENSION / height;
+              height = MAX_DIMENSION;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const newName = originalFile.name.replace(/\.[^/.]+$/, "") + ".webp";
+                resolve(new File([blob], newName, { type: 'image/webp' }));
+              } else {
+                resolve(originalFile);
+              }
+            }, 'image/webp', 0.85);
+          };
+          img.onerror = () => resolve(originalFile);
+        };
+        reader.onerror = () => resolve(originalFile);
+      });
+
+      const formData = new FormData();
+      formData.append("file", compressedFile);
+      formData.append("field", field);
+
       const res = await fetch("/api/upload", {
         method: "POST",
         headers: { "x-api-key": authToken },
