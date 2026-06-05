@@ -80,6 +80,7 @@ export default function ProjectsGrid({ dbProjects = [] }) {
                   alt={project.title}
                   width={800}
                   height={600}
+                  priority={index < 2}
                 />
                 {project.period && <div className="portfolio-date">{project.period}</div>}
               </div>
