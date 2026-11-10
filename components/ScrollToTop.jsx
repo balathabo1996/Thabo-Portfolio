@@ -7,6 +7,7 @@
  */
 
 'use client';
+import Icon from './Icon';
 import { useState, useEffect } from 'react';
 
 /**
@@ -50,7 +51,7 @@ export default function ScrollToTop() {
       onClick={scrollToTop}
       aria-label="Scroll to top"
     >
-      <i className="fas fa-chevron-up"></i>
+      <Icon name="up" />
     </button>
   );
 }

@@ -15,6 +15,7 @@
  * the browser performs a smooth scroll to the correct section on click.
  */
 'use client';
+import Icon from './Icon';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -88,7 +89,7 @@ export default function Header() {
             window.history.pushState(null, null, '/#home');
           }}
         >
-          <i className="fas fa-home"></i>
+          <Icon name="home" />
           <span>Home</span>
         </Link>
         <Link 
@@ -98,7 +99,7 @@ export default function Header() {
           className={activeSection === 'about' ? 'active' : ''}
           onClick={() => setActiveSection('about')}
         >
-          <i className="fas fa-user"></i>
+          <Icon name="user" />
           <span>About</span>
         </Link>
         <Link 
@@ -108,7 +109,7 @@ export default function Header() {
           className={activeSection === 'projects' ? 'active' : ''}
           onClick={() => setActiveSection('projects')}
         >
-          <i className="fas fa-code"></i>
+          <Icon name="code" />
           <span>Projects</span>
         </Link>
         <Link 
@@ -118,7 +119,7 @@ export default function Header() {
           className={activeSection === 'contact' ? 'active' : ''}
           onClick={() => setActiveSection('contact')}
         >
-          <i className="fas fa-paper-plane"></i>
+          <Icon name="send" />
           <span>Contact</span>
         </Link>
       </nav>

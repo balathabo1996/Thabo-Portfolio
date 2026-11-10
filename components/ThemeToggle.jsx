@@ -6,6 +6,7 @@
  */
 
 'use client';
+import Icon from './Icon';
 import { useTheme } from './ThemeProvider';
 
 /**
@@ -21,9 +22,9 @@ export default function ThemeToggle() {
     <button
       className="theme-toggle"
       onClick={toggleTheme}
-      aria-label="Toggle theme"
+      aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
     >
-      <i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+      <Icon name={theme === "dark" ? "sun" : "moon"} />
     </button>
   );
 }

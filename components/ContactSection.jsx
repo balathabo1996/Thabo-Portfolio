@@ -1,3 +1,4 @@
+import Icon from "./Icon";
 /**
  * Contact Section Component — components/ContactSection.jsx
  * =========================================================
@@ -34,7 +35,7 @@ export default function ContactSection({ profile = {} }) {
               {profile.email && (
                 <li>
                   <div className="icon">
-                    <i className="fas fa-envelope"></i>
+                    <Icon name="mail" />
                   </div>
                   <div className="details">
                     <strong>Email</strong>
@@ -81,7 +82,7 @@ export default function ContactSection({ profile = {} }) {
               {profile.phone && (
                 <li>
                   <div className="icon">
-                    <i className="fas fa-phone"></i>
+                    <Icon name="phone" />
                   </div>
                   <div className="details">
                     <strong>Phone</strong>
@@ -92,7 +93,7 @@ export default function ContactSection({ profile = {} }) {
               {profile.location && (
                 <li>
                   <div className="icon">
-                    <i className="fas fa-map-marker-alt"></i>
+                    <Icon name="pin" />
                   </div>
                   <div className="details">
                     <strong>Location</strong>

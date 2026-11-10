@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 
 import { useState } from "react";
 import Image from "next/image";
@@ -24,7 +25,7 @@ export default function Hero({ profile = {} }) {
           {profile.resumeUrl && <ResumeButton resumeUrl={profile.resumeUrl} />}
         </div>
         <div className="studio-socials">
-          <span><i className="fas fa-location-dot" aria-hidden="true" /> {profile.location || "Scarborough, Ontario, Canada"}</span>
+          <span><Icon name="pin" /> {profile.location || "Scarborough, Ontario, Canada"}</span>
           <a href={profile.githubUrl || "https://github.com/balathabo1996"} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           <a href={profile.linkedinUrl || "https://www.linkedin.com/in/balachandran-thabotharan"} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>

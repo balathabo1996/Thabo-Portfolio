@@ -439,3 +439,21 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
   .portfolio-site .studio-hero { padding-top: 100px; }
   .portfolio-site .portrait-cutout .studio-portrait { height: 320px; }
 }
+
+/* Icon geometry is independent of text size and device font rendering. */
+.ui-icon { display: inline-block; width: 20px; height: 20px; flex: 0 0 auto; vertical-align: middle; overflow: visible; }
+.portfolio-site .navigation a { display: inline-flex; align-items: center; justify-content: center; }
+.portfolio-site .navigation .ui-icon { width: 18px; height: 18px; }
+.portfolio-site :is(.theme-toggle, .scroll-to-top) { display: inline-flex; align-items: center; justify-content: center; padding: 0; line-height: 1; }
+.portfolio-site :is(.theme-toggle, .scroll-to-top) .ui-icon { width: 21px; height: 21px; }
+.portfolio-site .studio-socials > span { display: inline-flex; align-items: center; gap: 8px; }
+.portfolio-site .studio-socials .ui-icon { width: 16px; height: 16px; }
+.portfolio-site :is(.category-icon-bubble, .timeline-node, .contact-list .icon) { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; line-height: 1; }
+.portfolio-site :is(.category-icon-bubble, .timeline-node, .contact-list .icon, .social-links a) > i { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; font-size: 18px; line-height: 1; }
+.portfolio-site .contact-list .icon .ui-icon { width: 21px; height: 21px; }
+.portfolio-site .skill-brand-img { display: inline-block; width: 18px; height: 18px; object-fit: contain; vertical-align: middle; flex-shrink: 0; }
+.portfolio-site :is(.skill-brand-fa, .tech-badge > i, .timeline-tab-btn > i) { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; min-width: 18px; font-size: 15px; line-height: 1; flex-shrink: 0; }
+.portfolio-site .timeline-node > i { width: 18px; height: 18px; font-size: 16px; }
+@media (hover: none), (pointer: coarse) {
+  .portfolio-site .theme-toggle:hover, .portfolio-site .scroll-to-top:hover { transform: none; }
+}
