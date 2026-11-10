@@ -1,5 +1,11 @@
 // Shared 24-unit stroke icons stay aligned without depending on font metrics.
 const paths = {
+  server: ['M4 3h16v7H4V3Z', 'M4 14h16v7H4v-7Z', 'M7 6.5h.01M7 17.5h.01', 'M11 6.5h6M11 17.5h6'],
+  layers: ['m12 3 10 5-10 5L2 8l10-5Z', 'm2 12 10 5 10-5', 'm2 16 10 5 10-5'],
+  shield: ['M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6l-9-4Z', 'm8 12 3 3 5-6'],
+  bulb: ['M9 18h6', 'M10 22h4', 'M9 18v-2c0-2-4-3-4-7a7 7 0 0 1 14 0c0 4-4 5-4 7v2'],
+  play: ['m8 5 11 7-11 7V5Z'],
+  pause: ['M8 5v14', 'M16 5v14'],
   arrowRight: ['M4 12h16', 'm14 6 6 6-6 6'],
   external: ['M7 17 17 7', 'M7 7h10v10'],
   down: ['M12 4v16', 'm6 14 6 6 6-6'],

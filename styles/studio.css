@@ -167,8 +167,8 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .capability-window { overflow: hidden; flex: 1; -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
 .capability-track { display: flex; width: max-content; animation: capability-scroll 35s linear infinite; }
 .capability-group { display: flex; align-items: center; flex-shrink: 0; }
-.capability-group > span { display: flex; align-items: center; white-space: nowrap; gap: 38px; padding: 23px 19px; color: var(--studio-muted); font: 500 clamp(16px, 2vw, 23px) var(--font-heading); letter-spacing: -.025em; }
-.strip-star { color: var(--studio-accent); font-size: 24px; }
+.capability-group > span { display: flex; align-items: center; white-space: nowrap; gap: 12px; padding: 23px 24px; color: var(--studio-muted); font: 500 clamp(16px, 2vw, 23px) var(--font-heading); letter-spacing: -.025em; }
+.portfolio-site .capability-icon { display: block; flex: 0 0 20px; width: 20px; height: 20px; color: var(--studio-accent); }
 .capability-strip > button { flex: 0 0 45px; margin: 0 15px; height: 36px; border: 1px solid var(--studio-line); border-radius: 50%; background: transparent; color: var(--studio-ink); font-size: 12px; }
 .capability-strip:is(:hover, :focus-within, .is-paused) .capability-track { animation-play-state: paused; }
 .section-kicker { font: 12px monospace; letter-spacing: .16em; color: var(--studio-muted); margin-bottom: 20px; }
@@ -209,14 +209,14 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
   .editorial-section-heading > p { margin-top: 20px; }
   .visual-coordinate { right: -15px; font-size: 8px; }
   .contact-headline > span { display: none; }
-  .capability-group > span { padding-block: 18px; gap: 24px; }
+  .capability-group > span { padding: 18px; gap: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .portfolio-site .headline-line > span, .portfolio-site .hero-eyebrow, .portfolio-site .studio-role, .portfolio-site .hero-description-text, .portfolio-site .system-note { animation: none; }
   .capability-track { animation: none; width: auto; }
   .capability-group { flex-wrap: wrap; justify-content: center; }
   .capability-group[aria-hidden="true"], .capability-strip > button { display: none; }
-  .capability-group > span { padding: 12px; gap: 18px; font-size: 14px; }
+  .capability-group > span { padding: 12px; gap: 10px; font-size: 14px; }
 }
 
 /* A single expressive initial; the rest of the wordmark stays simple. */
@@ -486,3 +486,56 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .portfolio-site footer .social-links { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px; margin: 0 auto 16px; }
 .portfolio-site footer .social-links a { flex: 0 0 44px; width: 44px; height: 44px; }
 .portfolio-site footer p { max-width: 650px; margin: 0 auto; text-align: center; line-height: 1.7; overflow-wrap: anywhere; }
+
+/* Timeline rail and milestones share the same coordinates at every breakpoint. */
+.portfolio-site .timeline {
+  --timeline-gap: 64px;
+  --timeline-node-size: 44px;
+  --timeline-axis: 22px;
+  --timeline-node-top: 24px;
+  padding-left: var(--timeline-gap);
+  margin-left: 0;
+  border-left: 0;
+}
+.portfolio-site .timeline::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--timeline-axis) - 1px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--studio-accent);
+  background: linear-gradient(180deg, transparent, var(--studio-accent) 32px, var(--studio-accent) calc(100% - 32px), transparent);
+  opacity: .35;
+  pointer-events: none;
+}
+.portfolio-site .timeline-node {
+  left: calc(var(--timeline-axis) - var(--timeline-gap) - var(--timeline-node-size) / 2);
+  top: var(--timeline-node-top);
+  width: var(--timeline-node-size);
+  height: var(--timeline-node-size);
+  background: var(--studio-surface);
+  border: 2px solid var(--studio-accent);
+  color: var(--studio-accent);
+}
+.portfolio-site .timeline-item::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--timeline-axis) - var(--timeline-gap) + var(--timeline-node-size) / 2);
+  top: calc(var(--timeline-node-top) + var(--timeline-node-size) / 2);
+  width: calc(var(--timeline-gap) - var(--timeline-axis) - var(--timeline-node-size) / 2);
+  height: 1px;
+  background: var(--studio-accent);
+  opacity: .35;
+  pointer-events: none;
+}
+.portfolio-site .timeline-item:hover .timeline-node { transform: none; border-color: var(--studio-accent); background: var(--studio-surface); color: var(--studio-accent); box-shadow: 0 0 0 5px var(--accent-glow); }
+.portfolio-site .timeline-item:last-child { margin-bottom: 0; }
+@media (max-width: 600px) {
+  .portfolio-site .timeline { --timeline-gap: 44px; --timeline-node-size: 32px; --timeline-axis: 16px; --timeline-node-top: 20px; }
+  .portfolio-site .timeline-node > i { width: 16px; height: 16px; font-size: 14px; }
+}
+
+.portfolio-site .capability-group > span { line-height: 1.5; }
+.portfolio-site .capability-strip > button { display: inline-flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+.portfolio-site .capability-strip > button .ui-icon { width: 16px; height: 16px; }

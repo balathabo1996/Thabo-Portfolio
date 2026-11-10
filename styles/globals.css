@@ -26,8 +26,8 @@
       transparent 25%),
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  --font-heading: var(--font-outfit), sans-serif;
-  --font-body: var(--font-inter), sans-serif;
+  --font-heading: var(--font-outfit, system-ui), sans-serif;
+  --font-body: var(--font-inter, system-ui), sans-serif;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --fs-h1: clamp(2.5rem, 5vw + 1rem, 4.5rem);
   --fs-h2: clamp(2rem, 4vw + 1rem, 3.5rem);
@@ -363,22 +363,16 @@ html {
   scroll-padding-top: 80px;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-body);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #00a3d9;
+/* Subtle scrollbars with a solid thumb instead of a glowing gradient. */
+:root { --scrollbar-thumb: #607565; --scrollbar-hover: #93b082; --scrollbar-track: #0d1210; }
+[data-theme="light"] { --scrollbar-thumb: #8c9c88; --scrollbar-hover: #59754b; --scrollbar-track: #f2f4ed; }
+html { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { min-height: 48px; background: var(--scrollbar-thumb); border: 3px solid var(--scrollbar-track); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+@media (pointer: coarse), (forced-colors: active) {
+  html { scrollbar-width: auto; scrollbar-color: auto; }
 }
 
 html,
@@ -2563,29 +2557,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Custom Scrollbar for premium feel */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom,
-      transparent,
-      var(--accent-color),
-      transparent);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-gradient);
-  box-shadow: 0 0 10px var(--accent-glow);
-}
-
 /* Safari fix for text gradients */
 .page-title span,
 .logo span {
@@ -3304,4 +3275,11 @@ textarea {
 @media (max-width: 480px) {
   .admin-wrapper .login-card { padding: 28px 20px; border-radius: 20px; }
   .admin-wrapper .item-actions { flex-wrap: wrap; }
+}
+
+/* Next.js font variables are attached to body; resolve derived tokens here. */
+body {
+  --font-heading: var(--font-outfit, system-ui), sans-serif;
+  --font-body: var(--font-inter, system-ui), sans-serif;
+  font-family: var(--font-body);
 }
