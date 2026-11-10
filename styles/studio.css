@@ -381,3 +381,61 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .portfolio-site dialog.contact-modal-overlay::backdrop { background: transparent; }
 .portfolio-site .studio-headline { font-size: clamp(2.2rem, 4.4vw, 4rem); }
 @media (max-width: 700px) { .portfolio-site .studio-headline { font-size: clamp(1.9rem, 7.8vw, 3.5rem); } }
+/* Device reflow: keep the fixed navigation compact and let content shrink safely. */
+.portfolio-site .logo.brand-wordmark { width: auto; text-align: left; }
+.portfolio-site .navigation { width: auto; flex: 0 0 auto; flex-wrap: nowrap; margin-top: 0; }
+.portfolio-site .navigation a { min-height: 44px; }
+.portfolio-site .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.portfolio-site :is(.skill-category, .role-info, .meta-info, .timeline-tab-content) { min-width: 0; }
+.portfolio-site .skill-tags { display: flex; flex-wrap: wrap; }
+.portfolio-site .skill-tags .badge { max-width: 100%; white-space: normal; text-align: left; line-height: 1.6; }
+.portfolio-site .skill-tags :is(img, i) { flex-shrink: 0; }
+.portfolio-site .timeline-tab-btn { min-height: 44px; }
+.portfolio-site .resume-card :is(h3, h4, p, li, a) { overflow-wrap: anywhere; }
+.portfolio-site .meta-info { max-width: 100%; }
+.portfolio-site .contact-list li { min-width: 0; }
+.portfolio-site .contact-list .icon { flex-shrink: 0; }
+.portfolio-site .contact-form textarea { resize: vertical; }
+.portfolio-site .contact-modal-card { max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); overflow-y: auto; padding: clamp(22px, 5vw, 40px); }
+@media (max-width: 900px) {
+  .portfolio-site header { left: max(14px, env(safe-area-inset-left, 0px)); right: max(14px, env(safe-area-inset-right, 0px)); width: auto; max-width: none; transform: none; gap: 12px; padding: 8px 12px !important; }
+  .portfolio-site .navigation { gap: 2px; padding: 2px; }
+  .portfolio-site .navigation a { min-width: 44px; padding: 0 10px; }
+  .portfolio-site .navigation a span { display: none; }
+  .portfolio-site .navigation a i { font-size: 16px; }
+  .portfolio-site .studio-hero { grid-template-columns: minmax(0, 1fr); padding-top: calc(115px + env(safe-area-inset-top, 0px)); gap: 36px; min-height: auto; }
+  .portfolio-site .hero-content { order: initial; }
+  .portfolio-site .studio-visual { width: min(85%, 380px); margin-inline: auto; }
+  .portfolio-site .studio-headline { font-size: clamp(1.9rem, 7.8vw, 4rem); }
+  .portfolio-site .editorial-section-heading { flex-wrap: wrap; }
+  .portfolio-site .timeline-tabs-nav { max-width: 100%; border-radius: 20px; gap: 6px; }
+  .portfolio-site .timeline-tab-btn { flex: 1 1 auto; justify-content: center; padding: 10px 12px; }
+}
+@media (max-width: 600px) {
+  .portfolio-site .skills-grid { grid-template-columns: minmax(0, 1fr); }
+  .portfolio-site .resume-card { padding: 20px; }
+  .portfolio-site .card-header { flex-direction: column; align-items: flex-start; }
+  .portfolio-site .meta-info { text-align: left; margin-left: 0; flex-shrink: 1; }
+  .portfolio-site .role-info h3 { font-size: clamp(21px, 5vw, 28px); }
+  .portfolio-site .contact-headline { font-size: clamp(2rem, 8.3vw, 3rem); }
+  .portfolio-site .hero-actions > div { max-width: 100%; }
+  .portfolio-site .studio-primary { gap: 22px; }
+  .portfolio-site .contact-info-panel, .portfolio-site .contact-form { padding: 22px; }
+  .portfolio-site .portrait-cutout .studio-portrait { height: clamp(320px, 100vw, 420px); }
+  .portfolio-site footer { padding-right: 65px; }
+}
+@media (max-width: 400px) {
+  .portfolio-site header { left: 8px; right: 8px; gap: 4px; padding: 7px 8px !important; }
+  .portfolio-site .logo.brand-wordmark { font-size: 23px; padding-inline: 2px; }
+  .portfolio-site .navigation { gap: 0; padding: 0; }
+  .portfolio-site .navigation a { padding-inline: 8px; }
+  .portfolio-site .timeline-tab-btn { flex-basis: 100%; }
+  .portfolio-site .cutout-visual .system-note { left: 0; right: 0; justify-content: center; font-size: 12px; }
+  .portfolio-site .portrait-caption { flex-wrap: wrap; padding-inline: 0; gap: 12px; }
+  .portfolio-site .portrait-caption > span { text-align: left; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .portfolio-site header { top: 6px; }
+  .portfolio-site .studio-hero { padding-top: 100px; }
+  .portfolio-site .portrait-cutout .studio-portrait { height: 320px; }
+}
