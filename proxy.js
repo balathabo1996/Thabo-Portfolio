@@ -1,23 +1,15 @@
-import { NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
-
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_change_me'
-);
+import { NextResponse } from 'next/server.js';
+import { verifyToken } from './lib/auth.js';
 
 async function validateToken(request) {
   const token = request.headers.get('x-api-key');
   if (!token) return false;
-  try {
-    await jwtVerify(token, secret);
-    return true;
-  } catch {
-    return false;
-  }
+  const payload = await verifyToken(token);
+  return payload?.admin === true;
 }
 
 export async function proxy(request) {
-  const { pathname, method } = request.nextUrl;
+  const { pathname } = request.nextUrl;
   const reqMethod = request.method;
 
   // /api/backup — always requires auth (GET included)
@@ -40,7 +32,7 @@ export async function proxy(request) {
   ];
 
   const isWritableRoute = writableRoutes.some(r => pathname.startsWith(r));
-  const isWriteMethod = ['POST', 'PUT', 'DELETE'].includes(reqMethod);
+  const isWriteMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(reqMethod);
 
   if (isWritableRoute && isWriteMethod) {
     const valid = await validateToken(request);

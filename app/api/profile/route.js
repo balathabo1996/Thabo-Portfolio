@@ -18,19 +18,6 @@ import Profile from '@/lib/models/Profile';
 export const dynamic = 'force-dynamic';
 
 /**
- * @swagger
- * /api/profile:
- *   get:
- *     summary: Retrieve owner profile
- *     description: Returns the portfolio owner's configuration metadata. Automatically bootstraps an empty profile if none is registered.
- *     responses:
- *       200:
- *         description: Profile document retrieved successfully.
- *       500:
- *         description: Database bootstrap or fetch failure.
- */
-
-/**
  * GET /api/profile
  * Retrieves the singular profile configuration from MongoDB.
  *
@@ -49,62 +36,6 @@ export async function GET() {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
-
-/**
- * @swagger
- * /api/profile:
- *   put:
- *     summary: Update owner profile details
- *     description: Modifies existing attributes. Enforces whitelist checks to prevent mass assignment exploits.
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               profileImageUrl:
- *                 type: string
- *               bio:
- *                 type: string
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *               role:
- *                 type: string
- *               title:
- *                 type: string
- *               location:
- *                 type: string
- *               email:
- *                 type: string
- *               phone:
- *                 type: string
- *               linkedinUrl:
- *                 type: string
- *               githubUrl:
- *                 type: string
- *               tagline:
- *                 type: string
- *               heroDescription:
- *                 type: string
- *               resumeUrl:
- *                 type: string
- *               missionTitle:
- *                 type: string
- *               missionDescription:
- *                 type: string
- *     responses:
- *       200:
- *         description: Profile updated successfully.
- *       400:
- *         description: No valid update parameters provided.
- *       500:
- *         description: Server database update failure.
- */
 
 /**
  * PUT /api/profile

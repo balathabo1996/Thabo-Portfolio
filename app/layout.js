@@ -14,7 +14,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Outfit, Inter } from 'next/font/google';
 import SmoothScrolling from '@/components/SmoothScrolling';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import '@/styles/globals.css';
+import '@/styles/studio.css';
 
 // Configure the Outfit font with subsets and variable token mapping
 const outfit = Outfit({
@@ -52,6 +54,7 @@ export const generateViewport = () => ({
   themeColor: '#0a0c10',
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
 });
 
 /**
@@ -66,9 +69,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={`${outfit.variable}  ${inter.variable}`} suppressHydrationWarning>
-        <SmoothScrolling>
-          {children}
-        </SmoothScrolling>
+        <ThemeProvider>
+          <SmoothScrolling>
+            {children}
+          </SmoothScrolling>
+        </ThemeProvider>
       </body>
     </html>
   );

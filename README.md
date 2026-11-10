@@ -1,329 +1,260 @@
+<div align="center">
+
 # Thabo.Portfolio
 
-> A modern, full-stack portfolio website for **Balachandran Thabotharan** — Infrastructure Engineer & IT Professional.
+**Infrastructure. Security. Development.**
 
-Built with **Next.js 16**, **React 19**, **MongoDB**, and **Cloudinary**, featuring a single-page design with dark theming, dynamic profile management, Google Drive resume linking, contact form email delivery, and fully documented REST APIs.
+A personal portfolio and content-management system for **Balachandran Thabotharan** — Infrastructure Engineer & IT Professional.
 
----
+[Portfolio](https://thabo-portfolio.vercel.app) · [API Studio](https://thabo-portfolio.vercel.app/api-docs) · [OpenAPI JSON](https://thabo-portfolio.vercel.app/api/swagger)
 
-## Live Demo
+![Next.js 16](https://img.shields.io/badge/Next.js-16-111111?logo=nextdotjs)
+![React 19](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47a248?logo=mongodb&logoColor=white)
+![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-6ba539?logo=openapiinitiative&logoColor=white)
 
-| Environment | URL |
-|---|---|
-| Production | `https://thabo-portfolio.vercel.app` |
-| API Docs (Swagger) | `https://thabo-portfolio.vercel.app/api-docs` |
-| Admin Dashboard | `https://thabo-portfolio.vercel.app/admin` |
-| Local Dev | `http://localhost:3000` |
+</div>
 
 ---
 
-## Features
+## At a glance
 
-### User-Facing
-- **Lenis Smooth Scrolling** — Buttery-smooth, physics-based scrolling interpolation across the entire app
-- **Magnetic Micro-Interactions** — Buttons and social links follow the user's cursor using Framer Motion spring physics
-- **Fluid Animated Typography** — Hero headers feature flowing, continuous liquid color gradients
-- **Cyber-Network Particle Engine** — An ambient, physics-driven canvas background that flows continuously
-- **Glassmorphism & 3D Depth** — Frosted glass navigation bars and project cards that physically tilt and lift on hover
-- **Dynamic Profile Photo** — Uploaded to Cloudinary via the Admin Dashboard; served globally via CDN
-- **Resume Link** — "View Resume" opens a Google Drive PDF link; managed via the Admin Dashboard
-- **Contact Form** — Validated form (react-hook-form) with honeypot anti-spam and backend IP rate limiting; delivers email via Gmail SMTP
-- **Custom 404 Page** — Dark-mode "Signal Lost" page with glitch animation for any unknown routes
+A responsive, server-rendered portfolio with a graphite-and-mint identity, animated typography, an optimized transparent portrait, project showcases, categorized skills, an experience timeline, and a contact form. A separate admin dashboard manages portfolio content, uploaded images, and display order.
 
-### Technical
-- **Admin CMS Dashboard** — Protected by `x-api-key`; manage profile, experience, projects, and skills from a single UI at `/admin`
-- **Cloudinary Image Uploads** — Profile photo uploads go directly to Cloudinary with automatic overwrite (`overwrite: true`)
-- **REST API** — 10 endpoints documented with OpenAPI 3.1 and testable via Swagger UI at `/api-docs`
-- **Security Headers** — HSTS, X-Frame-Options, X-Content-Type-Options, and more via `next.config.mjs`
-- **API Key Protection** — Write endpoints guarded by `x-api-key` header check
-- **Mass-Assignment Protection** — Only whitelisted fields accepted on profile updates
-- **Drag-and-Drop Reordering** — Framer Motion `Reorder` integrated into the CMS with optimized bulk-update `PATCH` endpoints.
-- **PWA Ready** — `manifest.json` App Shortcuts (long-press icon to access Admin) and custom AI-generated high-fidelity logos.
-- **ISR Disabled** — `revalidate = 0` ensures all pages are always dynamically rendered from live DB data
+| Experience | What it includes |
+| --- | --- |
+| **Public portfolio** | Theme switching, scroll reveals, magnetic buttons, project previews, resume links, and reduced-motion support |
+| **Admin workspace** | Profile editing, projects, skills, experience, draft status, drag-and-drop ordering, media management, and JSON export |
+| **API Studio** | 28 documented operations across 13 paths, request and response schemas, JWT instructions, route filtering, and interactive requests |
+| **Backend services** | MongoDB persistence, Cloudinary images, Gmail SMTP delivery, and resume-click analytics |
 
----
+## Contents
 
-## Tech Stack
+- [Run locally](#run-locally)
+- [Environment variables](#environment-variables)
+- [Commands and checks](#commands-and-checks)
+- [API reference](#api-reference)
+- [Authentication](#authentication)
+- [Content and assets](#content-and-assets)
+- [Project structure](#project-structure)
+- [Deployment](#deployment)
+- [Current behavior and limitations](#current-behavior-and-limitations)
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, Turbopack) |
-| UI Library | React 19 |
-| Styling | CSS3 Custom Properties + Bootstrap 5.3 |
-| Animations | Framer Motion + Lenis Smooth Scroll |
-| Icons | Font Awesome 6 |
-| Database | MongoDB Atlas (Mongoose 9) |
-| Image Hosting | Cloudinary (free tier — images only) |
-| Resume Hosting | Google Drive (shareable PDF link) |
-| Email | Nodemailer + Gmail SMTP |
-| Forms | react-hook-form |
-| API Docs | Swagger UI (OpenAPI 3.1) |
-| Deployment | Vercel |
+## Run locally
 
----
+**Requirements:** Node.js **20.9 or newer** (the installed Next.js requirement), npm, and a reachable MongoDB database. Cloudinary is needed for media features; a Gmail App Password is needed for contact email delivery.
 
-## Project Structure
+1. Open the repository directory and install dependencies:
 
-```
-Thabo-Portfolio/
-│
-├── app/                          # Next.js App Router
-│   ├── layout.js                 # Root layout — global CSS, fonts, providers
-│   ├── not-found.js              # Custom 404 "Signal Lost" page
-│   │
-│   ├── (site)/
-│   │   ├── layout.js             # Site layout — Header, Footer, DynamicMetadata
-│   │   └── page.js               # Home page (Hero · Mission · Experience · Projects · Skills · Contact)
-│   │
-│   ├── admin/
-│   │   └── page.jsx              # Admin CMS Dashboard (protected by x-api-key)
-│   │
-│   ├── api/
-│   │   ├── profile/route.js      # GET + PUT /api/profile
-│   │   ├── experience/route.js   # GET + POST + PUT + DELETE /api/experience
-│   │   ├── projects/route.js     # GET + POST + PUT + DELETE /api/projects
-│   │   ├── skills/route.js       # GET + POST + PUT + DELETE /api/skills
-│   │   ├── analytics/resume/     # POST /api/analytics/resume (download tracking)
-│   │   ├── contact/route.js      # POST /api/contact
-│   │   ├── upload/route.js       # POST /api/upload (Cloudinary image upload)
-│   │   ├── swagger/route.js      # GET /api/swagger  (OpenAPI JSON)
-│   │   └── api-docs/             # GET /api-docs  (Swagger UI page)
-│   │
-│   └── opengraph-image.jsx       # Dynamic OG image generation
-│
-├── components/
-│   ├── Hero.jsx                  # Hero section with profile photo and resume button
-│   ├── Header.jsx                # Frosted glass nav with scroll-tracked active link
-│   ├── Footer.jsx                # Social links + copyright
-│   ├── ResumeButton.jsx          # CTA button — tracks clicks, opens Google Drive PDF
-│   ├── ContactForm.jsx           # react-hook-form contact form + modal feedback
-│   ├── DynamicMetadata.jsx       # Scroll-driven tab title + favicon updates
-│   ├── SmoothScrolling.jsx       # Lenis physics-based smooth scroll engine
-│   ├── Magnetic.jsx              # Framer motion spring physics for buttons
-│   ├── NetworkBackground.jsx     # Ambient HTML5 Canvas particle background
-│   └── ScrollToTop.jsx           # Floating scroll-to-top button
-│
-├── lib/
-│   ├── mongodb.js                # Cached Mongoose connection (global singleton)
-│   ├── swagger.js                # OpenAPI 3.1 specification (single source of truth)
-│   └── models/
-│       ├── Profile.js            # Mongoose schema — owner profile
-│       ├── Experience.js         # Mongoose schema — work/edu history
-│       ├── Project.js            # Mongoose schema — portfolio projects
-│       └── Skill.js              # Mongoose schema — skills
-│
-├── styles/
-│   └── globals.css               # Full design system (variables, layout, animations)
-│
-├── public/
-│   ├── favicon.png               # Site favicon
-│   ├── manifest.json             # PWA manifest
-│   └── apple-icon.png            # Apple touch icon
-│
-├── postman/
-│   ├── Thabo-Portfolio.postman_collection.json   # API requests + test scripts
-│   └── Thabo-Portfolio.postman_environment.json  # base_url + admin_api_key variables
-│
-├── next.config.mjs               # Security headers, Cloudinary + Drive image domains
-├── jsconfig.json                 # Path aliases (@/components, @/lib, etc.)
-└── .env                          # Environment variables (git-ignored)
+   ```bash
+   npm ci
+   ```
+
+2. Create a `.env` file using the settings below. Keep it out of version control; this repository ignores `.env`.
+3. Generate a signing secret, then place its output in `JWT_SECRET`:
+
+   ```bash
+   node -e "console.log(require('node:crypto').randomBytes(48).toString('hex'))"
+   ```
+
+4. Start development:
+
+   ```bash
+   npm run dev
+   ```
+
+| Local address | Purpose |
+| --- | --- |
+| [localhost:3000](http://localhost:3000) | Portfolio |
+| [localhost:3000/admin](http://localhost:3000/admin) | Admin login and dashboard |
+| [localhost:3000/api-docs](http://localhost:3000/api-docs) | Interactive API reference |
+| [localhost:3000/api/swagger](http://localhost:3000/api/swagger) | OpenAPI JSON |
+
+## Environment variables
+
+```dotenv
+# Database
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
+MONGODB_DB=thabo-portfolio
+
+# Admin passphrase and a separate JWT signing secret
+ADMIN_API_KEY=replace-with-a-strong-admin-passphrase
+JWT_SECRET=replace-with-a-random-secret-of-at-least-32-characters
+
+# Gmail SMTP; use a Gmail App Password
+EMAIL_USER=your-account@gmail.com
+EMAIL_PASS=your-gmail-app-password
+
+# Cloudinary image service
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
 ```
 
----
+| Variable | Used for | Required by |
+| --- | --- | --- |
+| `MONGODB_URI`, `MONGODB_DB` | Database connection and database name | Portfolio data, content APIs, analytics, backups |
+| `ADMIN_API_KEY` | Admin login passphrase | `POST /api/auth/verify` |
+| `JWT_SECRET` | HS256 signing and verification; minimum 32 characters | Admin login and authenticated requests |
+| `EMAIL_USER`, `EMAIL_PASS` | Gmail SMTP credentials; mail is delivered to `EMAIL_USER` | Contact form |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Cloudinary credentials | Image upload and media routes |
 
-## API Reference
+`MONGO_URI` and `MONGO_DB` are supported as legacy aliases. The `MONGODB_*` values take precedence. Do not prefix secrets with `NEXT_PUBLIC_` or commit populated environment files.
 
-Full interactive documentation available at **`/api-docs`**.
+## Commands and checks
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/profile` | — | Fetch owner profile (auto-creates if missing) |
-| `PUT` | `/api/profile` | `x-api-key` | Update whitelisted profile fields |
-| `GET` | `/api/experience` | — | Fetch all experience entries |
-| `POST` | `/api/experience` | `x-api-key` | Add new experience entry |
-| `PUT` | `/api/experience` | `x-api-key` | Update experience entry by ID |
-| `PATCH` | `/api/experience` | `x-api-key` | Bulk update experiences (drag-and-drop reorder) |
-| `DELETE` | `/api/experience` | `x-api-key` | Delete experience entry by ID |
-| `GET` | `/api/projects` | — | Fetch all portfolio projects |
-| `POST` | `/api/projects` | `x-api-key` | Add new project |
-| `PUT` | `/api/projects` | `x-api-key` | Update project by ID |
-| `PATCH` | `/api/projects` | `x-api-key` | Bulk update projects (drag-and-drop reorder) |
-| `DELETE` | `/api/projects` | `x-api-key` | Delete project by ID |
-| `GET` | `/api/skills` | — | Fetch all skills |
-| `POST` | `/api/skills` | `x-api-key` | Add new skill |
-| `PUT` | `/api/skills` | `x-api-key` | Update skill by ID |
-| `PATCH` | `/api/skills` | `x-api-key` | Bulk update skills (drag-and-drop reorder) |
-| `DELETE` | `/api/skills` | `x-api-key` | Delete skill by ID |
-| `POST` | `/api/upload` | `x-api-key` | Upload profile image to Cloudinary |
-| `POST` | `/api/contact` | — | Send contact form email via Gmail |
-| `POST` | `/api/analytics/resume` | — | Track resume download click |
-| `GET` | `/api/swagger` | — | Raw OpenAPI 3.1 JSON spec |
-| `GET` | `/api-docs` | — | Interactive Swagger UI page |
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Next.js development server |
+| `npm run build` | Compile and generate the production build |
+| `npm start` | Serve the production build |
+| `npm test` | Run the security and documentation regression checks |
+| `node --test tests/security.test.mjs` | Verify JWT handling and protected routes without a database |
+| `node --test tests/openapi.test.mjs` | Verify route coverage, schemas, authentication declarations, and documentation HTML |
+
+The project uses the production build and regression tests as its configured checks. There is no lint command or unused lint toolchain installed.
+
+The security tests cover protected write methods including PATCH, authenticated backup export, public-route exceptions, token tampering, expired tokens, incorrect signing algorithms, non-admin tokens, and missing or short secrets. Documentation tests compare the specification against actual route exports to catch missing or stale operations.
+
+## API reference
+
+**[Open API Studio →](https://thabo-portfolio.vercel.app/api-docs)**
+
+The maintained specification lives in [`lib/swagger.js`](lib/swagger.js). Swagger UI consumes the same document returned by `/api/swagger`. Route handlers contain implementation notes; API schemas are maintained in this single specification.
+
+All paths below are relative to the current site. JSON is the default request/response format; upload uses multipart form data, and `/api-docs` returns HTML.
+
+| Path | Methods | Authentication and behavior |
+| --- | --- | --- |
+| `/api/auth/verify` | POST | Public login; exchanges `{ "key": "…" }` for an eight-hour admin JWT |
+| `/api/profile` | GET, PUT | GET is public; PUT requires JWT and accepts supported profile fields only |
+| `/api/projects` | GET, POST, PUT, PATCH, DELETE | GET is public; every write requires JWT |
+| `/api/experience` | GET, POST, PUT, PATCH, DELETE | GET is public; every write requires JWT |
+| `/api/skills` | GET, POST, PUT, PATCH, DELETE | GET is public; every write requires JWT |
+| `/api/upload` | POST | JWT required; multipart `file` plus optional `field`; images only |
+| `/api/media` | GET, DELETE | GET is public and lists up to 100 assets; DELETE requires JWT and JSON `{ "public_id": "…" }` |
+| `/api/contact` | POST | Public; sends email; per-instance IP rate limit and honeypot |
+| `/api/analytics/resume` | GET, POST | Public; GET reads count, POST increments it without a body |
+| `/api/stats` | GET | Public dashboard counts, including draft counts |
+| `/api/backup` | GET | JWT required; downloads a JSON content snapshot |
+| `/api/swagger` | GET | Public OpenAPI 3.1 document |
+| `/api-docs` | GET | Public branded Swagger UI |
+
+### Request conventions
+
+- **Create:** POST a resource payload. Project creation requires `title` and `description`; experience requires `role` and `company`; skills require `name` and `category`.
+- **Update:** PUT JSON containing `_id` and the fields to change. Profile PUT is a single-document update and does not use `_id`.
+- **Reorder:** PATCH `{ "items": [{ "_id": "OBJECT_ID", "order": 0 }] }`.
+- **Delete content:** DELETE `/api/projects?id=OBJECT_ID` (the same convention applies to experience and skills).
+- **Delete media:** DELETE `/api/media` with a JSON `public_id`, not an `id` query parameter.
+- **Include drafts:** Projects and experience accept `?all=true`. This is currently public. The skills GET route already returns all records, including drafts.
 
 ### Authentication
 
-All write endpoints require an `x-api-key` header:
+The header is named `x-api-key` for compatibility, but **its value is the JWT**, not the admin passphrase.
 
-```http
-PUT /api/profile
-x-api-key: your_admin_api_key
-Content-Type: application/json
+1. Send `POST /api/auth/verify` with JSON `{ "key": "YOUR_ADMIN_PASSPHRASE" }`.
+2. Copy `token` from the response.
+3. In API Studio, select **Authorize** and paste the raw token. Do not add `Bearer`.
+4. Use the header below for protected requests:
 
-{
-  "profileImageUrl": "https://res.cloudinary.com/...",
-  "resumeUrl": "https://drive.google.com/file/d/.../view",
-  "firstName": "Balachandran",
-  "lastName": "Thabotharan",
-  "role": "Infrastructure Engineer",
-  "location": "Scarborough, Ontario, Canada",
-  "email": "balathabo96@gmail.com",
-  "phone": "(437) 383-1996"
-}
-```
+   ```http
+   x-api-key: YOUR_JWT_TOKEN
+   ```
 
-Only whitelisted fields are written — all other keys are silently ignored.
+Tokens expire after **eight hours** and must contain `admin: true`. Missing or short `JWT_SECRET` values prevent signing and cause protected requests to be rejected. Missing `ADMIN_API_KEY` makes login return 503. Changing the signing secret invalidates existing sessions.
 
----
+Swagger authorization stays in memory and is cleared on refresh. The explorer targets its current origin. **Try it out sends real requests**: mutations modify stored content, uploads use Cloudinary, and contact submissions send email.
 
-## Getting Started
+### Examples
 
-### Prerequisites
-
-- **Node.js** 18 or later
-- **MongoDB Atlas** account (free tier works)
-- **Gmail** account with an [App Password](https://myaccount.google.com/apppasswords) enabled
-- **Cloudinary** account (free tier — for profile image uploads)
-
-### 1. Clone the repository
+Read public content:
 
 ```bash
-git clone <repository-url>
-cd Thabo-Portfolio
+curl 'http://localhost:3000/api/projects' --header 'Accept: application/json'
 ```
 
-### 2. Install dependencies
+Reorder projects with a token obtained from login:
 
 ```bash
-npm install
+curl --request PATCH 'http://localhost:3000/api/projects' \
+  --header 'Content-Type: application/json' \
+  --header 'x-api-key: YOUR_JWT_TOKEN' \
+  --data '{"items":[{"_id":"6650e8f2c3d4b5e6f7a8b9c0","order":0}]}'
 ```
 
-### 3. Configure environment variables
+These examples use POSIX-shell quoting. On Windows, use Swagger UI or PowerShell `Invoke-RestMethod` with the equivalent headers and body. Use placeholders in shared examples, never real tokens.
 
-Create a `.env` file in the project root:
+### Response conventions
 
-```env
-# MongoDB Atlas
-MONGO_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net
-MONGO_DB=Thabo-Portfolio
+| Status | Current use |
+| --- | --- |
+| `200` | Successful read, update, reorder, delete, login, upload, contact, or analytics operation |
+| `201` | Project, experience, or skill created |
+| `400` | Missing IDs, missing upload file or media ID, invalid reorder shape, or no supported profile fields |
+| `401` | Invalid login credentials or missing/invalid admin JWT |
+| `415` | Unsupported upload MIME type |
+| `429` | Contact endpoint rate limit exceeded |
+| `500` | Server, database, configuration, schema validation, or upstream-service failure |
+| `503` | Admin login passphrase is not configured |
 
-# Admin API key — protects all write endpoints
-ADMIN_API_KEY=your_strong_secret_key
+Most errors return `{ "error": "…" }`; some also include `success: false`. PUT routes for projects, experience, and skills currently return `null` with 200 when the ID has no matching record; they do not return 404. See each operation in Swagger for its actual responses.
 
-# Gmail SMTP — for contact form email delivery
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASS=xxxx xxxx xxxx xxxx    # Gmail App Password
+## Content and assets
 
-# Cloudinary — for profile image uploads (images only)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+- **Profile:** Manage identity, biography, contact information, mission text, and resume URL through the admin dashboard.
+- **Homepage portrait:** The current hero explicitly uses [`public/images/thabo-cutout.png`](public/images/thabo-cutout.png), optimized through Next.js Image. Updating `profileImageUrl` in the CMS does not replace this local hero asset.
+- **Projects, experience, skills:** Publish or draft entries and reorder them in the admin dashboard. The homepage excludes drafts.
+- **Images:** `/api/upload` stores images in Cloudinary under `thabo-portfolio` with a `field_timestamp` public ID. It returns a secure URL. The upload route does not accept resume PDFs.
+- **Resume:** Store a shareable document URL in `resumeUrl`. The resume button appears when that field is populated. Analytics count clicks, not confirmed downloads.
+- **Backup:** `/api/backup` exports profile, projects, experiences, and skills, including drafts. It does not include analytics, image file contents, or environment variables. There is no restore API.
+
+## Project structure
+
+```text
+app/
+  (site)/                  Public portfolio page and layout
+  admin/                   Admin login and CMS
+  api/                     Content, auth, contact, media, analytics, and docs routes
+  api-docs/route.js        Branded API Studio HTML
+  layout.js                Fonts, theme provider, global styles, and scrolling
+  opengraph-image.jsx      Social-sharing image
+  robots.js / sitemap.js   Search-engine discovery
+components/                Portfolio sections and interaction components
+lib/
+  auth.js                  HS256 token signing and verification
+  mongodb.js               Cached Mongoose connection
+  models/                  Profile, Project, Experience, Skill, and Analytics
+  swagger.js               Maintained OpenAPI specification
+styles/
+  globals.css              Shared design system and existing component styles
+  studio.css               Scoped public portfolio styling
+public/                    Icons, manifest, project images, and portrait
+tests/                     Security and documentation regression checks
+proxy.js                   API authorization boundary
 ```
 
-### 4. Start the development server
-
-```bash
-npm run dev
-```
-
-| URL | What you see |
-|---|---|
-| `http://localhost:3000` | Portfolio site |
-| `http://localhost:3000/admin` | Admin CMS Dashboard |
-| `http://localhost:3000/api-docs` | Swagger API docs |
-| `http://localhost:3000/api/swagger` | Raw OpenAPI JSON |
-
----
-
-## Admin Dashboard
-
-The Admin Dashboard at `/admin` is a protected CMS that lets you manage all dynamic content without touching code:
-
-| Section | What you can do |
-|---|---|
-| **Overview** | View resume download stats |
-| **Profile** | Update name, title, bio, contact info, upload profile photo to Cloudinary, set resume Google Drive link |
-| **Projects** | Add, edit, delete portfolio projects |
-| **Experience** | Add, edit, delete work/education entries |
-| **Skills** | Add, edit, delete skills with category and icon |
-
-**Authentication:** Enter your `ADMIN_API_KEY` from `.env` on the login screen.
-
----
-
-## Asset Management
-
-### Profile Image
-- Uploaded directly from the Admin Dashboard → Profile tab
-- Stored on **Cloudinary** with automatic CDN delivery and cache invalidation
-- Overwrites the previous image on re-upload (fixed `public_id: profileImageUrl`)
-
-### Resume
-- Store your PDF on **Google Drive**
-- Share it as "Anyone with the link can view"
-- Paste the shareable link into Admin Dashboard → Profile → Resume URL field
-- The "View Resume" button opens the PDF in Google Drive's built-in viewer
-
----
-
-## Available Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the Next.js development server with Turbopack |
-| `npm run build` | Create an optimised production build |
-| `npm start` | Serve the production build |
-| `npm run lint` | Run ESLint across the project |
-
----
-
-## Postman Collection
-
-Two files are included in the `postman/` folder:
-
-| File | Purpose |
-|---|---|
-| `Thabo-Portfolio.postman_collection.json` | API requests with automated test scripts |
-| `Thabo-Portfolio.postman_environment.json` | `base_url` and `admin_api_key` variables |
-
-**Steps to use:**
-1. Open Postman → **Import** both JSON files
-2. Select the **Thabo Portfolio — Local** environment
-3. Set `admin_api_key` to the value of `ADMIN_API_KEY` in your `.env`
-4. Start the dev server and run any request
-
----
+The OpenAPI document is the current API reference. Import `/api/swagger` into an API client when a collection is needed.
 
 ## Deployment
 
-The project deploys to **Vercel** automatically on every push to `main`.
+The project is configured for standard Next.js hosting; the listed production URL uses Vercel.
 
-Vercel auto-detects Next.js — no additional configuration file is needed. Add all `.env` variables to your Vercel project under **Settings → Environment Variables** before deploying.
+1. Configure the environment variables in your hosting provider. Local `.env` changes are not copied to deployment settings.
+2. Allow the deployment environment to reach MongoDB and the required upstream services.
+3. Run the security and documentation tests, then `npm run build`.
+4. Deploy the Next.js application. For a self-hosted Node deployment, run `npm start` after building.
+5. Verify public content, admin login, an authenticated update, contact delivery, media upload, and `/api-docs` in the deployed environment.
 
----
+The build fetches the existing Google Fonts through `next/font/google`, so build-time internet access is required. Swagger UI uses pinned CDN assets and needs an internet connection for its interactive interface; `/api/swagger` remains directly available without those assets.
 
-## Security
+## Current behavior and limitations
 
-| Feature | Implementation |
-|---|---|
-| Strict security headers | HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy |
-| API key authentication | `x-api-key` header check on all write endpoints |
-| Mass-assignment protection | Whitelisted fields only on profile updates |
-| Bot / spam protection | Hidden honeypot field on the contact form |
-| Client-side validation | react-hook-form rules on all contact form fields |
-| Cloudinary access control | `access_mode: 'public'` enforced on all uploads |
+- **Draft status is presentation filtering, not confidentiality.** Public `?all=true` content reads, skill reads, and statistics can expose draft data or counts. Do not store private material there.
+- **Contact validation differs between frontend and server.** The frontend validates required fields, email syntax, and message length. The server currently handles honeypot and rate limiting without repeating all field validation.
+- **Rate limiting is in memory per server instance.** It is not a shared distributed limit and resets when the process restarts.
+- **Database reads are dynamic.** The portfolio uses `revalidate = 0`; database failure can leave dynamic sections empty while fallback profile text remains.
+- **Browser support needs device verification.** Responsive layouts, touch targets, visual fallbacks, reduced-motion handling, and high-contrast adjustments are implemented. They do not replace testing on Safari, Firefox, Edge, Chrome, iOS, and Android.
+- **Animation respects reduced-motion preferences.** The capability strip also provides a pause control. The previously added 3D background was removed.
 
----
-
-## License
-
-ISC License — © 2026 Balachandran Thabotharan
+For future API changes, update `lib/swagger.js` and run the documentation coverage test so the explorer and route inventory stay aligned.

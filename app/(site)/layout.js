@@ -10,6 +10,8 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
+import ThemeToggle from '@/components/ThemeToggle';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import DynamicMetadata from '@/components/DynamicMetadata';
 import { connectToDatabase } from "@/lib/mongodb";
 import Profile from "@/lib/models/Profile";
@@ -37,7 +39,10 @@ export default async function SiteLayout({ children }) {
   }
 
   return (
-    <>
+    <div className="portfolio-site">
+      {/* Top viewport scroll progress line indicator */}
+      <ScrollProgressBar />
+
       {/* Top sticky responsive website navigation bar */}
       <Header />
       
@@ -47,12 +52,15 @@ export default async function SiteLayout({ children }) {
       {/* Public footer displaying shared contact coordinates and copyrights */}
       <Footer profile={profileData} />
       
+      {/* Floating theme toggle button stacked directly above the back-to-top button */}
+      <ThemeToggle />
+
       {/* Interactive sticky dynamic scroll-to-top micro-animation widget */}
       <ScrollToTop />
       
       {/* Helper component injecting custom favicon configurations */}
       <DynamicMetadata />
-    </>
+    </div>
   );
 }
 

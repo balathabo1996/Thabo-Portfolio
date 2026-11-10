@@ -25,10 +25,7 @@ export default function ContactSection({ profile = {} }) {
   return (
     <section id="contact" className="py-5 reveal">
       <div className="container">
-        <h1 className="page-title display-5 fw-bold reveal">
-          <i className="fas fa-envelope-open-text"></i> Get in{" "}
-          <span>Touch</span>
-        </h1>
+        <div className="contact-editorial reveal"><p className="section-kicker">03 / THE NEXT CONNECTION</p><h2 className="contact-headline">Good things start<br />with a <em>conversation.</em><span aria-hidden="true">↗</span></h2><p>Have a challenge in mind? Let’s find a way forward.</p></div>
 
         <div className="contact-wrapper">
           <div className="contact-info-panel reveal">

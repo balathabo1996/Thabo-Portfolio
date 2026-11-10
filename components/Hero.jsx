@@ -1,146 +1,47 @@
-/**
- * Hero Component — components/Hero.jsx
- * ====================================
- * Renders the introductory primary landing screen.
- * Displays profile snapshot image, key technical descriptors, localized contact
- * pointers, social shortcuts (embedded in magnetic interactive frames), and call to actions.
- * Features an interactive dynamic canvas-drawn network particle background.
- */
+"use client";
 
-'use client';
-
-import NetworkBackground from "./NetworkBackground";
+import { useState } from "react";
+import Image from "next/image";
 import ResumeButton from "./ResumeButton";
 import Magnetic from "./Magnetic";
 
-/**
- * Hero Component
- * Renders the primary portfolio welcome block and social pointers.
- *
- * @param {Object} props
- * @param {Object} props.profile - User profile information
- * @param {string} [props.profile.firstName] - Owner's first name
- * @param {string} [props.profile.lastName] - Owner's last name
- * @param {string} [props.profile.title] - Job title descriptor string
- * @param {string} [props.profile.profileImageUrl] - Cloudinary or local profile image URL
- * @param {string} [props.profile.location] - Target geography or office location
- * @param {string} [props.profile.email] - Contact email address
- * @param {string} [props.profile.phone] - Telephony contact number
- * @param {string} [props.profile.linkedinUrl] - URL pointer for LinkedIn profile
- * @param {string} [props.profile.githubUrl] - URL pointer for GitHub profile
- * @param {string} [props.profile.tagline] - Primary sub-heading statement
- * @param {string} [props.profile.heroDescription] - Narrative overview block
- * @param {string} [props.profile.resumeUrl] - URL mapping to the downloadable Resume document
- * @returns {React.ReactElement} The styled Hero component
- */
 export default function Hero({ profile = {} }) {
-  const {
-    firstName = "Thabotharan",
-    lastName = "Balachandran",
-    title = "Infrastructure Engineer | IT Solutions Professional",
-    profileImageUrl = "https://res.cloudinary.com/dk4kvk0kw/image/upload/v1/thabo-portfolio/profileImageUrl.png",
-    location = "Scarborough, Ontario, Canada",
-    email = "balathabo96@gmail.com",
-    phone = "(437) 383-1996",
-    linkedinUrl = "https://www.linkedin.com/in/balachandran-thabotharan",
-    githubUrl = "https://github.com/balathabo1996",
-    tagline = "Building Resilient Infrastructures & Secure Systems",
-    heroDescription = "Leveraging expertise in Windows environments, virtualization, and security to deliver scalable IT solutions.",
-    resumeUrl = "/resume.pdf"
-  } = profile;
-
+  const [imageFailed, setImageFailed] = useState(false);
+  const firstName = profile.firstName || "Thabotharan";
+  const lastName = profile.lastName || "Balachandran";
+  const image = "/images/thabo-cutout.png";
   return (
-    <section className="hero container" id="home" style={{ position: 'relative' }}>
-      <NetworkBackground />
-      <div className="hero-content reveal" style={{ position: 'relative', zIndex: 1 }}>
-        <h2 className="hero-name">
-          <span>{firstName}</span> <br />
-          <span>{lastName}</span>
-        </h2>
-
-        <p className="hero-description-blue">
-          {title.split(' | ').map((part, index, arr) => (
-            <span key={index}>
-              {part}{index < arr.length - 1 ? ' | ' : ''}
-              {index === 1 && <br />}
-            </span>
-          ))}
-        </p>
-
-        <h3 className="hero-tagline-white">
-          {tagline}
-        </h3>
-
-        <div className="hero-contact reveal-stagger">
-          <div className="contact-row">
-            <span className="contact-item">
-              <i className="fas fa-map-marker-alt"></i> {location}
-            </span>
-          </div>
-
-          <div className="contact-row">
-            <span className="contact-item">
-              <i className="fas fa-envelope"></i>
-              <a href={`mailto:${email}`}>{email}</a>
-            </span>
-            <span className="separator">|</span>
-            <span className="contact-item">
-              <i className="fas fa-phone"></i>
-              <a href={`tel:${phone}`}>{phone}</a>
-            </span>
-          </div>
-
-          <div className="contact-row">
-            <span className="contact-item">
-              <i className="fab fa-linkedin"></i>
-              <Magnetic strength={0.15}>
-                <a
-                  href={linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {firstName} {lastName}
-                </a>
-              </Magnetic>
-            </span>
-            <span className="separator">|</span>
-            <span className="contact-item">
-              <i className="fab fa-github"></i>
-              <Magnetic strength={0.15}>
-                <a
-                  href={githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {githubUrl?.split('/').pop() || "GitHub"}
-                </a>
-              </Magnetic>
-            </span>
-          </div>
-        </div>
-
-        <p className="hero-description-text">
-          {heroDescription}
-        </p>
-
+    <section className="hero container studio-hero" id="home" aria-labelledby="hero-heading">
+      <div className="hero-atmosphere" aria-hidden="true"><span /><span /><div className="atmosphere-grid" /></div>
+      <div className="hero-content">
+        <div className="hero-eyebrow"><span className="status-dot" /> Infrastructure. Security. Development.</div>
+        <p className="hero-intro">Hello, I’m {firstName}.</p>
+        <h1 id="hero-heading" className="studio-headline"><span className="headline-line"><span>Reliable systems.</span></span><span className="headline-line"><span><em>Secure by design.</em></span></span></h1>
+        <p className="studio-role">{profile.title || profile.role || "Infrastructure Engineer | IT Solutions Professional"}</p>
+        <p className="hero-description-text">{profile.heroDescription || "Building resilient infrastructure, secure systems, and thoughtful digital experiences."}</p>
         <div className="hero-actions">
-          <ResumeButton resumeUrl={resumeUrl} />
+          <Magnetic strength={0.12}><a className="studio-primary" href="#projects">Explore my work <span aria-hidden="true">↗</span></a></Magnetic>
+          {profile.resumeUrl && <ResumeButton resumeUrl={profile.resumeUrl} />}
+        </div>
+        <div className="studio-socials">
+          <span><i className="fas fa-location-dot" aria-hidden="true" /> {profile.location || "Scarborough, Ontario, Canada"}</span>
+          <a href={profile.githubUrl || "https://github.com/balathabo1996"} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a href={profile.linkedinUrl || "https://www.linkedin.com/in/balachandran-thabotharan"} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
       </div>
-
-      <div className="hero-image" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="image-wrapper reveal">
-          <img
-            id="profile-image"
-            src={profileImageUrl}
-            alt={`${firstName} - Infrastructure Engineer`}
-            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            loading="eager"
-            fetchPriority="high"
-            onError={(e) => { e.target.style.display = 'none'; }}
-          />
+      <div className="studio-visual cutout-visual">
+        <div className="orbit orbit-one" aria-hidden="true"><span /></div>
+        <div className="orbit orbit-two" aria-hidden="true"><span /></div>
+        <div className="portrait-panel portrait-cutout">
+          <div className="studio-portrait">
+            {!imageFailed ? <Image src={image} width={1024} height={1536} sizes="(max-width: 700px) 320px, 380px" quality={80} alt={`${firstName} ${lastName}`} loading="eager" fetchPriority="high" onError={() => setImageFailed(true)} /> : <span className="portrait-monogram">{firstName[0]}{lastName[0]}</span>}
+          </div>
+          <div className="portrait-caption"><strong>{firstName}<br />{lastName}</strong><span>Engineer.<br />Problem solver.</span></div>
         </div>
+        <div className="visual-coordinate" aria-hidden="true">01 / HUMAN × TECHNOLOGY</div>
+        <div className="system-note" aria-hidden="true"><span className="status-dot" /><div>Built to connect.<small>Designed to keep moving.</small></div><i className="fas fa-network-wired" /></div>
       </div>
+      <div className="hero-bottomline"><a href="#about"><span aria-hidden="true">↓</span> Scroll to discover</a><span>INFRASTRUCTURE / CODE / CURIOSITY</span></div>
     </section>
   );
 }

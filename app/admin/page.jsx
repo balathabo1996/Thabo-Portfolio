@@ -17,16 +17,9 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
   Cell,
   PieChart,
   Pie,
-  Legend,
 } from "recharts";
 import NetworkBackground from "@/components/NetworkBackground";
 

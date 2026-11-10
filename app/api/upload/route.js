@@ -16,47 +16,6 @@ cloudinary.config({
 });
 
 /**
- * @swagger
- * /api/upload:
- *   post:
- *     summary: Upload an image asset to Cloudinary
- *     description: Accepts a multipart form file and uploads it to the portfolio's cloud storage.
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: The image file to upload. Only image types are supported.
- *               field:
- *                 type: string
- *                 description: Descriptive ID segment used as the public_id suffix.
- *     responses:
- *       200:
- *         description: Upload succeeded. Returns the asset URL.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 url:
- *                   type: string
- *                   format: uri
- *       400:
- *         description: Missing file.
- *       415:
- *         description: Unsupported media type (not an image).
- *       500:
- *         description: Internal upload failure.
- */
-
-/**
  * POST /api/upload
  * Handles Multipart FormData image binary uploads to Cloudinary storage.
  *

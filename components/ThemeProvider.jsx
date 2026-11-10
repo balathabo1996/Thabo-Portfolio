@@ -17,6 +17,15 @@
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 
+function readSavedTheme() {
+  try {
+    const saved = window.localStorage.getItem('theme');
+    return saved === 'light' || saved === 'dark' ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
 const ThemeContext = createContext({ theme: 'dark', toggleTheme: () => {} });
 
 export function ThemeProvider({ children }) {
@@ -24,7 +33,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     // 1. Initial Load: Check localStorage then System Preference
-    const saved = localStorage.getItem('theme');
+    const saved = readSavedTheme();
     const systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     const initialTheme = saved || systemTheme;
     
@@ -35,7 +44,7 @@ export function ThemeProvider({ children }) {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
     const handleChange = (e) => {
       // Only auto-switch if the user hasn't set a manual preference
-      if (!localStorage.getItem('theme')) {
+      if (!readSavedTheme()) {
         const newTheme = e.matches ? 'light' : 'dark';
         setTheme(newTheme);
         document.documentElement.setAttribute('data-theme', newTheme);
@@ -50,7 +59,7 @@ export function ThemeProvider({ children }) {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
     document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
+    try { window.localStorage.setItem('theme', next); } catch { /* Theme still works when storage is unavailable. */ }
   };
 
   return (

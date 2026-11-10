@@ -13,6 +13,7 @@ import Experience from "@/lib/models/Experience";
 import Project from "@/lib/models/Project";
 import Skill from "@/lib/models/Skill";
 import Hero from "@/components/Hero";
+import CapabilityStrip from "@/components/CapabilityStrip";
 import About from "@/components/About";
 import ProjectsGrid from "@/components/ProjectsGrid";
 import ContactSection from "@/components/ContactSection";
@@ -118,6 +119,7 @@ export default async function HomePage() {
       
       {/* Hero Welcome banner section */}
       <Hero profile={profileData} />
+      <CapabilityStrip />
 
       <div className="section-divider"></div>
 

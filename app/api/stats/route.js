@@ -16,40 +16,6 @@ import Analytics from '@/lib/models/Analytics';
 export const dynamic = 'force-dynamic';
 
 /**
- * @swagger
- * /api/stats:
- *   get:
- *     summary: Retrieve aggregate statistics of portfolio items
- *     description: Tallies total and status counts for projects, employment records, technical skills, and tracking counters.
- *     responses:
- *       200:
- *         description: Statistics object containing specific counts.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 totalProjects:
- *                   type: integer
- *                 publishedProjects:
- *                   type: integer
- *                 draftProjects:
- *                   type: integer
- *                 totalExperience:
- *                   type: integer
- *                 draftExperience:
- *                   type: integer
- *                 totalSkills:
- *                   type: integer
- *                 draftSkills:
- *                   type: integer
- *                 resumeDownloads:
- *                   type: integer
- *       500:
- *         description: Database error fetching aggregates.
- */
-
-/**
  * GET /api/stats
  * Queries Mongoose collections to count records and summarize statistics.
  *

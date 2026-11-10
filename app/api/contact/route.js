@@ -16,57 +16,6 @@ export const dynamic = 'force-dynamic';
 const rateLimitMap = new Map();
 
 /**
- * @swagger
- * /api/contact:
- *   post:
- *     summary: Submit contact form message
- *     description: Validates form submission, verifies bot protection (honeypot), enforces rate limits, and sends a styled notification email to the site owner via Gmail SMTP.
- *     tags:
- *       - Contact
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - name
- *               - email
- *               - subject
- *               - message
- *             properties:
- *               name:
- *                 type: string
- *                 description: Sender's name.
- *                 example: John Doe
- *               email:
- *                 type: string
- *                 format: email
- *                 description: Sender's email address.
- *                 example: john.doe@example.com
- *               subject:
- *                 type: string
- *                 description: Subject of the inquiry.
- *                 example: Collaboration Inquiry
- *               message:
- *                 type: string
- *                 description: Content of the message.
- *                 example: I'd like to discuss a potential contract opportunity.
- *               honeypot:
- *                 type: string
- *                 description: Hidden anti-bot spam input field. Must be empty.
- *     responses:
- *       200:
- *         description: Inquiry sent successfully.
- *       400:
- *         description: Missing fields or invalid request.
- *       429:
- *         description: Rate limit exceeded.
- *       500:
- *         description: Mailer transport failure.
- */
-
-/**
  * POST /api/contact
  * Handles contact form submittals, checks for bot abuse, rate limits, and mails the inquiry.
  *

@@ -11,47 +11,6 @@ import Analytics from "@/lib/models/Analytics";
 import { NextResponse } from "next/server";
 
 /**
- * @swagger
- * /api/analytics/resume:
- *   post:
- *     summary: Track resume download / view event
- *     description: Increments the resume download click counter in MongoDB using a findOneAndUpdate upsert operation.
- *     tags:
- *       - System
- *     responses:
- *       200:
- *         description: Tracker updated successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 count:
- *                   type: number
- *       500:
- *         description: Database error.
- *   get:
- *     summary: Fetch resume view statistics
- *     description: Returns the total count of resume download/view clicks tracked in MongoDB.
- *     tags:
- *       - System
- *     responses:
- *       200:
- *         description: Analytics statistics payload returned.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: number
- *       500:
- *         description: Database query error.
- */
-
-/**
  * POST /api/analytics/resume
  * Increments the click counter for the "resume_download" event.
  *

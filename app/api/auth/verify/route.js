@@ -15,46 +15,6 @@ import { signToken } from '@/lib/auth';
 export const dynamic = 'force-dynamic';
 
 /**
- * @swagger
- * /api/auth/verify:
- *   post:
- *     summary: Verify administrative credentials and issue JWT
- *     description: Accepts a security key and validates it against ADMIN_API_KEY. If verified, issues a JWT token valid for admin requests.
- *     tags:
- *       - System
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - key
- *             properties:
- *               key:
- *                 type: string
- *                 description: The admin security passphrase.
- *                 example: MySuperSecretPassphrase
- *     responses:
- *       200:
- *         description: Passphrase verified. Returns a signed JWT token.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 token:
- *                   type: string
- *                   description: Signed JWT auth token.
- *       401:
- *         description: Unauthorized. Invalid passphrase.
- *       500:
- *         description: JWT sign failure or request parsing error.
- */
-
-/**
  * POST /api/auth/verify
  * Validates the administrative key and delivers a signed JWT token.
  *
@@ -66,7 +26,10 @@ export async function POST(request) {
     const { key } = await request.json();
     
     // Validate credentials against environment
-    if (key === process.env.ADMIN_API_KEY) {
+    if (!process.env.ADMIN_API_KEY) {
+      return NextResponse.json({ error: 'Admin authentication is not configured' }, { status: 503 });
+    }
+    if (typeof key === 'string' && key.length > 0 && key === process.env.ADMIN_API_KEY) {
       // Sign administrative authorization payload
       const token = await signToken({ admin: true });
       return NextResponse.json({ success: true, token });
@@ -75,6 +38,6 @@ export async function POST(request) {
     return NextResponse.json({ success: false, error: 'Invalid passphrase' }, { status: 401 });
   } catch (err) {
     console.error('Auth verification error:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ error: 'Unable to authenticate. Check server configuration.' }, { status: 500 });
   }
 }

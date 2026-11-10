@@ -15,21 +15,6 @@ cloudinary.config({
 });
 
 /**
- * @swagger
- * /api/media:
- *   get:
- *     summary: Retrieve uploaded media resources
- *     description: Lists up to 100 image assets in Cloudinary matching the prefix 'thabo-portfolio'.
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Media resources list retrieved successfully.
- *       500:
- *         description: Cloudinary connection failure.
- */
-
-/**
  * GET /api/media
  * Retrives all uploaded images under the folder prefix 'thabo-portfolio'.
  *
@@ -50,34 +35,6 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
-/**
- * @swagger
- * /api/media:
- *   delete:
- *     summary: Delete a media resource from Cloudinary
- *     description: Deletes an upload asset permanently using its public ID.
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - public_id
- *             properties:
- *               public_id:
- *                 type: string
- *     responses:
- *       200:
- *         description: Media deleted successfully.
- *       400:
- *         description: Missing public ID parameter.
- *       500:
- *         description: Cloudinary delete operation failure.
- */
 
 /**
  * DELETE /api/media

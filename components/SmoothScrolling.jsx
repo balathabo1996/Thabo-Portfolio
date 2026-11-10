@@ -9,6 +9,7 @@
 'use client';
 import { ReactLenis } from 'lenis/react';
 import { usePathname } from 'next/navigation';
+import { useReducedMotion } from 'framer-motion';
 
 /**
  * SmoothScrolling Component
@@ -21,14 +22,15 @@ import { usePathname } from 'next/navigation';
 export default function SmoothScrolling({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname === '/admin';
+  const reducedMotion = useReducedMotion();
 
-  if (isAdmin) return <>{children}</>;
+  if (isAdmin || reducedMotion) return <>{children}</>;
 
   return (
     <ReactLenis root options={{ 
       lerp: 0.08, 
       duration: 1.2, 
-      smoothTouch: true,
+      anchors: true,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
     }}>
       {children}

@@ -7,6 +7,7 @@
  */
 
 import Image from "next/image";
+import InteractiveSurface from "./InteractiveSurface";
 
 /**
  * ProjectsGrid Component
@@ -26,6 +27,14 @@ import Image from "next/image";
  * @param {Array<string>} [props.dbProjects[].techStack] - Array of technology names used
  * @returns {React.ReactElement} The styled grid and title section
  */
+function projectLink(value) {
+  if (typeof value !== 'string' || !value.trim()) return undefined;
+  try {
+    const url = new URL(value.trim());
+    return ['https:', 'http:'].includes(url.protocol) ? url.href : undefined;
+  } catch { return undefined; }
+}
+
 export default function ProjectsGrid({ dbProjects = [] }) {
   const getTechIcon = (name) => {
     const icons = {
@@ -61,26 +70,30 @@ export default function ProjectsGrid({ dbProjects = [] }) {
   return (
     <section id="projects" className="py-5 reveal">
       <div className="container">
-        <h1 className="page-title display-5 fw-bold reveal">
-          <i className="fas fa-briefcase"></i> My <span>Projects</span>
-        </h1>
+        <div className="editorial-section-heading reveal"><div><p className="section-kicker">02 / SELECTED WORK</p><h2 className="page-title display-5 fw-bold">Ideas into <span>impact.</span></h2></div><p>A selection of systems, solutions,<br />and things I’ve built.</p></div>
 
         <div className="portfolio-grid reveal-stagger">
-          {dbProjects.map((project, index) => (
-            <a
-              key={index}
-              href={project.link || "#"}
+          {dbProjects.map((project, index) => {
+            const href = projectLink(project.link);
+            const Card = href ? 'a' : 'article';
+            return (
+            <InteractiveSurface key={project._id || index} className="project-surface">
+            <Card
+              href={href}
               className="portfolio-card"
-              target="_blank"
-              rel="noopener noreferrer"
+              target={href ? "_blank" : undefined}
+              rel={href ? "noopener noreferrer" : undefined}
             >
               <div className="portfolio-img-wrapper">
+                <span className="project-index">{String(index + 1).padStart(2, "0")} / PROJECT</span>
+                {href && <span className="project-open" aria-hidden="true">↗</span>}
                 <Image
                   src={project.imageUrl || "/images/placeholder.png"}
                   alt={project.title}
                   width={800}
                   height={600}
-                  priority={index < 2}
+                  sizes="(max-width: 700px) 100vw, (max-width: 1240px) 50vw, 580px"
+                  loading="lazy"
                 />
                 {project.period && <div className="portfolio-date">{project.period}</div>}
               </div>
@@ -98,6 +111,7 @@ export default function ProjectsGrid({ dbProjects = [] }) {
                   </p>
                 )}
 
+                {!href && <p className="project-link-status">Project preview · link not available</p>}
                 <p className="project-desc">{project.description}</p>
 
                 <div className="features-list">
@@ -127,8 +141,9 @@ export default function ProjectsGrid({ dbProjects = [] }) {
                   ))}
                 </div>
               </div>
-            </a>
-          ))}
+            </Card>
+            </InteractiveSurface>
+          );})}
         </div>
       </div>
     </section>

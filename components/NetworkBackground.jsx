@@ -64,9 +64,10 @@ export default function NetworkBackground() {
         this.baseY = this.y;
       }
       draw() {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fillStyle = 'rgba(0, 198, 255, 0.8)';
+        ctx.fillStyle = isLight ? 'rgba(37, 99, 235, 0.55)' : 'rgba(0, 198, 255, 0.8)';
         ctx.fill();
       }
       update() {
@@ -105,6 +106,11 @@ export default function NetworkBackground() {
 
     const connect = () => {
       let maxDistance = 150;
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      const rgbBase = isLight ? '37, 99, 235' : '0, 198, 255';
+      const lineMultiplier = isLight ? 0.25 : 0.4;
+      const mouseMultiplier = isLight ? 0.35 : 0.5;
+
       for (let a = 0; a < particlesArray.length; a++) {
         for (let b = a; b < particlesArray.length; b++) {
           let dx = particlesArray[a].x - particlesArray[b].x;
@@ -112,7 +118,7 @@ export default function NetworkBackground() {
           let distance = dx * dx + dy * dy;
           if (distance < maxDistance * maxDistance) {
             let opacityValue = 1 - (distance / (maxDistance * maxDistance));
-            ctx.strokeStyle = `rgba(0, 198, 255, ${opacityValue * 0.4})`;
+            ctx.strokeStyle = `rgba(${rgbBase}, ${opacityValue * lineMultiplier})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -128,7 +134,7 @@ export default function NetworkBackground() {
           let mouseDistance = dxMouse * dxMouse + dyMouse * dyMouse;
           if (mouseDistance < mouse.radius * mouse.radius) {
             let opacityValue = 1 - (mouseDistance / (mouse.radius * mouse.radius));
-            ctx.strokeStyle = `rgba(0, 198, 255, ${opacityValue * 0.5})`;
+            ctx.strokeStyle = `rgba(${rgbBase}, ${opacityValue * mouseMultiplier})`;
             ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);

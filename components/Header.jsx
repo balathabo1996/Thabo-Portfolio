@@ -31,7 +31,7 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState('home');
   const pathname = usePathname();
 
-  if (pathname === '/admin') return null;
+
 
   useEffect(() => {
     const sections = ['home', 'about', 'projects', 'contact'];
@@ -58,27 +58,32 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (pathname === '/admin') return null;
+
   return (
     <header>
       <Link 
         href="/#home" 
-        className="logo" 
+        className="logo brand-wordmark"
+        aria-label="Thabo portfolio home"
         onClick={(e) => {
           e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
           setActiveSection('home');
           window.history.pushState(null, null, '/#home');
         }}
       >
-        <span>T</span>habo.
+        <span className="brand-initial">T</span>habo<span className="brand-dot">.</span>
       </Link>
-      <nav className="navigation">
+      <nav className="navigation" aria-label="Main navigation">
         <Link 
           href="/#home" 
+          aria-label="Home"
+          aria-current={activeSection === 'home' ? 'location' : undefined}
           className={activeSection === 'home' ? 'active' : ''}
           onClick={(e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
             setActiveSection('home');
             window.history.pushState(null, null, '/#home');
           }}
@@ -88,6 +93,8 @@ export default function Header() {
         </Link>
         <Link 
           href="/#about" 
+          aria-label="About"
+          aria-current={activeSection === 'about' ? 'location' : undefined}
           className={activeSection === 'about' ? 'active' : ''}
           onClick={() => setActiveSection('about')}
         >
@@ -96,6 +103,8 @@ export default function Header() {
         </Link>
         <Link 
           href="/#projects" 
+          aria-label="Projects"
+          aria-current={activeSection === 'projects' ? 'location' : undefined}
           className={activeSection === 'projects' ? 'active' : ''}
           onClick={() => setActiveSection('projects')}
         >
@@ -104,6 +113,8 @@ export default function Header() {
         </Link>
         <Link 
           href="/#contact" 
+          aria-label="Contact"
+          aria-current={activeSection === 'contact' ? 'location' : undefined}
           className={activeSection === 'contact' ? 'active' : ''}
           onClick={() => setActiveSection('contact')}
         >
