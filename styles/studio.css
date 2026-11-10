@@ -199,7 +199,6 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .contact-editorial > p:last-child { font-size: 18px; color: var(--studio-muted); }
 .portfolio-site .contact-wrapper { gap: 28px; }
 .portfolio-site footer { position: relative; }
-.portfolio-site footer::before { content: "THABO."; display: block; font: 600 clamp(4rem, 16vw, 13rem)/1 var(--font-heading); letter-spacing: -.07em; color: var(--studio-ink); opacity: .07; margin: 0 auto 30px; pointer-events: none; }
 @keyframes headline-arrive { from { transform: translateY(115%) rotate(3deg); } to { transform: translateY(0) rotate(0); } }
 @keyframes atmosphere-drift { to { transform: translate(-12%, 12%) scale(1.2); } }
 @keyframes capability-scroll { to { transform: translateX(-50%); } }
@@ -421,7 +420,6 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
   .portfolio-site .studio-primary { gap: 22px; }
   .portfolio-site .contact-info-panel, .portfolio-site .contact-form { padding: 22px; }
   .portfolio-site .portrait-cutout .studio-portrait { height: clamp(320px, 100vw, 420px); }
-  .portfolio-site footer { padding-right: 65px; }
 }
 @media (max-width: 400px) {
   .portfolio-site header { left: 8px; right: 8px; gap: 4px; padding: 7px 8px !important; }
@@ -479,3 +477,12 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 @media (hover: none), (pointer: coarse) {
   .portfolio-site .studio-primary:hover, .portfolio-site .studio-primary:hover > .ui-icon { transform: none; }
 }
+
+/* Symmetric footer spacing keeps the content centered on narrow devices. */
+.portfolio-site footer {
+  padding: 32px max(24px, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)) calc(84px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+.portfolio-site footer .social-links { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px; margin: 0 auto 16px; }
+.portfolio-site footer .social-links a { flex: 0 0 44px; width: 44px; height: 44px; }
+.portfolio-site footer p { max-width: 650px; margin: 0 auto; text-align: center; line-height: 1.7; overflow-wrap: anywhere; }
