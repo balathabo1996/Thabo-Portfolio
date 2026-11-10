@@ -1,5 +1,8 @@
 // Shared 24-unit stroke icons stay aligned without depending on font metrics.
 const paths = {
+  arrowRight: ['M4 12h16', 'm14 6 6 6-6 6'],
+  external: ['M7 17 17 7', 'M7 7h10v10'],
+  down: ['M12 4v16', 'm6 14 6 6 6-6'],
   home: ['m3 10 9-7 9 7', 'M5 9v12h5v-7h4v7h5V9'],
   user: ['M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0', 'M4 21v-2a8 8 0 0 1 16 0v2'],
   code: ['m8 6-6 6 6 6', 'm16 6 6 6-6 6', 'm14 3-4 18'],

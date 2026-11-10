@@ -7,6 +7,7 @@
  */
 
 import Image from "next/image";
+import Icon from "./Icon";
 import InteractiveSurface from "./InteractiveSurface";
 
 /**
@@ -86,7 +87,6 @@ export default function ProjectsGrid({ dbProjects = [] }) {
             >
               <div className="portfolio-img-wrapper">
                 <span className="project-index">{String(index + 1).padStart(2, "0")} / PROJECT</span>
-                {href && <span className="project-open" aria-hidden="true">↗</span>}
                 <Image
                   src={project.imageUrl || "/images/placeholder.png"}
                   alt={project.title}
@@ -100,6 +100,7 @@ export default function ProjectsGrid({ dbProjects = [] }) {
               <div className="portfolio-content">
                 <div className="portfolio-header">
                   <h3>{project.title}</h3>
+                  {href && <span className="project-open" aria-hidden="true"><Icon name="external" /></span>}
                 </div>
                 {project.subTitle && <p className="project-title-ext">{project.subTitle}</p>}
 

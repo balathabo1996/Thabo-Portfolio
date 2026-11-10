@@ -39,7 +39,7 @@ export default function Magnetic({ children, strength = 0.2 }) {
   const { x, y } = position;
   return (
     <motion.div
-      style={{ position: 'relative', display: 'inline-block' }}
+      style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', maxWidth: '100%' }}
       ref={ref}
       onMouseMove={handleMouse}
       onMouseLeave={reset}

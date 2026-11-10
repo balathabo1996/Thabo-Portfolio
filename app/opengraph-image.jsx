@@ -2,14 +2,14 @@
  * Dynamic OpenGraph Cover Card Generator — app/opengraph-image.jsx
  * =================================================================
  * Generates the OpenGraph cover image dynamically on the fly using Next.js ImageResponse.
- * Runs in the Vercel Edge Runtime to ensure ultra-fast load times when the portfolio
+ * Uses the Node.js runtime to render the preview shown when the portfolio
  * link is shared across social media networks (LinkedIn, Slack, WhatsApp, Twitter, etc.).
  */
 
 import { ImageResponse } from 'next/og';
 
-// Force Edge Runtime execution for optimal dynamic rendering performance
-export const runtime = 'edge';
+// Render social preview images with the supported Node.js runtime.
+export const runtime = 'nodejs';
 
 // Descriptive accessibility text for the social preview card image
 export const alt = 'Thabotharan Balachandran Portfolio';

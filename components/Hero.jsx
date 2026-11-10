@@ -4,7 +4,6 @@ import Icon from "./Icon";
 import { useState } from "react";
 import Image from "next/image";
 import ResumeButton from "./ResumeButton";
-import Magnetic from "./Magnetic";
 
 export default function Hero({ profile = {} }) {
   const [imageFailed, setImageFailed] = useState(false);
@@ -21,13 +20,13 @@ export default function Hero({ profile = {} }) {
         <p className="studio-role">{profile.title || profile.role || "Infrastructure Engineer | IT Solutions Professional"}</p>
         <p className="hero-description-text">{profile.heroDescription || "Building resilient infrastructure, secure systems, and thoughtful digital experiences."}</p>
         <div className="hero-actions">
-          <Magnetic strength={0.12}><a className="studio-primary" href="#projects">Explore my work <span aria-hidden="true">↗</span></a></Magnetic>
+          <a className="studio-primary" href="#projects"><span>Explore my work</span><Icon name="arrowRight" /></a>
           {profile.resumeUrl && <ResumeButton resumeUrl={profile.resumeUrl} />}
         </div>
         <div className="studio-socials">
           <span><Icon name="pin" /> {profile.location || "Scarborough, Ontario, Canada"}</span>
-          <a href={profile.githubUrl || "https://github.com/balathabo1996"} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <a href={profile.linkedinUrl || "https://www.linkedin.com/in/balachandran-thabotharan"} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href={profile.githubUrl || "https://github.com/balathabo1996"} target="_blank" rel="noopener noreferrer">GitHub <Icon name="external" /></a>
+          <a href={profile.linkedinUrl || "https://www.linkedin.com/in/balachandran-thabotharan"} target="_blank" rel="noopener noreferrer">LinkedIn <Icon name="external" /></a>
         </div>
       </div>
       <div className="studio-visual cutout-visual">
@@ -42,7 +41,7 @@ export default function Hero({ profile = {} }) {
         <div className="visual-coordinate" aria-hidden="true">01 / HUMAN × TECHNOLOGY</div>
         <div className="system-note" aria-hidden="true"><span className="status-dot" /><div>Built to connect.<small>Designed to keep moving.</small></div><i className="fas fa-network-wired" /></div>
       </div>
-      <div className="hero-bottomline"><a href="#about"><span aria-hidden="true">↓</span> Scroll to discover</a><span>INFRASTRUCTURE / CODE / CURIOSITY</span></div>
+      <div className="hero-bottomline"><a href="#about"><Icon name="down" /> Scroll to discover</a><span>INFRASTRUCTURE / CODE / CURIOSITY</span></div>
     </section>
   );
 }

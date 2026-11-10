@@ -155,8 +155,8 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .portfolio-site .studio-primary { position: relative; overflow: hidden; }
 .studio-primary::before { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 25%, #ffffff50 50%, transparent 75%); transform: translateX(-110%); transition: transform .65s; }
 .studio-primary:hover::before { transform: translateX(110%); }
-.studio-primary > span { transition: transform .3s; }
-.studio-primary:hover > span { transform: translate(3px, -3px); }
+.studio-primary > .ui-icon { transition: transform .25s ease; }
+.studio-primary:hover > .ui-icon { transform: translateX(3px); }
 .interactive-surface { --pointer-x: 50%; --pointer-y: 50%; position: relative; }
 .portfolio-site .portrait-panel { border-color: color-mix(in srgb, var(--studio-accent) 25%, var(--studio-line)); box-shadow: 0 30px 90px #0003; }
 .portfolio-site .studio-portrait { position: relative; }
@@ -184,8 +184,8 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .portfolio-site .portfolio-img-wrapper img { transition: transform .8s cubic-bezier(.16,1,.3,1), filter .8s; filter: saturate(.8); }
 .project-surface:hover .portfolio-img-wrapper img { transform: scale(1.065); filter: saturate(1); }
 .project-index { position: absolute; z-index: 2; top: 16px; left: 16px; font: 9px monospace; letter-spacing: .12em; color: #fff; background: #0d1210b8; border: 1px solid #ffffff25; padding: 8px 10px; border-radius: 4px; backdrop-filter: blur(10px); }
-.project-open { position: absolute; z-index: 2; right: 20px; bottom: 20px; display: grid; place-items: center; width: 48px; height: 48px; background: var(--studio-accent); color: var(--studio-surface); border-radius: 50%; font-size: 24px; transform: translateY(10px) rotate(-30deg); opacity: 0; transition: transform .4s, opacity .4s; }
-.project-surface:is(:hover, :focus-within) .project-open { opacity: 1; transform: translateY(0) rotate(0); }
+.portfolio-site .project-open { position: static; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 1px solid var(--studio-line); background: var(--studio-surface); color: var(--studio-accent); border-radius: 50%; opacity: 1; transform: none; }
+.project-surface:is(:hover, :focus-within) .project-open { background: var(--studio-accent); color: var(--studio-surface); }
 .portfolio-site .portfolio-header h3 { transition: color .3s; }
 .project-surface:hover .portfolio-header h3 { color: var(--studio-accent); }
 .portfolio-site .portfolio-content { background: radial-gradient(500px circle at var(--pointer-x) var(--pointer-y), #b9f58206, transparent 75%), var(--studio-surface); }
@@ -212,7 +212,6 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
   .contact-headline > span { display: none; }
   .capability-group > span { padding-block: 18px; gap: 24px; }
 }
-@media (hover: none) { .project-open { opacity: 1; transform: none; width: 36px; height: 36px; font-size: 20px; } }
 @media (prefers-reduced-motion: reduce) {
   .portfolio-site .headline-line > span, .portfolio-site .hero-eyebrow, .portfolio-site .studio-role, .portfolio-site .hero-description-text, .portfolio-site .system-note { animation: none; }
   .capability-track { animation: none; width: auto; }
@@ -456,4 +455,27 @@ html:has(.portfolio-site), body:has(.portfolio-site) { padding-top: 0; backgroun
 .portfolio-site .timeline-node > i { width: 18px; height: 18px; font-size: 16px; }
 @media (hover: none), (pointer: coarse) {
   .portfolio-site .theme-toggle:hover, .portfolio-site .scroll-to-top:hover { transform: none; }
+}
+
+/* Link labels and SVG arrows share a stable baseline on every input type. */
+.portfolio-site .hero-actions { align-items: center; }
+.portfolio-site .studio-primary, .portfolio-site .hero-actions .btn-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 14px;
+  min-height: 52px; padding: 14px 22px; line-height: 1.4; font-size: 16px;
+  white-space: normal; text-align: center; vertical-align: middle;
+}
+.portfolio-site .studio-primary > span { min-width: 0; }
+.portfolio-site .studio-primary > .ui-icon { width: 20px; height: 20px; flex: 0 0 20px; }
+.portfolio-site .studio-socials a, .portfolio-site .hero-bottomline > a { display: inline-flex; align-items: center; gap: 8px; line-height: 1.5; }
+.portfolio-site .studio-socials a .ui-icon { width: 15px; height: 15px; }
+.portfolio-site .hero-bottomline > a .ui-icon { width: 17px; height: 17px; }
+.portfolio-site .portfolio-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.portfolio-site .portfolio-header h3 { flex: 1 1 auto; min-width: 0; margin: 0; line-height: 1.3; overflow-wrap: anywhere; }
+.portfolio-site .project-open .ui-icon { width: 20px; height: 20px; }
+@media (max-width: 400px) {
+  .portfolio-site .hero-actions { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .portfolio-site .hero-actions > *, .portfolio-site .hero-actions .btn-cta { width: 100%; }
+}
+@media (hover: none), (pointer: coarse) {
+  .portfolio-site .studio-primary:hover, .portfolio-site .studio-primary:hover > .ui-icon { transform: none; }
 }
